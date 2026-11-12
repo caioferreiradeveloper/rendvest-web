@@ -1,0 +1,135 @@
+.button {
+  display: inline-flex;
+  min-height: 50px;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  padding: 0 21px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+}
+
+.button__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.button--small {
+  min-height: 40px;
+  padding-inline: 16px;
+  font-size: 12px;
+}
+
+.button--primary {
+  background: var(--color-primary);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--color-primary) 18%, transparent);
+  color: #fff;
+}
+
+.button--primary:hover {
+  background: var(--color-primary-hover);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--color-primary) 23%, transparent);
+}
+
+.button--dark {
+  background: #24352a;
+  color: #fff;
+}
+
+.button--dark:hover {
+  background: #354b3b;
+}
+
+.button--secondary {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.button--secondary:hover {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-secondary);
+}
+
+.button--light {
+  background: #fff;
+  color: #245c3e;
+}
+
+.button--light:hover {
+  background: #eaf2df;
+}
+
+.button--full {
+  width: 100%;
+}
+
+.button--text {
+  min-height: 36px;
+  padding: 0 8px;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  color: var(--color-primary);
+}
+
+.button--text:hover {
+  background: var(--color-surface-secondary);
+  box-shadow: none;
+}
+
+.button--icon {
+  width: 42px;
+  min-height: 42px;
+  padding: 0;
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+}
+
+.button--icon:hover {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-secondary);
+  color: var(--color-primary);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-primary);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.eyebrow--light {
+  color: #c9ddb9;
+}

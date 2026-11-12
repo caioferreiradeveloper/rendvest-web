@@ -1,0 +1,19 @@
+.form-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 14px 0 0;
+  padding: 11px 12px;
+  border: 1px solid color-mix(in srgb, var(--color-info) 25%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-info) 7%, var(--color-surface));
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.form-notice svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: var(--color-info);
+}

@@ -1,0 +1,44 @@
+.page-heading {
+  position: relative;
+  overflow: hidden;
+  padding-block: 77px 73px;
+  background:
+    radial-gradient(ellipse at 88% 40%, rgb(215 231 194 / 43%), transparent 29%),
+    linear-gradient(116deg, #f8f8f3, #f0f4e9);
+}
+
+.page-heading__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.page-heading h1 {
+  max-width: 720px;
+  margin: 15px 0 0;
+  font-size: clamp(40px, 5vw, 57px);
+  font-weight: 550;
+  letter-spacing: -0.075em;
+  line-height: 1.05;
+}
+
+.page-heading p {
+  max-width: 520px;
+  margin: 17px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+@media (max-width: 680px) {
+  .page-heading {
+    padding-block: 58px 54px;
+  }
+
+  .page-heading h1 {
+    font-size: clamp(38px, 9vw, 52px);
+  }
+
+  .page-heading p {
+    font-size: 12px;
+  }
+}

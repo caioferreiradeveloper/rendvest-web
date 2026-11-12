@@ -1,0 +1,23 @@
+.not-found-page {
+  display: grid;
+  min-height: 55vh;
+  align-content: center;
+  justify-items: center;
+  padding: 60px 24px;
+  text-align: center;
+
+  h1 {
+    max-width: 550px;
+    margin: 13px 0 0;
+    font-size: clamp(35px, 5vw, 52px);
+    font-weight: 550;
+    letter-spacing: -0.07em;
+    line-height: 1.1;
+  }
+
+  p {
+    margin: 12px 0 23px;
+    color: var(--color-text-secondary);
+    font-size: 13px;
+  }
+}

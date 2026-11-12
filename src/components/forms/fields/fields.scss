@@ -1,0 +1,129 @@
+.field {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  min-width: 0;
+}
+
+.field__label {
+  color: var(--color-text-primary);
+  font-size: 13px;
+  font-weight: 620;
+  line-height: 1.45;
+}
+
+.field__required {
+  padding-left: 3px;
+  color: var(--color-danger);
+}
+
+.field-control {
+  width: 100%;
+  min-width: 0;
+  height: 46px;
+  padding: 0 13px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  appearance: none;
+  background: var(--color-surface);
+  box-shadow: 0 1px 2px rgb(20 40 27 / 2%);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.field-control::placeholder {
+  color: #a0aaa1;
+  opacity: 1;
+}
+
+.field-control:hover {
+  border-color: var(--color-border-strong);
+}
+
+.field-control:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.field-control[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.field-control:disabled {
+  cursor: not-allowed;
+  background: var(--color-surface-secondary);
+  color: var(--color-text-muted);
+}
+
+.field-control-wrap {
+  position: relative;
+  display: block;
+}
+
+.field-control--with-action {
+  padding-right: 45px;
+}
+
+.field-control[type='password']::-ms-reveal,
+.field-control[type='password']::-ms-clear {
+  display: none;
+}
+
+.field-control[type='password']::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.field-control[type='password']::-webkit-password-reveal-button {
+  display: none;
+}
+
+.field-control__action.button--icon {
+  position: absolute;
+  top: 50%;
+  right: 11px;
+  width: 27px;
+  height: 27px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text-muted);
+  transform: translateY(-50%);
+}
+
+.field-control__action.button--icon:hover {
+  background: var(--color-surface-secondary);
+  color: var(--color-primary);
+  transform: translateY(-50%);
+}
+
+.field-control--textarea {
+  height: auto;
+  min-height: 112px;
+  padding-block: 11px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.field-control--date {
+  min-height: 46px;
+}
+
+.field__hint,
+.field__error {
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.field__hint {
+  color: var(--color-text-muted);
+}
+
+.field__error {
+  color: var(--color-danger);
+}

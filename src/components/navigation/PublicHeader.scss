@@ -1,0 +1,128 @@
+.site-header {
+  position: relative;
+  z-index: 5;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-border) 72%, transparent);
+  background: color-mix(in srgb, var(--color-background) 92%, transparent);
+  backdrop-filter: blur(16px);
+}
+
+.site-header__inner {
+  display: flex;
+  min-height: 76px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.brand {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 9px;
+  color: var(--color-text-primary);
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: -0.075em;
+}
+
+.brand__mark {
+  display: grid;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 3.2vw, 42px);
+  margin-left: auto;
+}
+
+.site-nav__link {
+  position: relative;
+  padding-block: 10px;
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  font-weight: 550;
+  transition: color 160ms ease;
+}
+
+.site-nav__link::after {
+  position: absolute;
+  right: 0;
+  bottom: 3px;
+  left: 0;
+  height: 1px;
+  background: var(--color-primary);
+  content: '';
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 160ms ease;
+}
+
+.site-nav__link:hover,
+.site-nav__link.is-active {
+  color: var(--color-primary);
+}
+
+.site-nav__link.is-active::after {
+  transform: scaleX(1);
+}
+
+@media (max-width: 680px) {
+  .site-header__inner {
+    min-height: 67px;
+    gap: 12px;
+  }
+
+  .brand {
+    gap: 7px;
+    font-size: 17px;
+  }
+
+  .brand__mark {
+    width: 28px;
+    height: 28px;
+  }
+
+  .site-nav {
+    gap: clamp(12px, 4vw, 22px);
+  }
+
+  .site-nav__link {
+    font-size: 12px;
+  }
+
+  .site-header__inner > .button {
+    min-height: 35px;
+    padding-inline: 11px;
+    font-size: 11px;
+  }
+
+  .site-header__inner > .button svg {
+    display: none;
+  }
+}
+
+@media (max-width: 390px) {
+  .site-header__inner {
+    gap: 8px;
+  }
+
+  .site-nav {
+    gap: 10px;
+  }
+
+  .site-nav__link {
+    font-size: 11px;
+  }
+
+  .site-header__inner > .button {
+    padding-inline: 9px;
+  }
+}

@@ -1,0 +1,229 @@
+.private-shell {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 252px minmax(0, 1fr);
+  background: var(--color-background);
+}
+
+.private-sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  padding: 23px 15px 16px;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.private-sidebar__brand {
+  padding-inline: 8px;
+}
+
+.private-sidebar__workspace {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 26px 8px 13px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.private-sidebar__workspace-dot,
+.private-topbar__status > span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #d3a449;
+  box-shadow: 0 0 0 3px color-mix(in srgb, #d3a449 15%, transparent);
+}
+
+.private-nav {
+  display: grid;
+  align-content: start;
+  gap: 21px;
+  overflow: auto;
+}
+
+.private-nav__group {
+  display: grid;
+  gap: 3px;
+}
+
+.private-nav__title {
+  padding: 0 10px 7px;
+  color: var(--color-text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.private-nav__link {
+  display: flex;
+  min-height: 39px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+  border-radius: 8px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 520;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.private-nav__link:hover {
+  background: var(--color-surface-secondary);
+  color: var(--color-text-primary);
+}
+
+.private-nav__link.is-active {
+  background: var(--color-highlight);
+  color: var(--color-primary);
+  font-weight: 650;
+}
+
+.private-sidebar__bottom {
+  display: grid;
+  gap: 9px;
+  margin-top: auto;
+  padding: 14px 8px 0;
+  border-top: 1px solid var(--color-divider);
+}
+
+.private-sidebar__bottom > span {
+  color: var(--color-text-muted);
+  font-size: 10px;
+}
+
+.private-sidebar__public-link {
+  justify-content: flex-start;
+  margin-left: -8px;
+  font-size: 12px;
+}
+
+.private-main {
+  min-width: 0;
+}
+
+.private-topbar {
+  display: flex;
+  min-height: 64px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-inline: 32px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.private-topbar__breadcrumb {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.private-topbar__breadcrumb span {
+  padding-inline: 8px;
+  color: var(--color-border-strong);
+}
+
+.private-topbar__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+@media (max-width: 860px) {
+  .private-shell {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .private-topbar {
+    padding-inline: 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  .private-shell {
+    display: block;
+  }
+
+  .private-sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    padding: 14px 16px 10px;
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .private-sidebar__brand {
+    padding-inline: 0;
+  }
+
+  .private-sidebar__workspace,
+  .private-sidebar__bottom {
+    display: none;
+  }
+
+  .private-nav {
+    display: flex;
+    gap: 15px;
+    margin-top: 13px;
+    overflow: auto;
+    scrollbar-width: thin;
+  }
+
+  .private-nav__group {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .private-nav__title {
+    display: none;
+  }
+
+  .private-nav__link {
+    min-height: 34px;
+    gap: 7px;
+    padding-inline: 9px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .private-nav__link svg {
+    width: 15px;
+  }
+
+  .private-topbar {
+    min-height: 48px;
+    padding-inline: 18px;
+  }
+
+  .private-topbar__status {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 390px) {
+  .private-nav {
+    gap: 8px;
+  }
+
+  .private-nav__group {
+    gap: 2px;
+  }
+
+  .private-nav__link {
+    gap: 5px;
+    padding-inline: 7px;
+    font-size: 10px;
+  }
+}
