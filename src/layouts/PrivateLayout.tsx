@@ -1,15 +1,43 @@
-import { ArrowUpRight, Sprout } from 'lucide-react';
-import { Link, NavLink, Outlet } from 'react-router-dom';
+import { ArrowUpRight, LogOut, Sprout } from 'lucide-react';
+import { useState } from 'react';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
   privateModules,
   privateNavigationGroups,
 } from '../config/privateModules';
-import { ButtonLink } from '../components/ui/buttons';
+import { Button, ButtonLink } from '../components/ui/buttons';
+import MessageAlert from '../components/ui/MessageAlert';
+import { useAuth } from '../hooks/useAuth';
+import { toApiAlert, type ApiAlertMessage } from '../services/api/apiFeedback';
 import './PrivateLayout.scss';
 
 export default function PrivateLayout() {
+  const { pathname } = useLocation();
+  const { logout } = useAuth();
+  const [logoutError, setLogoutError] = useState<ApiAlertMessage | null>(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const isTablePage =
+    pathname === '/app/lancamentos' ||
+    pathname === '/app/emprestimos-a-pagar';
+
+  async function handleLogout() {
+    setLogoutError(null);
+    setIsLoggingOut(true);
+    try {
+      await logout();
+    } catch (error) {
+      setLogoutError(
+        toApiAlert(error, 'Não foi possível encerrar a sessão. Tente novamente.'),
+      );
+    } finally {
+      setIsLoggingOut(false);
+    }
+  }
+
   return (
-    <div className="private-shell">
+    <div
+      className={`private-shell${isTablePage ? ' private-shell--table-page' : ''}`}
+    >
       <aside className="private-sidebar">
         <Link className="brand private-sidebar__brand" to="/app/dashboard">
           <span className="brand__mark" aria-hidden="true">
@@ -68,9 +96,29 @@ export default function PrivateLayout() {
           <span className="private-topbar__breadcrumb">
             Rendvest <span>/</span> Área financeira
           </span>
-          <span className="private-topbar__status">
-            <span /> Em desenvolvimento
-          </span>
+          <div className="private-topbar__actions">
+            {logoutError && (
+              <MessageAlert
+                kind={logoutError.kind}
+                message={logoutError.message}
+                onDismiss={() => setLogoutError(null)}
+                title={logoutError.title}
+              />
+            )}
+            <span className="private-topbar__status">
+              <span /> Em desenvolvimento
+            </span>
+            <Button
+              className="private-topbar__logout"
+              disabled={isLoggingOut}
+              icon={<LogOut size={15} />}
+              onClick={handleLogout}
+              size="small"
+              variant="text"
+            >
+              {isLoggingOut ? 'Saindo…' : 'Sair'}
+            </Button>
+          </div>
         </header>
         <Outlet />
       </div>

@@ -7,6 +7,7 @@ import {
   TextArea,
 } from '../../../components/forms/fields';
 import { Button } from '../../../components/ui/buttons';
+import MessageAlert from '../../../components/ui/MessageAlert';
 import './Contact.scss';
 
 export default function ContactPage() {
@@ -102,9 +103,12 @@ export default function ContactPage() {
             Enviar mensagem
           </Button>
           {notice && (
-            <p className="form-notice" role="status">
-              {notice}
-            </p>
+            <MessageAlert
+              kind="info"
+              message={notice}
+              onDismiss={() => setNotice('')}
+              title="Formulário demonstrativo"
+            />
           )}
           <p className="contact-form__privacy">
             Não compartilhe senhas ou informações bancárias neste formulário.
