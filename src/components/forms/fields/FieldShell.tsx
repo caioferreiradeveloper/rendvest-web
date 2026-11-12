@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 interface FieldShellProps {
   id: string;
   label: string;
+  labelId?: string;
   hint?: string;
   error?: string;
   required?: boolean;
@@ -23,6 +24,7 @@ export function getFieldDescriptionIds(
 export default function FieldShell({
   id,
   label,
+  labelId,
   hint,
   error,
   required,
@@ -31,7 +33,7 @@ export default function FieldShell({
 }: FieldShellProps) {
   return (
     <div className={['field', className].filter(Boolean).join(' ')}>
-      <label className="field__label" htmlFor={id}>
+      <label className="field__label" htmlFor={id} id={labelId}>
         {label}
         {required && (
           <span className="field__required" aria-label="obrigatório">

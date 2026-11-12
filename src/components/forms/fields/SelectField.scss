@@ -1,0 +1,102 @@
+.select-field {
+  position: relative;
+  min-width: 0;
+}
+
+.select-field__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.select-field__value {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 9px;
+}
+
+.select-field__value > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.select-field__chevron {
+  flex: 0 0 auto;
+  color: var(--color-text-muted);
+  transition: transform 150ms ease;
+}
+
+.select-field__chevron.is-open {
+  transform: rotate(180deg);
+}
+
+.select-field__options {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  right: 0;
+  left: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 5px;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.select-field__option {
+  display: flex;
+  width: 100%;
+  min-height: 38px;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+}
+
+.select-field__option:hover,
+.select-field__option.is-active {
+  background: var(--color-surface-secondary);
+}
+
+.select-field__check {
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: var(--color-primary);
+}
+
+.select-field__trigger[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.select-field__trigger:disabled {
+  cursor: not-allowed;
+}
+
+.transaction-bank-filter .field {
+  gap: 4px;
+}
+
+.transaction-bank-filter .field__label {
+  color: var(--color-text-secondary);
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.transaction-bank-filter .select-field__trigger {
+  height: 38px;
+  font-size: 11px;
+}

@@ -1,19 +1,24 @@
-.form-notice {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  margin: 14px 0 0;
-  padding: 11px 12px;
-  border: 1px solid color-mix(in srgb, var(--color-info) 25%, transparent);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--color-info) 7%, var(--color-surface));
+.auth-loading {
+  display: grid;
+  min-height: 100vh;
+  align-content: center;
+  justify-items: center;
+  gap: 12px;
   color: var(--color-text-secondary);
-  font-size: 11px;
-  line-height: 1.55;
+  font-size: 13px;
 }
 
-.form-notice svg {
-  flex: 0 0 auto;
-  margin-top: 1px;
-  color: var(--color-info);
+.auth-loading__spinner {
+  width: 25px;
+  height: 25px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: auth-spinner 700ms linear infinite;
+}
+
+@keyframes auth-spinner {
+  to {
+    transform: rotate(360deg);
+  }
 }

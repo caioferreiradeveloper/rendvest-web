@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { RequireAuth, RequireGuest } from '../components/auth/AuthGuards';
 import PublicLayout from '../layouts/PublicLayout';
 import PrivateLayout from '../layouts/PrivateLayout';
 import DashboardPage from '../pages/private/Dashboard';
@@ -17,7 +18,14 @@ import NotFoundPage from '../pages/public/NotFound';
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/app" element={<PrivateLayout />}>
+      <Route
+        path="/app"
+        element={
+          <RequireAuth>
+            <PrivateLayout />
+          </RequireAuth>
+        }
+      >
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="lancamentos" element={<TransactionsPage />} />
@@ -29,7 +37,14 @@ export default function AppRoutes() {
       </Route>
       <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/login"
+          element={
+            <RequireGuest>
+              <LoginPage />
+            </RequireGuest>
+          }
+        />
         <Route path="/contato" element={<ContactPage />} />
         <Route path="/sobre" element={<AboutPage />} />
       </Route>

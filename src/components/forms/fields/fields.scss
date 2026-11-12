@@ -54,6 +54,11 @@
   border-color: var(--color-danger);
 }
 
+.field-control[aria-invalid='true']:focus {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger) 12%, transparent);
+}
+
 .field-control:disabled {
   cursor: not-allowed;
   background: var(--color-surface-secondary);
