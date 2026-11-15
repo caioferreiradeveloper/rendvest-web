@@ -22,7 +22,7 @@ import DebtorDetailSidebar from './components/DebtorDetailSidebar';
 import DebtorFormSidebar from './components/DebtorFormSidebar';
 import './Debtors.scss';
 
-const pageSize = getPageSize(5);
+const pageSize = getPageSize();
 
 export default function DebtorsPage() {
   const [page, setPage] = useState(1);

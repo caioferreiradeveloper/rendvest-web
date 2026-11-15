@@ -1,10 +1,10 @@
 import type {
   Transaction,
-  TransactionBank,
   TransactionPayload,
   TransactionType,
 } from '@interface/transaction';
 import { apiJsonRequest, apiRequest } from '../api/apiClient';
+import type { TransactionBank } from '@config/transactionBanks';
 
 const transactionsBasePath = '/api/v1/transactions';
 
