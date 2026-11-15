@@ -1,7 +1,10 @@
 @use "./abstracts/colors";
+@use "./abstracts/design-tokens";
 @use "./base/global";
 @use "../components/ui/buttons";
 @use "../components/forms/fields/fields";
 @use "../components/ui/page-heading";
 @use "../components/ui/feedback";
 @use "../components/ui/MessageAlert";
+@use "../components/private/PrivatePage";
+@use "../components/private/TransactionManagement";

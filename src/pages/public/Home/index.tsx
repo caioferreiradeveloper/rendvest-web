@@ -11,7 +11,7 @@ import {
   Target,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { ButtonLink } from '../../../components/ui/buttons';
+import { ButtonLink } from '@components/ui/buttons';
 import './Home.scss';
 
 const highlights = [
@@ -42,7 +42,7 @@ export default function HomePage() {
         <div className="container hero">
           <div className="hero__copy">
             <span className="eyebrow">
-              <Sparkles size={15} aria-hidden="true" />
+              <Sparkles size="var(--icon-size-15)" aria-hidden="true" />
               Seu dinheiro, com mais intenção
             </span>
             <h1>
@@ -53,16 +53,16 @@ export default function HomePage() {
               com confiança. Sem complicação — do seu jeito.
             </p>
             <div className="hero__actions">
-              <ButtonLink icon={<ArrowUpRight size={17} />} to="/login">
+              <ButtonLink icon={<ArrowUpRight size="var(--icon-size-17)" />} to="/login">
                 Comece por aqui
               </ButtonLink>
               <Link className="text-link" to="/sobre">
-                Conheça a Rendvest <ArrowRight size={16} aria-hidden="true" />
+                Conheça a Rendvest <ArrowRight size="var(--icon-size-16)" aria-hidden="true" />
               </Link>
             </div>
             <div className="hero__reassurance">
               <span className="hero__reassurance-icon" aria-hidden="true">
-                <Check size={14} />
+                <Check size="var(--icon-size-14)" />
               </span>
               Um passo de cada vez já é progresso.
             </div>
@@ -76,13 +76,13 @@ export default function HomePage() {
             <div className="hero-visual__glow" />
             <div className="hero-note">
               <span className="hero-note__icon" aria-hidden="true">
-                <Leaf size={17} />
+                <Leaf size="var(--icon-size-17)" />
               </span>
               <span>
                 <strong>Planos que crescem</strong>
                 <small>no seu tempo</small>
               </span>
-              <ArrowUpRight size={17} aria-hidden="true" />
+              <ArrowUpRight size="var(--icon-size-17)" aria-hidden="true" />
             </div>
             <div className="goal-card">
               <div className="goal-card__top">
@@ -93,7 +93,7 @@ export default function HomePage() {
               </div>
               <div className="goal-card__title-row">
                 <span className="goal-card__icon">
-                  <Sparkles size={18} aria-hidden="true" />
+                  <Sparkles size="var(--icon-size-18)" aria-hidden="true" />
                 </span>
                 <div>
                   <strong>Uma meta de cada vez</strong>
@@ -110,22 +110,22 @@ export default function HomePage() {
               </div>
               <div className="goal-card__bottom">
                 <span>
-                  <Check size={13} aria-hidden="true" /> Clareza para decidir
+                  <Check size="var(--icon-size-13)" aria-hidden="true" /> Clareza para decidir
                 </span>
-                <ArrowDownRight size={16} aria-hidden="true" />
+                <ArrowDownRight size="var(--icon-size-16)" aria-hidden="true" />
               </div>
             </div>
             <div className="hero-sticker" aria-hidden="true">
               <span>cresça</span>
               <span>com calma</span>
-              <Leaf size={16} />
+              <Leaf size="var(--icon-size-16)" />
             </div>
           </div>
         </div>
         <div className="hero-section__bottom container">
           <span>PLANEJAR TAMBÉM É CUIDAR DE SI</span>
           <a href="#como-funciona">
-            Descubra um jeito mais leve <ArrowDownRight size={15} />
+            Descubra um jeito mais leve <ArrowDownRight size="var(--icon-size-15)" />
           </a>
         </div>
       </section>
@@ -151,7 +151,7 @@ export default function HomePage() {
             <article className="feature-card" key={title}>
               <div className="feature-card__top">
                 <span className="feature-card__icon">
-                  <Icon size={20} strokeWidth={1.8} aria-hidden="true" />
+                  <Icon size="var(--icon-size-20)" strokeWidth={1.8} aria-hidden="true" />
                 </span>
                 <span className="feature-card__number">0{index + 1}</span>
               </div>
@@ -171,7 +171,7 @@ export default function HomePage() {
           <h2>Seus planos merecem sair do papel.</h2>
           <p>Comece hoje. O caminho se constrói um passo de cada vez.</p>
           <ButtonLink
-            icon={<ArrowUpRight size={17} />}
+            icon={<ArrowUpRight size="var(--icon-size-17)" />}
             to="/login"
             variant="light"
           >

@@ -1,5 +1,5 @@
 import { Clock3 } from 'lucide-react';
-import { privateModules, type PrivateModuleKey } from '../../config/privateModules';
+import { privateModules, type PrivateModuleKey } from '@config/privateModules';
 import './PrivateModulePage.scss';
 
 interface PrivateModulePageProps {
@@ -16,7 +16,7 @@ export default function PrivateModulePage({
     <main className="private-module-page">
       <div className="private-module-page__heading">
         <span className="private-module-page__icon">
-          <ModuleIcon size={22} strokeWidth={1.8} aria-hidden="true" />
+          <ModuleIcon size="var(--icon-size-22)" strokeWidth={1.8} aria-hidden="true" />
         </span>
         <div className="private-module-page__title">
           <span className="eyebrow">Módulo financeiro</span>
@@ -26,7 +26,7 @@ export default function PrivateModulePage({
       </div>
       <section className="module-status" aria-label="Status do módulo">
         <span className="module-status__icon">
-          <Clock3 size={19} aria-hidden="true" />
+          <Clock3 size="var(--icon-size-19)" aria-hidden="true" />
         </span>
         <div className="module-status__content">
           <span className="module-status__label">Em andamento</span>

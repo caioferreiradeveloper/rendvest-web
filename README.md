@@ -31,9 +31,13 @@ src/
 └── styles/               # Tokens de tema e estilos globais
 ```
 
-Cada página mantém seu `index.tsx` e seu Sass na própria pasta. Estilos
-reutilizáveis de campos, botões, navegação e layout permanecem junto aos
-componentes correspondentes.
+Cada página mantém seu `index.tsx`; os estilos comuns da área financeira ficam
+centralizados e são carregados globalmente. Estilos reutilizáveis de campos,
+botões e navegação permanecem junto aos componentes correspondentes.
+
+Os aliases `@components/*`, `@config/*`, `@hooks/*`, `@interface/*`,
+`@services/*` e `@pages/*` apontam para as pastas correspondentes dentro de
+`src/` e estão configurados no TypeScript e no Vite.
 
 ## Área privada
 
@@ -47,8 +51,9 @@ As rotas internas ficam sob `/app`:
 - `/app/acoes`
 - `/app/fiis`
 
-Ganhos e gastos e empréstimos a pagar já possuem integração com a API. Os
-demais módulos ainda exibem “Em andamento”.
+Ganhos e gastos e empréstimos a pagar já possuem integração com a API. O
+módulo Devedores está preparado para o contrato REST descrito abaixo, cuja API
+está em desenvolvimento. Os demais módulos ainda exibem “Em andamento”.
 As rotas privadas passam pelo guard de autenticação e dependem da validação de
 sessão pelo backend antes de serem exibidas.
 
@@ -67,14 +72,24 @@ Pagamentos parciais ou integrais são registrados em
 opcionalmente, `paid_at`. O backend aloca o valor aos juros e depois ao
 principal, cria a despesa vinculada e mantém os valores das demais parcelas.
 
+### Devedores
+
+O frontend está preparado para o contrato REST em desenvolvimento:
+`GET/POST /api/v1/debtors/` e `GET/PATCH/DELETE /api/v1/debtors/{id}/`.
+O cadastro usa `name`, `occurred_at` (data no formato `YYYY-MM-DD`) e `amount`.
+A listagem aceita `page` e `page_size` e retorna uma lista ou um objeto com
+`results`, `count` e `next`. A integração ficará operacional quando esses
+endpoints estiverem disponíveis no backend.
+
 ## Autenticação e API
 
 No desenvolvimento, o Vite encaminha `/api/*` para
 `API_PROXY_TARGET` (padrão `http://localhost:8000`), evitando CORS entre
 frontend e backend. Copie `.env.example` para `.env.local` para personalizar o
-destino. Em produção, configure `VITE_API_BASE_URL` se a API estiver em outra
-origem. O cliente usa `credentials: include` para enviar e receber cookies
-HttpOnly:
+destino. `PAGE_SIZE` define o número de itens por página nas listas financeiras;
+se estiver vazio, Transações/Assinaturas mantêm 5 itens e Empréstimos mantém 10.
+Em produção, configure `VITE_API_BASE_URL` se a API estiver em outra origem. O
+cliente usa `credentials: include` para enviar e receber cookies HttpOnly:
 
 - `GET /api/v1/auth/csrf/` para obter a proteção CSRF (lendo a resposta JSON ou
   o cookie Django `csrftoken`);

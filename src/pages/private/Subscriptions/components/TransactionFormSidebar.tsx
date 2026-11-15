@@ -6,25 +6,17 @@ import {
   InputText,
   SelectField,
   TextArea,
-} from '../../../components/forms/fields';
-import MessageAlert from '../../../components/ui/MessageAlert';
-import { Button, IconButton } from '../../../components/ui/buttons';
-import { transactionBankOptions } from '../../../config/transactionBanks';
+} from '@components/forms/fields';
+import MessageAlert from '@components/ui/MessageAlert';
+import { Button, IconButton } from '@components/ui/buttons';
+import { transactionBankOptions } from '@config/transactionBanks';
+import useRequiredFormValidation from '@hooks/useRequiredFormValidation';
 import type {
   Transaction,
   TransactionFormValues,
-  TransactionPayload,
   TransactionType,
-} from '../../../interfaces/transaction';
-
-interface TransactionFormSidebarProps {
-  transaction: Transaction | null;
-  initialType: TransactionType;
-  isSaving: boolean;
-  error: string | null;
-  onClose: () => void;
-  onSave: (transaction: TransactionPayload) => Promise<boolean>;
-}
+} from '@interface/transaction';
+import type { TransactionFormSidebarProps } from '../interfaces';
 
 function getLocalDateTimeValue(value?: string): string {
   const date = value ? new Date(value) : new Date();
@@ -69,6 +61,11 @@ export default function TransactionFormSidebar({
     getInitialValues(transaction, initialType),
   );
   const [formError, setFormError] = useState<string | null>(null);
+  const {
+    hasAttemptedSubmit,
+    handleInvalidCapture,
+    hasMissingCustomRequiredFields,
+  } = useRequiredFormValidation();
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -97,6 +94,9 @@ export default function TransactionFormSidebar({
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (hasMissingCustomRequiredFields(event.currentTarget)) {
+      return;
+    }
 
     const amount = Number(values.amount);
     const occurredAt = new Date(values.occurred_at);
@@ -135,7 +135,7 @@ export default function TransactionFormSidebar({
       <aside
         aria-labelledby="transaction-form-title"
         aria-modal="true"
-        className="transaction-drawer__panel"
+        className="transaction-drawer__panel transaction-form__panel"
         role="dialog"
       >
         <header className="transaction-drawer__header">
@@ -149,16 +149,20 @@ export default function TransactionFormSidebar({
             </p>
           </div>
           <IconButton
-            icon={<X size={18} />}
+            icon={<X size="var(--icon-size-18)" />}
             label="Fechar formulário"
             onClick={onClose}
             disabled={isSaving}
           />
         </header>
 
-        <form className="transaction-form" onSubmit={handleSubmit}>
+        <form
+          className={`transaction-form${hasAttemptedSubmit ? ' form-validation-attempted' : ''}`}
+          onInvalidCapture={handleInvalidCapture}
+          onSubmit={handleSubmit}
+        >
           <div className="transaction-form__fields">
-            <div className="field">
+            <div className="field form-grid__item--span-2">
               <label className="field__label" htmlFor="transaction-type">
                 Tipo
               </label>
@@ -186,16 +190,30 @@ export default function TransactionFormSidebar({
 
             <SelectField
               disabled={isSaving}
+              fieldClassName="form-grid__item--span-2"
               id="transaction-bank"
               label="Banco"
               onChange={(bank) => updateField('bank', bank)}
               options={transactionBankOptions}
+              required
+              validationAttempted={hasAttemptedSubmit}
               value={values.bank}
             />
 
-            <InputNumber
-              autoFocus
+            <InputText
               disabled={isSaving}
+              fieldClassName="form-grid__item--span-2"
+              id="transaction-category"
+              label="Categoria"
+              maxLength={80}
+              placeholder="Ex.: Salário, moradia"
+              required
+              value={values.category}
+              onChange={(event) => updateField('category', event.target.value)}
+            />
+            <InputNumber
+              disabled={isSaving}
+              fieldClassName="form-grid__item--span-1"
               id="transaction-amount"
               label="Valor"
               min="0.01"
@@ -205,18 +223,9 @@ export default function TransactionFormSidebar({
               value={values.amount}
               onChange={(event) => updateField('amount', event.target.value)}
             />
-            <InputText
-              disabled={isSaving}
-              id="transaction-category"
-              label="Categoria"
-              maxLength={80}
-              placeholder="Ex.: Salário, moradia"
-              required
-              value={values.category}
-              onChange={(event) => updateField('category', event.target.value)}
-            />
             <InputDateTime
               disabled={isSaving}
+              fieldClassName="form-grid__item--span-1"
               id="transaction-occurred-at"
               label="Data e horário"
               required
@@ -227,6 +236,7 @@ export default function TransactionFormSidebar({
             />
             <TextArea
               disabled={isSaving}
+              fieldClassName="form-grid__item--span-4"
               id="transaction-description"
               label="Descrição"
               maxLength={5000}

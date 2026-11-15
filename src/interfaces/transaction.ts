@@ -1,4 +1,4 @@
-import type { TransactionBank } from '../config/transactionBanks';
+import type { TransactionBank } from '@config/transactionBanks';
 
 export type TransactionType = 'income' | 'expense';
 

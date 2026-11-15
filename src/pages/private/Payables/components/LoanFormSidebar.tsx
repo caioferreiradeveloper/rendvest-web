@@ -4,19 +4,13 @@ import {
   InputDate,
   InputNumber,
   SelectField,
-} from '../../../components/forms/fields';
-import MessageAlert from '../../../components/ui/MessageAlert';
-import { Button, IconButton } from '../../../components/ui/buttons';
-import { transactionBankOptions } from '../../../config/transactionBanks';
-import type { Loan, LoanPayload } from '../../../interfaces/loan';
-
-interface LoanFormSidebarProps {
-  loan: Loan | null;
-  isSaving: boolean;
-  error: string | null;
-  onClose: () => void;
-  onSave: (loan: LoanPayload) => Promise<boolean>;
-}
+} from '@components/forms/fields';
+import MessageAlert from '@components/ui/MessageAlert';
+import { Button, IconButton } from '@components/ui/buttons';
+import { transactionBankOptions } from '@config/transactionBanks';
+import useRequiredFormValidation from '@hooks/useRequiredFormValidation';
+import type { Loan } from '@interface/loan';
+import type { LoanFormSidebarProps } from '../interfaces';
 
 interface LoanFormValues {
   bank: Loan['bank'];
@@ -58,6 +52,11 @@ export default function LoanFormSidebar({
 }: LoanFormSidebarProps) {
   const [values, setValues] = useState(() => getInitialValues(loan));
   const [formError, setFormError] = useState<string | null>(null);
+  const {
+    hasAttemptedSubmit,
+    handleInvalidCapture,
+    hasMissingCustomRequiredFields,
+  } = useRequiredFormValidation();
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -86,6 +85,10 @@ export default function LoanFormSidebar({
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (hasMissingCustomRequiredFields(event.currentTarget)) {
+      return;
+    }
+
     const contractedAmount = Number(values.contracted_amount);
     const iofAmount = Number(values.iof_amount);
     const monthlyInterest = Number(values.monthly_interest_percentage);
@@ -155,7 +158,7 @@ export default function LoanFormSidebar({
       <aside
         aria-labelledby="loan-form-title"
         aria-modal="true"
-        className="transaction-drawer__panel"
+        className="transaction-drawer__panel transaction-form__panel"
         role="dialog"
       >
         <header className="transaction-drawer__header">
@@ -172,25 +175,33 @@ export default function LoanFormSidebar({
           </div>
           <IconButton
             disabled={isSaving}
-            icon={<X size={18} />}
+            icon={<X size="var(--icon-size-18)" />}
             label="Fechar formulário"
             onClick={onClose}
           />
         </header>
 
-        <form className="transaction-form" onSubmit={handleSubmit}>
+        <form
+          className={`transaction-form${hasAttemptedSubmit ? ' form-validation-attempted' : ''}`}
+          onInvalidCapture={handleInvalidCapture}
+          onSubmit={handleSubmit}
+        >
           <div className="transaction-form__fields">
             <SelectField
               disabled={isSaving}
+              fieldClassName="form-grid__item--span-2"
               id="loan-bank"
               label="Banco"
               onChange={(bank) => updateField('bank', bank)}
               options={transactionBankOptions}
+              required
+              validationAttempted={hasAttemptedSubmit}
               value={values.bank}
             />
             <InputNumber
               autoFocus
               disabled={isSaving}
+              fieldClassName="form-grid__item--span-2"
               id="loan-contracted-amount"
               label="Valor liberado (R$)"
               min="0.01"
@@ -204,6 +215,7 @@ export default function LoanFormSidebar({
             />
             <InputNumber
               disabled={isSaving}
+              fieldClassName="form-grid__item--span-1"
               id="loan-iof-amount"
               label="IOF do contrato (R$)"
               min="0"
@@ -217,6 +229,7 @@ export default function LoanFormSidebar({
             />
             <InputNumber
               disabled={isSaving}
+              fieldClassName="form-grid__item--span-1"
               id="loan-monthly-interest-percentage"
               label="Taxa efetiva mensal (%)"
               min="0"
@@ -230,6 +243,7 @@ export default function LoanFormSidebar({
             />
             <InputNumber
               disabled={isSaving}
+              fieldClassName="form-grid__item--span-1"
               id="loan-monthly-cet-percentage"
               label="CET mensal (%)"
               min="0"
@@ -243,6 +257,7 @@ export default function LoanFormSidebar({
             />
             <InputNumber
               disabled={isSaving}
+              fieldClassName="form-grid__item--span-1"
               id="loan-term-months"
               label="Prazo (meses)"
               min="1"
@@ -257,6 +272,7 @@ export default function LoanFormSidebar({
             />
             <InputDate
               disabled={isSaving}
+              fieldClassName="form-grid__item--span-2"
               id="loan-started-at"
               label="Data de início"
               required
@@ -265,6 +281,7 @@ export default function LoanFormSidebar({
             />
             <InputDate
               disabled={isSaving}
+              fieldClassName="form-grid__item--span-2"
               id="loan-first-due-date"
               label="Vencimento da primeira parcela"
               required

@@ -4,29 +4,28 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
   privateModules,
   privateNavigationGroups,
-} from '../config/privateModules';
-import { Button, ButtonLink } from '../components/ui/buttons';
-import MessageAlert from '../components/ui/MessageAlert';
-import { useAuth } from '../hooks/useAuth';
-import { toApiAlert, type ApiAlertMessage } from '../services/api/apiFeedback';
+} from '@config/privateModules';
+import { Button, ButtonLink } from '@components/ui/buttons';
+import { useToast } from '@contexts/ToastContext';
+import { useAuth } from '@hooks/useAuth';
+import { toApiAlert } from '@services/api/apiFeedback';
 import './PrivateLayout.scss';
 
 export default function PrivateLayout() {
   const { pathname } = useLocation();
   const { logout } = useAuth();
-  const [logoutError, setLogoutError] = useState<ApiAlertMessage | null>(null);
+  const { showToast } = useToast();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const isTablePage =
     pathname === '/app/lancamentos' ||
     pathname === '/app/emprestimos-a-pagar';
 
   async function handleLogout() {
-    setLogoutError(null);
     setIsLoggingOut(true);
     try {
       await logout();
     } catch (error) {
-      setLogoutError(
+      showToast(
         toApiAlert(error, 'Não foi possível encerrar a sessão. Tente novamente.'),
       );
     } finally {
@@ -41,7 +40,7 @@ export default function PrivateLayout() {
       <aside className="private-sidebar">
         <Link className="brand private-sidebar__brand" to="/app/dashboard">
           <span className="brand__mark" aria-hidden="true">
-            <Sprout size={19} strokeWidth={2.2} />
+            <Sprout size="var(--icon-size-19)" strokeWidth={2.2} />
           </span>
           <span>rendvest</span>
         </Link>
@@ -68,7 +67,7 @@ export default function PrivateLayout() {
                     key={moduleKey}
                     to={module.path}
                   >
-                    <ModuleIcon size={17} strokeWidth={1.8} aria-hidden="true" />
+                    <ModuleIcon size="var(--icon-size-17)" strokeWidth={1.8} aria-hidden="true" />
                     <span>{module.title}</span>
                   </NavLink>
                 );
@@ -81,7 +80,7 @@ export default function PrivateLayout() {
           <span>Área interna em construção</span>
           <ButtonLink
             className="private-sidebar__public-link"
-            icon={<ArrowUpRight size={15} />}
+            icon={<ArrowUpRight size="var(--icon-size-15)" />}
             size="small"
             to="/"
             variant="text"
@@ -97,21 +96,13 @@ export default function PrivateLayout() {
             Rendvest <span>/</span> Área financeira
           </span>
           <div className="private-topbar__actions">
-            {logoutError && (
-              <MessageAlert
-                kind={logoutError.kind}
-                message={logoutError.message}
-                onDismiss={() => setLogoutError(null)}
-                title={logoutError.title}
-              />
-            )}
             <span className="private-topbar__status">
               <span /> Em desenvolvimento
             </span>
             <Button
               className="private-topbar__logout"
               disabled={isLoggingOut}
-              icon={<LogOut size={15} />}
+              icon={<LogOut size="var(--icon-size-15)" />}
               onClick={handleLogout}
               size="small"
               variant="text"

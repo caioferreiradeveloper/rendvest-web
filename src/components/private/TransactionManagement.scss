@@ -1,20 +1,3 @@
-.transactions-page {
-  display: flex;
-  width: min(1200px, calc(100% - 48px));
-  min-height: 0;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
-  margin-inline: auto;
-  padding-block: 28px 42px;
-}
-
-.transactions-page__toast {
-  z-index: 1200;
-}
-
-.transactions-page__header,
-.transactions-page__heading,
 .transaction-summary__card,
 .transaction-list__header,
 .transaction-pagination,
@@ -24,57 +7,18 @@
   align-items: center;
 }
 
-.transactions-page__header {
-  justify-content: space-between;
-  gap: 20px;
-  flex-shrink: 0;
-}
-
-.transactions-page__heading {
-  min-width: 0;
-  gap: 14px;
-}
-
-.transactions-page__heading-icon {
-  display: grid;
-  width: 46px;
-  height: 46px;
-  flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid var(--color-border);
-  border-radius: 13px;
-  background: var(--color-surface);
-  box-shadow: var(--shadow-sm);
-  color: var(--color-primary);
-}
-
-.transactions-page__heading h1 {
-  margin: 2px 0 1px;
-  font-size: clamp(27px, 3.2vw, 35px);
-  font-weight: 580;
-  letter-spacing: -0.06em;
-  line-height: 1.12;
-}
-
-.transactions-page__heading p {
-  margin: 0;
-  color: var(--color-text-secondary);
-  font-size: 13px;
-  line-height: 1.55;
-}
-
 .transaction-summary {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: var(--space-14);
   flex-shrink: 0;
-  margin-top: 25px;
+  margin-top: var(--space-25);
 }
 
 .transaction-summary__card {
   min-width: 0;
-  gap: 13px;
-  padding: 18px 20px;
+  gap: var(--space-13);
+  padding: var(--space-18) var(--space-20);
   border: 1px solid var(--color-border);
   border-radius: 12px;
   background: var(--color-surface);
@@ -84,7 +28,7 @@
 .transaction-summary__card > div {
   display: grid;
   min-width: 0;
-  gap: 3px;
+  gap: var(--space-3);
 }
 
 .transaction-summary__icon {
@@ -108,7 +52,7 @@
 
 .transaction-summary__label {
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   font-weight: 560;
 }
 
@@ -149,7 +93,7 @@
   min-height: 0;
   flex: 1;
   flex-direction: column;
-  margin-top: 20px;
+  margin-top: var(--space-20);
   border: 1px solid var(--color-border);
   border-radius: 12px;
   background: var(--color-surface);
@@ -158,9 +102,9 @@
 
 .transaction-list__header {
   justify-content: space-between;
-  gap: 18px;
+  gap: var(--space-18);
   flex-shrink: 0;
-  padding: 18px 20px;
+  padding: var(--space-18) var(--space-20);
   border-bottom: 1px solid var(--color-divider);
 }
 
@@ -172,32 +116,32 @@
   display: flex;
   flex: 0 0 auto;
   align-items: flex-end;
-  gap: 16px;
+  gap: var(--space-16);
 }
 
 .transaction-type-filter {
   display: grid;
   min-width: 230px;
-  gap: 4px;
+  gap: var(--space-4);
 }
 
 .transaction-type-filter__label {
   color: var(--color-text-secondary);
-  font-size: 10px;
+  font-size: var(--font-size-10);
   font-weight: 650;
 }
 
 .transaction-list__header h2 {
   margin: 0;
-  font-size: 16px;
+  font-size: var(--font-size-16);
   font-weight: 680;
   letter-spacing: -0.025em;
 }
 
 .transaction-list__header p {
-  margin: 2px 0 0;
+  margin: var(--space-2) 0 0;
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 
 .transaction-filters {
@@ -206,8 +150,8 @@
   min-height: 38px;
   flex: 0 0 auto;
   align-items: center;
-  gap: 3px;
-  padding: 3px;
+  gap: var(--space-3);
+  padding: var(--space-3);
   border: 1px solid var(--color-border);
   border-radius: 9px;
   background: var(--color-background);
@@ -216,13 +160,13 @@
 .transaction-filters__button {
   min-height: 30px;
   flex: 1 1 0;
-  padding: 0 11px;
+  padding: 0 var(--space-11);
   border: 0;
   border-radius: 6px;
   background: transparent;
   color: var(--color-text-secondary);
   cursor: pointer;
-  font-size: 11px;
+  font-size: var(--font-size-11);
   font-weight: 600;
   transition:
     background-color 140ms ease,
@@ -240,16 +184,16 @@
   display: grid;
   width: 250px;
   min-width: 250px;
-  gap: 4px;
+  gap: var(--space-4);
   color: var(--color-text-secondary);
-  font-size: 10px;
+  font-size: var(--font-size-10);
   font-weight: 650;
 }
 
 .transaction-bank-filter .field-control {
   min-height: 38px;
-  padding-inline: 12px;
-  font-size: 12px;
+  padding-inline: var(--space-12);
+  font-size: var(--font-size-12);
 }
 
 .transaction-table-wrap {
@@ -271,10 +215,10 @@
 }
 
 .transaction-table th {
-  padding: 10px 18px;
+  padding: var(--space-10) var(--space-18);
   background: color-mix(in srgb, var(--color-background) 72%, var(--color-surface));
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: var(--font-size-11);
   font-weight: 700;
   letter-spacing: 0.075em;
   text-transform: uppercase;
@@ -283,26 +227,26 @@
 
 .transaction-table th:first-child,
 .transaction-table td:first-child {
-  padding-left: 20px;
+  padding-left: var(--space-20);
 }
 
 .transaction-table th:last-child,
 .transaction-table td:last-child {
-  padding-right: 20px;
+  padding-right: var(--space-20);
   text-align: right;
 }
 
 .transaction-table td {
-  padding: 12px 18px;
+  padding: var(--space-12) var(--space-18);
   border-top: 1px solid var(--color-divider);
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   white-space: nowrap;
 }
 
 .transaction-table__name {
   min-width: 180px;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .transaction-type-icon {
@@ -327,41 +271,41 @@
 .transaction-table__name > div {
   display: grid;
   min-width: 0;
-  gap: 1px;
+  gap: var(--space-1);
 }
 
 .transaction-table__name strong {
   overflow: hidden;
   max-width: 250px;
   color: var(--color-text-primary);
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-weight: 620;
   text-overflow: ellipsis;
 }
 
 .transaction-table__name > div > span {
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: var(--font-size-11);
 }
 
 .transaction-category {
   display: inline-block;
   max-width: 170px;
   overflow: hidden;
-  padding: 5px 9px;
+  padding: var(--space-5) var(--space-9);
   border: 1px solid var(--color-border);
   border-radius: 6px;
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   text-overflow: ellipsis;
 }
 
 .transaction-bank {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 
 .transaction-table__date {
@@ -394,7 +338,7 @@
 }
 
 .transaction-table__actions .button--icon + .button--icon {
-  margin-left: 3px;
+  margin-left: var(--space-3);
 }
 
 .transaction-table__actions .transaction-table__delete:hover {
@@ -414,17 +358,17 @@
 .transaction-empty {
   display: grid;
   justify-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   width: min(100%, 520px);
   margin-inline: auto;
-  padding: 20px;
+  padding: var(--space-20);
   text-align: center;
 }
 
 .transaction-empty > strong {
-  margin-top: 5px;
+  margin-top: var(--space-5);
   color: var(--color-text-primary);
-  font-size: 17px;
+  font-size: var(--font-size-17);
   font-weight: 700;
   line-height: 1.4;
 }
@@ -432,7 +376,7 @@
 .transaction-empty > p {
   margin: 0;
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   line-height: 1.6;
 }
 
@@ -447,38 +391,21 @@
 }
 
 .transaction-empty .button {
-  margin-top: 7px;
-}
-
-.transaction-loading {
-  display: block;
-  width: 22px;
-  height: 22px;
-  margin-bottom: 9px;
-  border: 2px solid var(--color-border);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: transaction-spin 700ms linear infinite;
-}
-
-@keyframes transaction-spin {
-  to {
-    transform: rotate(360deg);
-  }
+  margin-top: var(--space-7);
 }
 
 .transaction-pagination {
   justify-content: space-between;
-  gap: 15px;
+  gap: var(--space-15);
   flex-shrink: 0;
-  padding: 12px 20px;
+  padding: var(--space-12) var(--space-20);
   border-top: 1px solid var(--color-divider);
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: var(--font-size-11);
 }
 
 .transaction-pagination__controls {
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .transaction-pagination__controls .button--icon {
@@ -534,15 +461,20 @@
   animation: transaction-slide-in 220ms ease both;
 }
 
+.transaction-drawer__panel.transaction-form__panel {
+  width: min(50vw, 760px);
+  min-width: 540px;
+}
+
 .transaction-detail-loading {
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: var(--space-12);
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: var(--font-size-13);
 }
 
-.transaction-detail-loading .transaction-loading {
+.transaction-detail-loading .loading-spinner {
   margin: 0;
 }
 
@@ -550,14 +482,14 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
-  padding: 25px 26px 20px;
+  gap: var(--space-16);
+  padding: var(--space-25) var(--space-26) var(--space-20);
   border-bottom: 1px solid var(--color-divider);
 }
 
 .transaction-drawer__header h2 {
-  margin: 3px 0 2px;
-  font-size: 23px;
+  margin: var(--space-3) 0 var(--space-2);
+  font-size: var(--font-size-23);
   font-weight: 650;
   letter-spacing: -0.05em;
   line-height: 1.25;
@@ -566,7 +498,7 @@
 .transaction-drawer__header p {
   margin: 0;
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 
 .transaction-form {
@@ -578,9 +510,22 @@
 
 .transaction-form__fields {
   display: grid;
-  gap: 17px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-17);
   overflow-y: auto;
-  padding: 21px 26px;
+  padding: var(--space-21) var(--space-26);
+}
+
+.form-grid__item--span-1 {
+  grid-column: span 1;
+}
+
+.form-grid__item--span-2 {
+  grid-column: span 2;
+}
+
+.form-grid__item--span-4 {
+  grid-column: span 4;
 }
 
 .transaction-form__fields .field-control {
@@ -594,21 +539,21 @@
 .transaction-form__actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: var(--space-10);
   margin-top: auto;
-  padding: 16px 26px;
+  padding: var(--space-16) var(--space-26);
   border-top: 1px solid var(--color-divider);
 }
 
 .transaction-detail {
   overflow-y: auto;
-  padding: 22px 26px;
+  padding: var(--space-22) var(--space-26);
 }
 
 .transaction-detail__amount {
   display: grid;
-  gap: 3px;
-  padding: 17px;
+  gap: var(--space-3);
+  padding: var(--space-17);
   border: 1px solid var(--color-border);
   border-radius: 10px;
   background: var(--color-background);
@@ -616,12 +561,12 @@
 
 .transaction-detail__amount > span {
   color: var(--color-text-secondary);
-  font-size: 11px;
+  font-size: var(--font-size-11);
   font-weight: 600;
 }
 
 .transaction-detail__amount > strong {
-  font-size: 25px;
+  font-size: var(--font-size-25);
   font-weight: 680;
   letter-spacing: -0.045em;
   line-height: 1.3;
@@ -638,20 +583,20 @@
 .transaction-detail__list {
   display: grid;
   gap: 0;
-  margin: 18px 0 0;
+  margin: var(--space-18) 0 0;
 }
 
 .transaction-detail__list > div {
   display: grid;
   grid-template-columns: minmax(110px, 0.7fr) minmax(0, 1.3fr);
-  gap: 14px;
-  padding-block: 12px;
+  gap: var(--space-14);
+  padding-block: var(--space-12);
   border-bottom: 1px solid var(--color-divider);
 }
 
 .transaction-detail__list dt {
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: var(--font-size-11);
   font-weight: 600;
 }
 
@@ -659,7 +604,7 @@
   margin: 0;
   overflow-wrap: anywhere;
   color: var(--color-text-primary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   text-align: right;
 }
 
@@ -669,7 +614,7 @@
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 20px;
+  padding: var(--space-20);
 }
 
 .transaction-confirmation__backdrop {
@@ -684,7 +629,7 @@
 .transaction-confirmation__dialog {
   position: relative;
   width: min(100%, 420px);
-  padding: 25px;
+  padding: var(--space-25);
   border: 1px solid var(--color-border);
   border-radius: 14px;
   background: var(--color-surface);
@@ -703,8 +648,8 @@
 }
 
 .transaction-confirmation__dialog h2 {
-  margin: 15px 0 5px;
-  font-size: 19px;
+  margin: var(--space-15) 0 var(--space-5);
+  font-size: var(--font-size-19);
   font-weight: 680;
   letter-spacing: -0.04em;
 }
@@ -712,7 +657,7 @@
 .transaction-confirmation__dialog p {
   margin: 0;
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   line-height: 1.65;
 }
 
@@ -723,8 +668,8 @@
 .transaction-confirmation__actions {
   display: flex;
   justify-content: flex-end;
-  gap: 9px;
-  margin-top: 22px;
+  gap: var(--space-9);
+  margin-top: var(--space-22);
 }
 
 .button--danger {
@@ -759,19 +704,17 @@
 }
 
 @media (max-width: 760px) {
-  .transactions-page {
-    width: calc(100% - 32px);
-    padding-block: 20px 30px;
+  .transaction-drawer__panel.transaction-form__panel {
+    width: min(100%, 600px);
+    min-width: 0;
   }
 
-  .transactions-page__header {
-    align-items: flex-start;
+  .transaction-form__fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .transactions-page__header > .button {
-    min-height: 42px;
-    padding-inline: 12px;
-    font-size: 11px;
+  .form-grid__item--span-4 {
+    grid-column: span 2;
   }
 
   .transaction-list__header {
@@ -807,114 +750,87 @@
 }
 
 @media (max-width: 520px) {
-  .transactions-page__heading {
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .transactions-page__heading-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 11px;
-  }
-
-  .transactions-page__heading h1 {
-    font-size: 25px;
-  }
-
-  .transactions-page__heading p {
-    font-size: 11px;
-  }
-
-  .transactions-page__header {
-    flex-wrap: wrap;
-  }
-
-  .transactions-page__header > .button {
-    margin-left: 50px;
-  }
-
   .transaction-summary {
     grid-template-columns: 1fr;
-    gap: 10px;
-    margin-top: 19px;
+    gap: var(--space-10);
+    margin-top: var(--space-19);
   }
 
   .transaction-summary__card {
-    padding: 14px 16px;
+    padding: var(--space-14) var(--space-16);
   }
 
   .transaction-list__header {
-    padding: 15px;
+    padding: var(--space-15);
   }
 
   .transaction-list__filters {
-    gap: 10px;
+    gap: var(--space-10);
   }
 
   .transaction-filters__button {
-    padding-inline: 5px;
-    font-size: 10px;
+    padding-inline: var(--space-5);
+    font-size: var(--font-size-10);
   }
 
   .transaction-bank-filter .select-field__trigger {
-    padding-inline: 8px;
-    font-size: 10px;
+    padding-inline: var(--space-8);
+    font-size: var(--font-size-10);
   }
 
   .transaction-table th,
   .transaction-table td {
-    padding-inline: 12px;
+    padding-inline: var(--space-12);
   }
 
   .transaction-table th:first-child,
   .transaction-table td:first-child {
-    padding-left: 15px;
+    padding-left: var(--space-15);
   }
 
   .transaction-table th:last-child,
   .transaction-table td:last-child {
-    padding-right: 15px;
+    padding-right: var(--space-15);
   }
 
   .transaction-pagination {
-    padding-inline: 15px;
+    padding-inline: var(--space-15);
   }
 
   .transaction-pagination__controls {
-    gap: 5px;
+    gap: var(--space-5);
   }
 
   .transaction-pagination__controls > span {
     min-width: 75px;
-    font-size: 10px;
+    font-size: var(--font-size-10);
   }
 
   .transaction-drawer__header {
-    padding: 20px 18px 16px;
+    padding: var(--space-20) var(--space-18) var(--space-16);
   }
 
   .transaction-detail {
-    padding: 18px;
+    padding: var(--space-18);
   }
 
   .transaction-form__fields {
-    gap: 14px;
-    padding: 18px;
+    gap: var(--space-14);
+    padding: var(--space-18);
   }
 
   .transaction-form__actions {
-    gap: 8px;
-    padding: 13px 18px;
+    gap: var(--space-8);
+    padding: var(--space-13) var(--space-18);
   }
 
   .transaction-form__actions .button {
     flex: 1;
-    padding-inline: 10px;
-    font-size: 11px;
+    padding-inline: var(--space-10);
+    font-size: var(--font-size-11);
   }
 
   .transaction-confirmation__dialog {
-    padding: 20px;
+    padding: var(--space-20);
   }
 }

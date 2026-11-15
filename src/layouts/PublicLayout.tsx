@@ -1,6 +1,6 @@
 import { ArrowUpRight, Sprout } from 'lucide-react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import PublicHeader from '../components/navigation/PublicHeader';
+import PublicHeader from '@components/navigation/PublicHeader';
 import './PublicLayout.scss';
 
 export default function PublicLayout() {
@@ -15,13 +15,13 @@ export default function PublicLayout() {
           <div className="container site-footer__inner">
             <Link className="brand brand--footer" to="/">
               <span className="brand__mark" aria-hidden="true">
-                <Sprout size={18} strokeWidth={2.2} />
+                <Sprout size="var(--icon-size-18)" strokeWidth={2.2} />
               </span>
               <span>rendvest</span>
             </Link>
             <p>Pequenos passos. Um futuro mais tranquilo.</p>
             <Link className="site-footer__link" to="/contato">
-              Vamos conversar <ArrowUpRight size={15} aria-hidden="true" />
+              Vamos conversar <ArrowUpRight size="var(--icon-size-15)" aria-hidden="true" />
             </Link>
           </div>
           <div className="container site-footer__legal">

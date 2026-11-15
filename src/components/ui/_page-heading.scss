@@ -14,7 +14,7 @@
 
 .page-heading h1 {
   max-width: 720px;
-  margin: 15px 0 0;
+  margin: var(--space-15) 0 0;
   font-size: clamp(40px, 5vw, 57px);
   font-weight: 550;
   letter-spacing: -0.075em;
@@ -23,15 +23,15 @@
 
 .page-heading p {
   max-width: 520px;
-  margin: 17px 0 0;
+  margin: var(--space-17) 0 0;
   color: var(--color-text-secondary);
-  font-size: 14px;
+  font-size: var(--font-size-14);
   line-height: 1.85;
 }
 
 @media (max-width: 680px) {
   .page-heading {
-    padding-block: 58px 54px;
+    padding-block: 58px var(--space-54);
   }
 
   .page-heading h1 {
@@ -39,6 +39,6 @@
   }
 
   .page-heading p {
-    font-size: 12px;
+    font-size: var(--font-size-12);
   }
 }

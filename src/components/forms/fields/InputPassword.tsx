@@ -49,9 +49,9 @@ export default function InputPassword({
           className="field-control__action"
           icon={
             isVisible ? (
-              <EyeOff size={17} />
+              <EyeOff size="var(--icon-size-17)" />
             ) : (
-              <Eye size={17} />
+              <Eye size="var(--icon-size-17)" />
             )
           }
           label={isVisible ? 'Ocultar senha' : 'Mostrar senha'}

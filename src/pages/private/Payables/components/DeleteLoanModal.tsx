@@ -1,20 +1,9 @@
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
-import { Button } from '../../../components/ui/buttons';
-import { getTransactionBankLabel } from '../../../config/transactionBanks';
-import type { Loan } from '../../../interfaces/loan';
-
-const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-});
-
-interface DeleteLoanModalProps {
-  loan: Loan;
-  isDeleting: boolean;
-  onCancel: () => void;
-  onConfirm: () => void;
-}
+import { Button } from '@components/ui/buttons';
+import { getTransactionBankLabel } from '@config/transactionBanks';
+import type { DeleteLoanModalProps } from '../interfaces';
+import { formatCurrency } from '../../../../utils/formatters';
 
 export default function DeleteLoanModal({
   loan,
@@ -55,15 +44,13 @@ export default function DeleteLoanModal({
         role="alertdialog"
       >
         <span className="transaction-confirmation__icon">
-          <AlertTriangle size={22} aria-hidden="true" />
+          <AlertTriangle size="var(--icon-size-22)" aria-hidden="true" />
         </span>
         <h2 id="delete-loan-title">Excluir empréstimo?</h2>
         <p>
           O empréstimo de{' '}
           <strong>
-            {currencyFormatter.format(
-              Number(loan.total_with_interest),
-            )}
+            {formatCurrency(loan.total_with_interest)}
           </strong>{' '}
           em <strong>{getTransactionBankLabel(loan.bank)}</strong> será excluído.
           Empréstimos com pagamentos registrados não podem ser removidos.

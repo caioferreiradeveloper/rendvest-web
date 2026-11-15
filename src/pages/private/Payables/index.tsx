@@ -1,8 +1,8 @@
+// React imports
 import { useEffect, useMemo, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
-  CalendarDays,
   CirclePlus,
   Eye,
   HandCoins,
@@ -10,54 +10,48 @@ import {
   Plus,
   Trash2,
 } from 'lucide-react';
-import { SelectField } from '../../../components/forms/fields';
-import BankLogo from '../../../components/ui/BankLogo';
-import MessageAlert from '../../../components/ui/MessageAlert';
-import { Button, IconButton } from '../../../components/ui/buttons';
+
+// Component imports
+import { SelectField } from '@components/forms/fields';
+import BankLogo from '@components/ui/BankLogo';
+import { Button, IconButton } from '@components/ui/buttons';
+
+// Config imports
 import {
   getTransactionBankLabel,
   getTransactionBankLogoDomain,
   transactionBankOptions,
-} from '../../../config/transactionBanks';
-import useLoans from '../../../hooks/useLoans';
+} from '@config/transactionBanks';
+import { getPageSize } from '@config/pagination';
+
+// Context imports
+import { useToast } from '@contexts/ToastContext';
+
+// Hook imports
+import useLoans from '@hooks/useLoans';
+
+// Interface imports
 import type {
   Loan,
   LoanPaymentPayload,
   LoanPayload,
-} from '../../../interfaces/loan';
-import DeleteLoanModal from './DeleteLoanModal';
-import LoanDetailsSidebar from './LoanDetailsSidebar';
-import LoanFormSidebar from './LoanFormSidebar';
-import './Payables.scss';
+} from '@interface/loan';
 
-const pageSize = 10;
+// Utility imports
+import { formatCurrency, formatDateOnly } from '../../../utils/formatters';
 
-type ToastMessage = {
-  kind: 'error' | 'success';
-  title: string;
-  message: string;
-};
+
+import DeleteLoanModal from './components/DeleteLoanModal';
+import LoanDetailsSidebar from './components/LoanDetailsSidebar';
+import LoanFormSidebar from './components/LoanFormSidebar';
+import './components/Payables.scss';
+
+const pageSize = getPageSize();
 
 const bankFilterOptions = [
   { value: 'all', label: 'Todos os bancos' },
   ...transactionBankOptions,
 ] as const;
-
-const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-});
-
-const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
-  day: '2-digit',
-  month: 'short',
-  year: 'numeric',
-});
-
-function formatCurrency(value: string | number): string {
-  const amount = Number(value);
-  return Number.isFinite(amount) ? currencyFormatter.format(amount) : '—';
-}
 
 function getLoanTotalPayable(loan: Loan): number {
   return Number(loan.total_with_interest);
@@ -65,11 +59,6 @@ function getLoanTotalPayable(loan: Loan): number {
 
 function hasRegisteredPayments(loan: Loan): boolean {
   return Number(loan.amount_paid) > 0;
-}
-
-function formatDate(value: string): string {
-  const date = new Date(`${value.slice(0, 10)}T00:00:00`);
-  return Number.isNaN(date.getTime()) ? '—' : dateFormatter.format(date);
 }
 
 export default function PayablesPage() {
@@ -94,7 +83,7 @@ export default function PayablesPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingLoan, setEditingLoan] = useState<Loan | null>(null);
   const [loanToDelete, setLoanToDelete] = useState<Loan | null>(null);
-  const [toast, setToast] = useState<ToastMessage | null>(null);
+  const { showToast } = useToast();
   const [paymentTargetId, setPaymentTargetId] = useState<string | null>(null);
 
   const filteredLoans = useMemo(
@@ -108,10 +97,6 @@ export default function PayablesPage() {
   const visibleLoans = filteredLoans.slice(
     (page - 1) * pageSize,
     page * pageSize,
-  );
-  const totalRemaining = loans.reduce(
-    (total, loan) => total + Number(loan.remaining_amount),
-    0,
   );
   const firstItem = filteredLoans.length ? (page - 1) * pageSize + 1 : 0;
   const lastItem = Math.min(page * pageSize, filteredLoans.length);
@@ -127,22 +112,14 @@ export default function PayablesPage() {
   }, [page, pageCount]);
 
   useEffect(() => {
-    if (!toast) {
-      return;
-    }
-    const timeout = window.setTimeout(() => setToast(null), 5000);
-    return () => window.clearTimeout(timeout);
-  }, [toast]);
-
-  useEffect(() => {
     if (error) {
-      setToast({
+      showToast({
         kind: 'error',
         title: 'Não foi possível concluir',
         message: error,
       });
     }
-  }, [error]);
+  }, [error, showToast]);
 
   function openCreateForm() {
     clearError();
@@ -154,7 +131,7 @@ export default function PayablesPage() {
 
   function openEditForm(loan: Loan) {
     if (hasRegisteredPayments(loan)) {
-      setToast({
+      showToast({
         kind: 'error',
         title: 'Edição indisponível',
         message:
@@ -181,7 +158,7 @@ export default function PayablesPage() {
 
   async function handleSave(payload: LoanPayload): Promise<boolean> {
     if (editingLoan && hasRegisteredPayments(editingLoan)) {
-      setToast({
+      showToast({
         kind: 'error',
         title: 'Edição indisponível',
         message:
@@ -195,7 +172,7 @@ export default function PayablesPage() {
       : await create(payload);
 
     if (saved) {
-      setToast({
+      showToast({
         kind: 'success',
         title: editingLoan ? 'Empréstimo atualizado' : 'Empréstimo cadastrado',
         message: editingLoan
@@ -220,7 +197,7 @@ export default function PayablesPage() {
 
   function openDeleteConfirmation(loan: Loan) {
     if (hasRegisteredPayments(loan)) {
-      setToast({
+      showToast({
         kind: 'error',
         title: 'Exclusão indisponível',
         message:
@@ -240,7 +217,7 @@ export default function PayablesPage() {
     }
     if (hasRegisteredPayments(loanToDelete)) {
       setLoanToDelete(null);
-      setToast({
+      showToast({
         kind: 'error',
         title: 'Exclusão indisponível',
         message:
@@ -252,7 +229,7 @@ export default function PayablesPage() {
     const deleted = await remove(loanToDelete);
     if (deleted) {
       setLoanToDelete(null);
-      setToast({
+      showToast({
         kind: 'success',
         title: 'Empréstimo excluído',
         message: 'O empréstimo foi removido com sucesso.',
@@ -266,7 +243,7 @@ export default function PayablesPage() {
   ): Promise<boolean> {
     const added = await addPayment(loanId, payment);
     if (added) {
-      setToast({
+      showToast({
         kind: 'success',
         title: 'Pagamento registrado',
         message: 'O pagamento foi registrado e a despesa foi criada.',
@@ -276,21 +253,11 @@ export default function PayablesPage() {
   }
 
   return (
-    <main className="payables-page">
-      {toast && (
-        <MessageAlert
-          className="payables-page__toast"
-          kind={toast.kind}
-          message={toast.message}
-          onDismiss={() => setToast(null)}
-          title={toast.title}
-        />
-      )}
-
-      <header className="payables-page__header">
-        <div className="payables-page__heading">
-          <span className="payables-page__heading-icon">
-            <HandCoins size={21} strokeWidth={1.8} aria-hidden="true" />
+    <main className="private-page">
+      <header className="private-page__header">
+        <div className="private-page__heading">
+          <span className="private-page__heading-icon">
+            <HandCoins size="var(--icon-size-21)" strokeWidth={1.8} aria-hidden="true" />
           </span>
           <div>
             <span className="eyebrow">Organização financeira</span>
@@ -299,7 +266,7 @@ export default function PayablesPage() {
           </div>
         </div>
         <Button
-          icon={<CirclePlus size={17} />}
+          icon={<CirclePlus size="var(--icon-size-17)" />}
           iconPosition="leading"
           onClick={openCreateForm}
         >
@@ -314,14 +281,16 @@ export default function PayablesPage() {
             <h2 id="loan-list-title">Seus empréstimos</h2>
             <p>Consulte as condições e acompanhe os pagamentos.</p>
           </div>
-          <SelectField
-            fieldClassName="loan-bank-filter"
-            id="loan-bank-filter"
-            label="Banco"
-            onChange={setBankFilter}
-            options={bankFilterOptions}
-            value={bankFilter}
-          />
+          <div className="transaction-list__filters">
+            <SelectField
+              fieldClassName="transaction-bank-filter"
+              id="loan-bank-filter"
+              label="Banco"
+              onChange={setBankFilter}
+              options={bankFilterOptions}
+              value={bankFilter}
+            />
+          </div>
         </header>
 
         <div className="loan-table-wrap">
@@ -343,9 +312,19 @@ export default function PayablesPage() {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td className="loan-table__state" colSpan={8}>
-                    <span className="transaction-loading" aria-hidden="true" />
-                    Carregando empréstimos...
+                  <td
+                    className="loan-table__state"
+                    colSpan={8}
+                    role="status"
+                    aria-live="polite"
+                  >
+                    <div className="table-loading">
+                      <span
+                        className="loading-spinner loading-spinner--table"
+                        aria-hidden="true"
+                      />
+                      <span>Carregando empréstimos...</span>
+                    </div>
                   </td>
                 </tr>
               ) : visibleLoans.length ? (
@@ -365,7 +344,7 @@ export default function PayablesPage() {
                   <td className="loan-table__state" colSpan={8}>
                     <div className="transaction-empty">
                       <span className="transaction-empty__icon">
-                        <HandCoins size={22} aria-hidden="true" />
+                        <HandCoins size="var(--icon-size-22)" aria-hidden="true" />
                       </span>
                       <strong>
                         {bankFilter === 'all'
@@ -402,7 +381,7 @@ export default function PayablesPage() {
           <div className="loan-pagination__controls">
             <IconButton
               disabled={page <= 1 || isLoading}
-              icon={<ArrowLeft size={16} />}
+              icon={<ArrowLeft size="var(--icon-size-16)" />}
               label="Página anterior"
               onClick={() => setPage((current) => current - 1)}
             />
@@ -411,7 +390,7 @@ export default function PayablesPage() {
             </span>
             <IconButton
               disabled={page >= pageCount || isLoading}
-              icon={<ArrowRight size={16} />}
+              icon={<ArrowRight size="var(--icon-size-16)" />}
               label="Próxima página"
               onClick={() => setPage((current) => current + 1)}
             />
@@ -449,7 +428,7 @@ export default function PayablesPage() {
             className="transaction-drawer__panel transaction-detail-loading"
             role="dialog"
           >
-            <span className="transaction-loading" aria-hidden="true" />
+            <span className="loading-spinner" aria-hidden="true" />
             Carregando detalhes...
           </aside>
         </div>
@@ -528,30 +507,30 @@ function LoanRow({
         {formatCurrency(loan.remaining_amount)}
       </td>
       <td>{loan.term_months} meses</td>
-      <td className="loan-table__date">{formatDate(loan.started_at)}</td>
+      <td className="loan-table__date">{formatDateOnly(loan.started_at)}</td>
       <td className="loan-table__actions">
         <IconButton
           className="loan-table__pay"
           disabled={Number(loan.remaining_amount) <= 0}
-          icon={<Plus size={16} />}
+          icon={<Plus size="var(--icon-size-16)" />}
           label={`Pagar parcela do empréstimo de ${formatCurrency(getLoanTotalPayable(loan))}`}
           onClick={onPay}
         />
         <IconButton
-          icon={<Eye size={16} />}
+          icon={<Eye size="var(--icon-size-16)" />}
           label={`Ver detalhes do empréstimo de ${formatCurrency(getLoanTotalPayable(loan))}`}
           onClick={onDetails}
         />
         <IconButton
           disabled={hasRegisteredPayments}
-          icon={<Pencil size={16} />}
+          icon={<Pencil size="var(--icon-size-16)" />}
           label={`Editar empréstimo de ${formatCurrency(getLoanTotalPayable(loan))}${hasRegisteredPayments ? ' (indisponível após pagamentos)' : ''}`}
           onClick={onEdit}
         />
         <IconButton
           className="loan-table__delete"
           disabled={hasRegisteredPayments}
-          icon={<Trash2 size={16} />}
+          icon={<Trash2 size="var(--icon-size-16)" />}
           label={`Excluir empréstimo de ${formatCurrency(getLoanTotalPayable(loan))}${hasRegisteredPayments ? ' (indisponível após pagamentos)' : ''}`}
           onClick={onDelete}
         />

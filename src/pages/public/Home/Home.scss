@@ -10,19 +10,19 @@
     min-height: 575px;
     grid-template-columns: 1.05fr 0.95fr;
     align-items: center;
-    gap: 38px;
-    padding-block: 54px 42px;
+    gap: var(--space-38);
+    padding-block: var(--space-54) var(--space-42);
   }
 
   .hero__copy {
     position: relative;
     z-index: 1;
     max-width: 565px;
-    padding-block: 16px;
+    padding-block: var(--space-16);
   }
 
   .hero__copy > .eyebrow {
-    margin-bottom: 24px;
+    margin-bottom: var(--space-24);
   }
 
   .hero h1 {
@@ -43,9 +43,9 @@
 
   .hero__description {
     max-width: 440px;
-    margin: 22px 0 0;
+    margin: var(--space-22) 0 0;
     color: var(--color-text-secondary);
-    font-size: 15px;
+    font-size: var(--font-size-15);
     line-height: 1.85;
   }
 
@@ -53,16 +53,16 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 24px;
-    margin-top: 30px;
+    gap: var(--space-24);
+    margin-top: var(--space-30);
   }
 
   .text-link {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-8);
     color: var(--color-text-primary);
-    font-size: 12px;
+    font-size: var(--font-size-12);
     font-weight: 650;
     transition: color 160ms ease;
   }
@@ -74,10 +74,10 @@
   .hero__reassurance {
     display: flex;
     align-items: center;
-    gap: 9px;
-    margin-top: 28px;
+    gap: var(--space-9);
+    margin-top: var(--space-28);
     color: var(--color-text-muted);
-    font-size: 11px;
+    font-size: var(--font-size-11);
   }
 
   .hero__reassurance-icon {
@@ -114,7 +114,7 @@
     position: relative;
     z-index: 1;
     width: min(100%, 365px);
-    padding: 24px;
+    padding: var(--space-24);
     border: 1px solid rgb(232 237 225 / 90%);
     border-radius: 15px;
     background: rgb(255 255 255 / 94%);
@@ -133,14 +133,14 @@
 
   .goal-card__top {
     color: #879188;
-    font-size: 8px;
+    font-size: var(--font-size-8);
     font-weight: 750;
     letter-spacing: 0.13em;
   }
 
   .goal-card__dots {
     color: #849186;
-    font-size: 19px;
+    font-size: var(--font-size-19);
     letter-spacing: 0;
     line-height: 0.5;
   }
@@ -148,8 +148,8 @@
   .goal-card__title-row {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-top: 27px;
+    gap: var(--space-12);
+    margin-top: var(--space-27);
   }
 
   .goal-card__icon {
@@ -165,41 +165,41 @@
 
   .goal-card__title-row > div {
     display: grid;
-    gap: 3px;
+    gap: var(--space-3);
   }
 
   .goal-card__title-row strong {
     color: #26332a;
-    font-size: 13px;
+    font-size: var(--font-size-13);
     font-weight: 700;
   }
 
   .goal-card__title-row span:not(.goal-card__icon) {
     color: #879188;
-    font-size: 10px;
+    font-size: var(--font-size-10);
   }
 
   .goal-card__divider {
     height: 1px;
-    margin-block: 22px 18px;
+    margin-block: var(--space-22) var(--space-18);
     background: #edf0ea;
   }
 
   .goal-card__progress-label {
     color: #536057;
-    font-size: 10px;
+    font-size: var(--font-size-10);
     font-weight: 550;
   }
 
   .goal-card__progress-label span:last-child {
     color: #829087;
-    font-size: 9px;
+    font-size: var(--font-size-9);
   }
 
   .progress-track {
     height: 5px;
     overflow: hidden;
-    margin-top: 10px;
+    margin-top: var(--space-10);
     border-radius: 9px;
     background: #edf0e9;
   }
@@ -213,15 +213,15 @@
   }
 
   .goal-card__bottom {
-    margin-top: 20px;
+    margin-top: var(--space-20);
     color: #819087;
-    font-size: 9px;
+    font-size: var(--font-size-9);
   }
 
   .goal-card__bottom span {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: var(--space-5);
   }
 
   .goal-card__bottom span svg {
@@ -235,8 +235,8 @@
     right: 0;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 11px 13px;
+    gap: var(--space-10);
+    padding: var(--space-11) var(--space-13);
     border: 1px solid rgb(231 235 225 / 90%);
     border-radius: 10px;
     background: #fff;
@@ -256,17 +256,17 @@
 
   .hero-note > span:nth-child(2) {
     display: grid;
-    gap: 1px;
+    gap: var(--space-1);
   }
 
   .hero-note strong {
     color: #27342b;
-    font-size: 10px;
+    font-size: var(--font-size-10);
   }
 
   .hero-note small {
     color: #8a958c;
-    font-size: 9px;
+    font-size: var(--font-size-9);
   }
 
   .hero-note > svg {
@@ -283,20 +283,20 @@
     height: 83px;
     align-content: center;
     justify-items: center;
-    gap: 1px;
+    gap: var(--space-1);
     border: 1px solid rgb(83 113 65 / 14%);
     border-radius: 50%;
     background: #e6edcf;
     color: #506943;
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 11px;
+    font-size: var(--font-size-11);
     font-style: italic;
     line-height: 1.25;
     transform: rotate(9deg);
   }
 
   .hero-sticker svg {
-    margin-top: 4px;
+    margin-top: var(--space-4);
   }
 
   .hero-section__bottom {
@@ -306,7 +306,7 @@
     justify-content: space-between;
     border-top: 1px solid rgb(88 113 79 / 12%);
     color: #8a9586;
-    font-size: 8px;
+    font-size: var(--font-size-8);
     font-weight: 700;
     letter-spacing: 0.12em;
   }
@@ -314,9 +314,9 @@
   .hero-section__bottom a {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: var(--space-6);
     color: #657461;
-    font-size: 10px;
+    font-size: var(--font-size-10);
     font-weight: 550;
     letter-spacing: 0;
   }
@@ -330,11 +330,11 @@
     display: grid;
     grid-template-columns: 1fr 0.7fr;
     align-items: end;
-    gap: 80px;
+    gap: var(--space-80);
   }
 
   .section-heading h2 {
-    margin: 15px 0 0;
+    margin: var(--space-15) 0 0;
     font-size: clamp(34px, 4vw, 49px);
     font-weight: 520;
     letter-spacing: -0.07em;
@@ -343,22 +343,22 @@
 
   .intro__text {
     max-width: 400px;
-    margin: 0 0 5px;
+    margin: 0 0 var(--space-5);
     color: var(--color-text-secondary);
-    font-size: 13px;
+    font-size: var(--font-size-13);
     line-height: 1.9;
   }
 
   .feature-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-    margin-top: 54px;
+    gap: var(--space-18);
+    margin-top: var(--space-54);
   }
 
   .feature-card {
     min-height: 214px;
-    padding: 23px;
+    padding: var(--space-23);
     border: 1px solid var(--color-border);
     border-radius: 11px;
     background: var(--color-surface);
@@ -393,12 +393,12 @@
   .feature-card__number {
     color: #a4ada2;
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 13px;
+    font-size: var(--font-size-13);
   }
 
   .feature-card h3 {
-    margin: 25px 0 7px;
-    font-size: 14px;
+    margin: var(--space-25) 0 var(--space-7);
+    font-size: var(--font-size-14);
     font-weight: 680;
     letter-spacing: -0.025em;
   }
@@ -407,7 +407,7 @@
     max-width: 300px;
     margin: 0;
     color: var(--color-text-secondary);
-    font-size: 11px;
+    font-size: var(--font-size-11);
     line-height: 1.75;
   }
 
@@ -419,7 +419,7 @@
   .closing-card {
     position: relative;
     overflow: hidden;
-    padding: 56px 66px;
+    padding: var(--space-56) var(--space-66);
     border-radius: 14px;
     background:
       radial-gradient(circle at 93% 20%, rgb(159 191 133 / 28%), transparent 31%),
@@ -442,7 +442,7 @@
 
   .closing-card h2 {
     max-width: 550px;
-    margin: 12px 0 8px;
+    margin: var(--space-12) 0 var(--space-8);
     font-size: clamp(27px, 3.5vw, 39px);
     font-weight: 520;
     letter-spacing: -0.06em;
@@ -452,11 +452,11 @@
   .closing-card p {
     margin: 0;
     color: rgb(255 255 255 / 72%);
-    font-size: 12px;
+    font-size: var(--font-size-12);
   }
 
   .closing-card .button {
-    margin-top: 23px;
+    margin-top: var(--space-23);
   }
 }
 
@@ -475,8 +475,8 @@
     .hero {
       min-height: auto;
       grid-template-columns: 1fr 0.85fr;
-      gap: 12px;
-      padding-block: 64px 32px;
+      gap: var(--space-12);
+      padding-block: 64px var(--space-32);
     }
 
     .hero h1 {
@@ -489,7 +489,7 @@
 
     .goal-card {
       width: min(100%, 320px);
-      padding: 20px;
+      padding: var(--space-20);
     }
 
     .hero-note {
@@ -497,7 +497,7 @@
     }
 
     .intro {
-      gap: 40px;
+      gap: var(--space-40);
     }
   }
 }
@@ -507,7 +507,7 @@
     .hero {
       grid-template-columns: 1fr;
       gap: 0;
-      padding-top: 54px;
+      padding-top: var(--space-54);
     }
 
     .hero__copy {
@@ -521,12 +521,12 @@
 
     .hero__description {
       max-width: 480px;
-      font-size: 13px;
+      font-size: var(--font-size-13);
     }
 
     .hero-visual {
       min-height: 345px;
-      margin-top: 8px;
+      margin-top: var(--space-8);
     }
 
     .hero-visual__glow {
@@ -547,7 +547,7 @@
       bottom: 7%;
       width: 72px;
       height: 72px;
-      font-size: 10px;
+      font-size: var(--font-size-10);
     }
 
     .hero-section__bottom {
@@ -556,16 +556,16 @@
     }
 
     .hero-section__bottom a {
-      font-size: 9px;
+      font-size: var(--font-size-9);
     }
 
     .intro-section {
-      padding-block: 72px;
+      padding-block: var(--space-72);
     }
 
     .intro {
       grid-template-columns: 1fr;
-      gap: 17px;
+      gap: var(--space-17);
     }
 
     .section-heading h2 {
@@ -574,22 +574,22 @@
 
     .intro__text {
       max-width: 500px;
-      font-size: 12px;
+      font-size: var(--font-size-12);
     }
 
     .feature-grid {
       grid-template-columns: 1fr;
-      gap: 11px;
-      margin-top: 30px;
+      gap: var(--space-11);
+      margin-top: var(--space-30);
     }
 
     .feature-card {
       min-height: auto;
-      padding: 18px;
+      padding: var(--space-18);
     }
 
     .feature-card h3 {
-      margin-top: 16px;
+      margin-top: var(--space-16);
     }
 
     .feature-card p {
@@ -597,11 +597,11 @@
     }
 
     .closing-section {
-      padding-bottom: 66px;
+      padding-bottom: var(--space-66);
     }
 
     .closing-card {
-      padding: 39px 25px;
+      padding: 39px var(--space-25);
     }
 
     .closing-card__decoration {
@@ -617,7 +617,7 @@
 
     .closing-card h2 {
       max-width: 410px;
-      padding-right: 18px;
+      padding-right: var(--space-18);
     }
   }
 }
@@ -627,7 +627,7 @@
     .hero__actions {
       align-items: flex-start;
       flex-direction: column;
-      gap: 17px;
+      gap: var(--space-17);
     }
 
     .hero-section__bottom > span {

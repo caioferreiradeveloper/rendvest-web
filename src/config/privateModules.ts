@@ -30,8 +30,14 @@ export const privateModules = {
   debtors: {
     path: '/app/devedores',
     title: 'Devedores',
-    description: 'Mantenha seus valores a receber organizados.',
+    description: 'Registre quem deve, em qual data e o valor a receber.',
     icon: CircleDollarSign,
+  },
+  subscriptions: {
+    path: '/app/assinaturas',
+    title: 'Assinaturas e Mensalidades',
+    description: 'Organize suas assinaturas e mensalidades recorrentes.',
+    icon: Banknote,
   },
   investments: {
     path: '/app/investimentos',
@@ -65,7 +71,7 @@ export const privateNavigationGroups: {
   { title: 'Visão geral', modules: ['dashboard'] },
   {
     title: 'Organização',
-    modules: ['transactions', 'payables', 'debtors'],
+    modules: ['transactions', 'payables', 'debtors', 'subscriptions'],
   },
   {
     title: 'Investimentos',

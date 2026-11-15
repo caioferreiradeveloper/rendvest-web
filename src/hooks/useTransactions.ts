@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type {
   Transaction,
   TransactionPayload,
-} from '../interfaces/transaction';
+} from '@interface/transaction';
 import {
   createTransaction as createTransactionRequest,
   deleteTransaction as deleteTransactionRequest,
@@ -10,7 +10,7 @@ import {
   listTransactions,
   updateTransaction as updateTransactionRequest,
   type TransactionListParams,
-} from '../services/transactions/transactionService';
+} from '@services/transactions/transactionService';
 
 function getErrorMessage(error: unknown): string {
   return error instanceof Error

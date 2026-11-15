@@ -3,7 +3,7 @@ import type {
   TransactionBank,
   TransactionPayload,
   TransactionType,
-} from '../../interfaces/transaction';
+} from '@interface/transaction';
 import { apiJsonRequest, apiRequest } from '../api/apiClient';
 
 const transactionsBasePath = '/api/v1/transactions';

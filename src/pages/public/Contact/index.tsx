@@ -1,23 +1,29 @@
 import { ArrowUpRight, Mail, MessageCircle, Send } from 'lucide-react';
-import { useState, type FormEvent } from 'react';
+import { type FormEvent } from 'react';
 import {
   InputDate,
   InputNumber,
   InputText,
   TextArea,
-} from '../../../components/forms/fields';
-import { Button } from '../../../components/ui/buttons';
-import MessageAlert from '../../../components/ui/MessageAlert';
+} from '@components/forms/fields';
+import { Button } from '@components/ui/buttons';
+import { useToast } from '@contexts/ToastContext';
+import useRequiredFormValidation from '@hooks/useRequiredFormValidation';
 import './Contact.scss';
 
 export default function ContactPage() {
-  const [notice, setNotice] = useState('');
+  const { showToast } = useToast();
+  const { hasAttemptedSubmit, handleInvalidCapture } =
+    useRequiredFormValidation();
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setNotice(
-      'O formulário está pronto para integração. Nenhuma mensagem foi enviada.',
-    );
+    showToast({
+      kind: 'info',
+      title: 'Formulário demonstrativo',
+      message:
+        'O formulário está pronto para integração. Nenhuma mensagem foi enviada.',
+    });
   }
 
   return (
@@ -35,7 +41,7 @@ export default function ContactPage() {
       <section className="container contact-layout">
         <aside className="contact-aside">
           <span className="contact-aside__icon">
-            <MessageCircle size={22} aria-hidden="true" />
+            <MessageCircle size="var(--icon-size-22)" aria-hidden="true" />
           </span>
           <h2>Uma boa conversa começa com uma pergunta.</h2>
           <p>
@@ -43,14 +49,18 @@ export default function ContactPage() {
             espaço está preparado para receber sua mensagem.
           </p>
           <div className="contact-aside__note">
-            <Mail size={17} aria-hidden="true" />
+            <Mail size="var(--icon-size-17)" aria-hidden="true" />
             <span>
               <strong>Sem pressa, sem complicação.</strong>
               <small>Vamos dar um passo de cada vez.</small>
             </span>
           </div>
         </aside>
-        <form className="contact-form" onSubmit={handleSubmit}>
+        <form
+          className={`contact-form${hasAttemptedSubmit ? ' form-validation-attempted' : ''}`}
+          onInvalidCapture={handleInvalidCapture}
+          onSubmit={handleSubmit}
+        >
           <div className="contact-form__heading">
             <span>ESCREVA PARA A GENTE</span>
             <h2>Como podemos ajudar?</h2>
@@ -99,22 +109,14 @@ export default function ContactPage() {
               />
             </div>
           </div>
-          <Button icon={<Send size={16} />} type="submit">
+          <Button icon={<Send size="var(--icon-size-16)" />} type="submit">
             Enviar mensagem
           </Button>
-          {notice && (
-            <MessageAlert
-              kind="info"
-              message={notice}
-              onDismiss={() => setNotice('')}
-              title="Formulário demonstrativo"
-            />
-          )}
           <p className="contact-form__privacy">
             Não compartilhe senhas ou informações bancárias neste formulário.
           </p>
           <span className="contact-form__corner" aria-hidden="true">
-            <ArrowUpRight size={20} />
+            <ArrowUpRight size="var(--icon-size-20)" />
           </span>
         </form>
       </section>

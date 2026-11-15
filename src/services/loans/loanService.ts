@@ -6,8 +6,8 @@ import type {
   LoanPaymentResult,
   LoanPaymentPayload,
   LoanPayload,
-} from '../../interfaces/loan';
-import type { TransactionBank } from '../../config/transactionBanks';
+} from '@interface/loan';
+import type { TransactionBank } from '@config/transactionBanks';
 import { apiJsonRequest, apiRequest } from '../api/apiClient';
 
 const loansPath = '/api/v1/loans/';

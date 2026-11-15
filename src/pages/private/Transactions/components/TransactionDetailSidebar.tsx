@@ -1,42 +1,29 @@
+// React imports
 import { useEffect } from 'react';
 import { Eye, X } from 'lucide-react';
-import { Button, IconButton } from '../../../components/ui/buttons';
-import { getTransactionBankLabel } from '../../../config/transactionBanks';
-import type { Transaction } from '../../../interfaces/transaction';
 
-interface TransactionDetailSidebarProps {
-  transaction: Transaction;
-  onClose: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
-}
+// Component imports
+import { Button, IconButton } from '@components/ui/buttons';
 
-const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-});
+// Config imports
+import { getTransactionBankLabel } from '@config/transactionBanks';
 
-const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
-  dateStyle: 'long',
-  timeStyle: 'short',
-});
+// Utility imports
+import { formatCurrency, formatDateTime } from '../../../../utils/formatters';
 
-function formatCurrency(value: string): string {
-  const amount = Number(value);
-  return Number.isFinite(amount) ? currencyFormatter.format(amount) : '—';
-}
+// Interface imports
+import type { TransactionDetailSidebarProps } from '../interfaces';
 
-function formatDate(value: string): string {
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? '—' : dateFormatter.format(date);
-}
 
+// Exported page component - TransactionDetailSidebar
 export default function TransactionDetailSidebar({
   transaction,
   onClose,
   onEdit,
   onDelete,
 }: TransactionDetailSidebarProps) {
+
+  // Effect to handle closing the sidebar on Escape key press and preventing body scroll
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -54,8 +41,10 @@ export default function TransactionDetailSidebar({
     };
   }, [onClose]);
 
+  // Determine if the transaction is of type 'income' for styling purposes
   const isIncome = transaction.type === 'income';
 
+  // Render the transaction detail sidebar with transaction information and action buttons
   return (
     <div className="transaction-drawer">
       <button
@@ -73,7 +62,7 @@ export default function TransactionDetailSidebar({
         <header className="transaction-drawer__header">
           <div>
             <span className="eyebrow">
-              <Eye size={13} aria-hidden="true" />
+              <Eye size="var(--icon-size-13)" aria-hidden="true" />
               Detalhes do lançamento
             </span>
             <h2 id="transaction-detail-title">
@@ -82,7 +71,7 @@ export default function TransactionDetailSidebar({
             <p>Consulte as informações desta movimentação.</p>
           </div>
           <IconButton
-            icon={<X size={18} />}
+            icon={<X size="var(--icon-size-18)" />}
             label="Fechar detalhes"
             onClick={onClose}
           />
@@ -113,7 +102,7 @@ export default function TransactionDetailSidebar({
             </div>
             <div>
               <dt>Data e horário</dt>
-              <dd>{formatDate(transaction.occurred_at)}</dd>
+              <dd>{formatDateTime(transaction.occurred_at)}</dd>
             </div>
             <div>
               <dt>Descrição</dt>
@@ -123,7 +112,7 @@ export default function TransactionDetailSidebar({
               <dt>Criado em</dt>
               <dd>
                 {transaction.created_at
-                  ? formatDate(transaction.created_at)
+                  ? formatDateTime(transaction.created_at)
                   : 'Não informado'}
               </dd>
             </div>
@@ -131,7 +120,7 @@ export default function TransactionDetailSidebar({
               <dt>Última atualização</dt>
               <dd>
                 {transaction.updated_at
-                  ? formatDate(transaction.updated_at)
+                  ? formatDateTime(transaction.updated_at)
                   : 'Não informado'}
               </dd>
             </div>

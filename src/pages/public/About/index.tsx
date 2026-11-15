@@ -1,5 +1,5 @@
 import { ArrowUpRight, Compass, Heart, Leaf, Target } from 'lucide-react';
-import { ButtonLink } from '../../../components/ui/buttons';
+import { ButtonLink } from '@components/ui/buttons';
 import './About.scss';
 
 const principles = [
@@ -71,7 +71,7 @@ export default function AboutPage() {
             {principles.map(({ icon: Icon, title, description }) => (
               <article className="principle-card" key={title}>
                 <span className="principle-card__icon">
-                  <Icon size={21} strokeWidth={1.8} aria-hidden="true" />
+                  <Icon size="var(--icon-size-21)" strokeWidth={1.8} aria-hidden="true" />
                 </span>
                 <h3>{title}</h3>
                 <p>{description}</p>
@@ -99,7 +99,7 @@ export default function AboutPage() {
           <span className="eyebrow">Quer saber mais?</span>
           <h2>Estamos abertos à conversa.</h2>
         </div>
-        <ButtonLink icon={<ArrowUpRight size={17} />} to="/contato">
+        <ButtonLink icon={<ArrowUpRight size="var(--icon-size-17)" />} to="/contato">
           Entre em contato
         </ButtonLink>
       </section>

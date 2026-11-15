@@ -15,7 +15,7 @@ export default function PublicHeader() {
       <div className="container site-header__inner">
         <Link className="brand" to="/" aria-label="Rendvest — início">
           <span className="brand__mark" aria-hidden="true">
-            <Sprout size={19} strokeWidth={2.2} />
+            <Sprout size="var(--icon-size-19)" strokeWidth={2.2} />
           </span>
           <span>rendvest</span>
         </Link>
@@ -36,7 +36,7 @@ export default function PublicHeader() {
         </nav>
 
         <ButtonLink
-          icon={<ArrowUpRight size={16} />}
+          icon={<ArrowUpRight size="var(--icon-size-16)" />}
           size="small"
           to="/login"
           variant="dark"

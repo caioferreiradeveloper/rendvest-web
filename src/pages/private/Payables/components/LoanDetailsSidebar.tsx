@@ -17,45 +17,22 @@ import {
   InputDateTime,
   InputNumber,
   SelectField,
-} from '../../../components/forms/fields';
-import MessageAlert from '../../../components/ui/MessageAlert';
-import { Button, IconButton } from '../../../components/ui/buttons';
-import BankLogo from '../../../components/ui/BankLogo';
+} from '@components/forms/fields';
+import MessageAlert from '@components/ui/MessageAlert';
+import { Button, IconButton } from '@components/ui/buttons';
+import BankLogo from '@components/ui/BankLogo';
 import {
   getTransactionBankLabel,
   getTransactionBankLogoDomain,
-} from '../../../config/transactionBanks';
+} from '@config/transactionBanks';
+import useRequiredFormValidation from '@hooks/useRequiredFormValidation';
 import type {
   Loan,
-  LoanDetails,
   LoanInstallment,
   LoanPaymentPayload,
-} from '../../../interfaces/loan';
-
-interface LoanDetailsSidebarProps {
-  details: LoanDetails;
-  openPaymentOnLoad?: boolean;
-  isSaving: boolean;
-  error: string | null;
-  onClose: () => void;
-  onEdit: (loan: Loan) => void;
-  onDelete: (loan: Loan) => void;
-  onAddPayment: (
-    loanId: string,
-    payment: LoanPaymentPayload,
-  ) => Promise<boolean>;
-}
-
-const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-});
-
-const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
-  day: '2-digit',
-  month: 'short',
-  year: 'numeric',
-});
+} from '@interface/loan';
+import type { LoanDetailsSidebarProps } from '../interfaces';
+import { formatCurrency, formatDateOnly } from '../../../../utils/formatters';
 
 const statusLabels = {
   pending: 'Pendente',
@@ -63,11 +40,6 @@ const statusLabels = {
   paid: 'Paga',
   overdue: 'Em atraso',
 } as const;
-
-function formatCurrency(value: number | string): string {
-  const amount = Number(value);
-  return Number.isFinite(amount) ? currencyFormatter.format(amount) : '—';
-}
 
 function getInstallmentDiscount(installment: LoanInstallment): number {
   if (installment.status !== 'paid') {
@@ -79,11 +51,6 @@ function getInstallmentDiscount(installment: LoanInstallment): number {
   return Number.isFinite(discount)
     ? Math.max(0, Math.round(discount * 100) / 100)
     : 0;
-}
-
-function formatDate(value: string): string {
-  const date = new Date(`${value.slice(0, 10)}T00:00:00`);
-  return Number.isNaN(date.getTime()) ? '—' : dateFormatter.format(date);
 }
 
 function getLocalDateTimeValue(): string {
@@ -110,6 +77,11 @@ export default function LoanDetailsSidebar({
   const [paidAt, setPaidAt] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
   const [isPaymentScreen, setIsPaymentScreen] = useState(false);
+  const {
+    hasAttemptedSubmit,
+    handleInvalidCapture,
+    hasMissingCustomRequiredFields,
+  } = useRequiredFormValidation();
   const autoOpenedPayment = useRef(false);
   const { loan, installments } = details;
   const totalPayable = Number(loan.total_with_interest);
@@ -152,7 +124,7 @@ export default function LoanDetailsSidebar({
     () =>
       payableInstallments.map((installment) => ({
         value: String(installment.number),
-        label: `Parcela ${installment.number} · vence ${formatDate(installment.due_date)} · ${formatCurrency(installment.remaining_amount)}`,
+        label: `Parcela ${installment.number} · vence ${formatDateOnly(installment.due_date)} · ${formatCurrency(installment.remaining_amount)}`,
       })),
     [payableInstallments],
   );
@@ -192,6 +164,10 @@ export default function LoanDetailsSidebar({
 
   async function handlePaymentSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (hasMissingCustomRequiredFields(event.currentTarget)) {
+      return;
+    }
+
     if (!selectedInstallment) {
       setFormError('Selecione uma parcela para registrar o pagamento.');
       return;
@@ -273,7 +249,7 @@ export default function LoanDetailsSidebar({
             </p>
           </div>
           <IconButton
-            icon={<X size={18} />}
+            icon={<X size="var(--icon-size-18)" />}
             label="Fechar detalhes"
             onClick={onClose}
           />
@@ -289,14 +265,15 @@ export default function LoanDetailsSidebar({
                 onClick={closePaymentScreen}
                 type="button"
               >
-                <ArrowLeft size={15} aria-hidden="true" />
+                <ArrowLeft size="var(--icon-size-15)" aria-hidden="true" />
                 Voltar aos detalhes
               </button>
 
               {payableInstallments.length ? (
                 <div className="loan-payment-screen__layout">
                   <form
-                    className="loan-payment-screen__form"
+                    className={`loan-payment-screen__form${hasAttemptedSubmit ? ' form-validation-attempted' : ''}`}
+                    onInvalidCapture={handleInvalidCapture}
                     onSubmit={handlePaymentSubmit}
                   >
                     <SelectField
@@ -315,6 +292,8 @@ export default function LoanDetailsSidebar({
                         }
                       }}
                       options={installmentOptions}
+                      required
+                      validationAttempted={hasAttemptedSubmit}
                       value={
                         selectedInstallment
                           ? String(selectedInstallment.number)
@@ -327,7 +306,7 @@ export default function LoanDetailsSidebar({
                         <div className="loan-payment-hero">
                           <div className="loan-payment-hero__top">
                             <span className="loan-payment-hero__icon">
-                              <CircleDollarSign size={20} aria-hidden="true" />
+                              <CircleDollarSign size="var(--icon-size-20)" aria-hidden="true" />
                             </span>
                             <span
                               className={`loan-installment__status loan-installment__status--${selectedInstallment.status}`}
@@ -347,7 +326,7 @@ export default function LoanDetailsSidebar({
                               {installments.length}
                             </span>
                             <span>
-                              Vencimento {formatDate(selectedInstallment.due_date)}
+                              Vencimento {formatDateOnly(selectedInstallment.due_date)}
                             </span>
                           </div>
                         </div>
@@ -419,7 +398,7 @@ export default function LoanDetailsSidebar({
                       </Button>
                       <Button
                         disabled={isSaving || !selectedInstallment}
-                        icon={<CircleDollarSign size={16} />}
+                        icon={<CircleDollarSign size="var(--icon-size-16)" />}
                         type="submit"
                       >
                         {isSaving ? 'Registrando...' : 'Confirmar pagamento'}
@@ -487,7 +466,7 @@ export default function LoanDetailsSidebar({
                               <li key={installment.number}>
                                 <span>
                                   Parcela {installment.number}
-                                  <small>{formatDate(installment.due_date)}</small>
+                                  <small>{formatDateOnly(installment.due_date)}</small>
                                 </span>
                                 <span>
                                   <strong>
@@ -519,7 +498,7 @@ export default function LoanDetailsSidebar({
               ) : (
                 <div className="loan-payment-screen__empty">
                   <span>
-                    <CalendarDays size={23} aria-hidden="true" />
+                    <CalendarDays size="var(--icon-size-23)" aria-hidden="true" />
                   </span>
                   <strong>Todas as parcelas estão pagas</strong>
                   <p>Não há saldo pendente para este empréstimo.</p>
@@ -613,11 +592,11 @@ export default function LoanDetailsSidebar({
             </div>
             <div>
               <dt>Início</dt>
-              <dd>{formatDate(loan.started_at)}</dd>
+              <dd>{formatDateOnly(loan.started_at)}</dd>
             </div>
             <div>
               <dt>Primeiro vencimento</dt>
-              <dd>{formatDate(loan.first_due_date)}</dd>
+              <dd>{formatDateOnly(loan.first_due_date)}</dd>
             </div>
           </dl>
 
@@ -643,7 +622,7 @@ export default function LoanDetailsSidebar({
                       <div className="loan-installment__heading">
                         <div>
                           <strong>Parcela {installment.number}</strong>
-                          <span>Vence em {formatDate(installment.due_date)}</span>
+                          <span>Vence em {formatDateOnly(installment.due_date)}</span>
                         </div>
                         <span
                           className={`loan-installment__status loan-installment__status--${installment.status}`}
@@ -682,7 +661,7 @@ export default function LoanDetailsSidebar({
                       {canPay && (
                         <Button
                           disabled={isSaving}
-                          icon={<Plus size={14} />}
+                          icon={<Plus size="var(--icon-size-14)" />}
                           onClick={() => openPaymentForm(installment)}
                           size="small"
                           variant="secondary"
@@ -696,7 +675,7 @@ export default function LoanDetailsSidebar({
               </ol>
             ) : (
               <div className="loan-payments__empty">
-                <CalendarDays size={18} aria-hidden="true" />
+                <CalendarDays size="var(--icon-size-18)" aria-hidden="true" />
                 <span>Nenhuma parcela retornada pela API.</span>
               </div>
             )}
@@ -721,7 +700,7 @@ export default function LoanDetailsSidebar({
             </Button>
             <Button
               disabled={hasRegisteredPayments}
-              icon={<Pencil size={15} />}
+              icon={<Pencil size="var(--icon-size-15)" />}
               iconPosition="leading"
               onClick={() => onEdit(loan)}
               title={
