@@ -27,7 +27,6 @@ import {
 } from '@config/transactionBanks';
 import useRequiredFormValidation from '@hooks/useRequiredFormValidation';
 import type {
-  Loan,
   LoanInstallment,
   LoanPaymentPayload,
 } from '@interface/loan';

@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { Eye, X } from 'lucide-react';
 import { Button, IconButton } from '@components/ui/buttons';
 import { getTransactionBankLabel } from '@config/transactionBanks';
-import type { Transaction } from '@interface/transaction';
 import type { TransactionDetailSidebarProps } from '../interfaces';
 import { formatCurrency, formatDateTime } from '../../../../utils/formatters';
 
