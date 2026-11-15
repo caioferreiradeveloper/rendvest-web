@@ -1,4 +1,4 @@
-import { authEndpoints, authEvents } from '../../config/auth';
+import { authEndpoints, authEvents } from '@config/auth';
 import ApiError from './ApiError';
 
 const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/+$/, '');

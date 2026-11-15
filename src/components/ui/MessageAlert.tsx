@@ -1,6 +1,6 @@
 import { AlertCircle, CheckCircle2, Info, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import type { MessageAlertKind } from '../../config/apiStatusCodes';
+import type { MessageAlertKind } from '@config/apiStatusCodes';
 import { IconButton } from './buttons';
 import './MessageAlert.scss';
 
@@ -42,7 +42,7 @@ export default function MessageAlert({
     >
       <AlertIcon
         className="message-alert__icon"
-        size={19}
+        size="var(--icon-size-19)"
         strokeWidth={2}
         aria-hidden="true"
       />
@@ -53,7 +53,7 @@ export default function MessageAlert({
       {onDismiss && (
         <IconButton
           className="message-alert__dismiss"
-          icon={<X size={16} />}
+          icon={<X size="var(--icon-size-16)" />}
           label="Fechar mensagem"
           onClick={onDismiss}
           variant="text"

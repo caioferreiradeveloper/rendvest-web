@@ -20,6 +20,8 @@ interface SelectFieldProps<Value extends string> {
   error?: string;
   required?: boolean;
   disabled?: boolean;
+  showLogos?: boolean;
+  validationAttempted?: boolean;
   fieldClassName?: string;
 }
 
@@ -33,6 +35,8 @@ export default function SelectField<Value extends string>({
   error,
   required,
   disabled,
+  showLogos = true,
+  validationAttempted = false,
   fieldClassName,
 }: SelectFieldProps<Value>) {
   const [isOpen, setIsOpen] = useState(false);
@@ -123,8 +127,13 @@ export default function SelectField<Value extends string>({
           aria-controls={`${id}-options`}
           aria-expanded={isOpen}
           aria-haspopup="listbox"
-          aria-invalid={Boolean(error)}
+          aria-invalid={
+            Boolean(error) ||
+            Boolean(validationAttempted && required && !value)
+          }
+          aria-required={required}
           className="field-control select-field__trigger"
+          data-required-empty={required && !value ? 'true' : undefined}
           disabled={disabled}
           id={id}
           onClick={() => {
@@ -138,11 +147,13 @@ export default function SelectField<Value extends string>({
           <span className="select-field__value">
             {selectedOption && (
               <>
-                <BankLogo
-                  label={selectedOption.label}
-                  logoDomain={selectedOption.logoDomain}
-                  size="small"
-                />
+                {showLogos && (
+                  <BankLogo
+                    label={selectedOption.label}
+                    logoDomain={selectedOption.logoDomain}
+                    size="small"
+                  />
+                )}
                 <span>{selectedOption.label}</span>
               </>
             )}
@@ -150,7 +161,7 @@ export default function SelectField<Value extends string>({
           <ChevronDown
             aria-hidden="true"
             className={isOpen ? 'select-field__chevron is-open' : 'select-field__chevron'}
-            size={16}
+            size="var(--icon-size-16)"
           />
         </button>
         {isOpen && (
@@ -177,17 +188,19 @@ export default function SelectField<Value extends string>({
                 role="option"
                 type="button"
               >
-                <BankLogo
-                  label={option.label}
-                  logoDomain={option.logoDomain}
-                  size="small"
-                />
+                {showLogos && (
+                  <BankLogo
+                    label={option.label}
+                    logoDomain={option.logoDomain}
+                    size="small"
+                  />
+                )}
                 <span>{option.label}</span>
                 {option.value === value && (
                   <Check
                     aria-hidden="true"
                     className="select-field__check"
-                    size={15}
+                    size="var(--icon-size-15)"
                   />
                 )}
               </button>

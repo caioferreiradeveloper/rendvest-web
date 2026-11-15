@@ -1,5 +1,5 @@
-import { getApiStatusFeedback } from '../../config/apiStatusCodes';
-import type { MessageAlertKind } from '../../config/apiStatusCodes';
+import { getApiStatusFeedback } from '@config/apiStatusCodes';
+import type { MessageAlertKind } from '@config/apiStatusCodes';
 import ApiError from './ApiError';
 
 export interface ApiAlertMessage {

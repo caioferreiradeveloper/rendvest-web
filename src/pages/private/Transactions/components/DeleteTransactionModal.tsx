@@ -1,21 +1,23 @@
+// React imports
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
-import { Button } from '../../../components/ui/buttons';
-import type { Transaction } from '../../../interfaces/transaction';
 
-interface DeleteTransactionModalProps {
-  transaction: Transaction;
-  isDeleting: boolean;
-  onCancel: () => void;
-  onConfirm: () => void;
-}
+// Component imports
+import { Button } from '@components/ui/buttons';
 
+// Interface imports
+import type { DeleteTransactionModalProps } from '../interfaces';
+
+
+// Exported page component - DeleteTransactionModal
 export default function DeleteTransactionModal({
   transaction,
   isDeleting,
   onCancel,
   onConfirm,
 }: DeleteTransactionModalProps) {
+
+  // Effect to handle closing the modal on Escape key press and preventing body scroll
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -33,6 +35,7 @@ export default function DeleteTransactionModal({
     };
   }, [isDeleting, onCancel]);
 
+  // Render the delete transaction confirmation modal with transaction details and action buttons
   return (
     <div className="transaction-confirmation">
       <button
@@ -49,7 +52,7 @@ export default function DeleteTransactionModal({
         role="alertdialog"
       >
         <span className="transaction-confirmation__icon">
-          <AlertTriangle size={22} aria-hidden="true" />
+          <AlertTriangle size="var(--icon-size-22)" aria-hidden="true" />
         </span>
         <h2 id="delete-transaction-title">Excluir lançamento?</h2>
         <p>

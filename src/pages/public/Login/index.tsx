@@ -4,11 +4,12 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   InputPassword,
   InputText,
-} from '../../../components/forms/fields';
-import { Button } from '../../../components/ui/buttons';
-import MessageAlert from '../../../components/ui/MessageAlert';
-import { useAuth } from '../../../hooks/useAuth';
-import { toApiAlert, type ApiAlertMessage } from '../../../services/api/apiFeedback';
+} from '@components/forms/fields';
+import { Button } from '@components/ui/buttons';
+import { useToast } from '@contexts/ToastContext';
+import { useAuth } from '@hooks/useAuth';
+import useRequiredFormValidation from '@hooks/useRequiredFormValidation';
+import { toApiAlert } from '@services/api/apiFeedback';
 import './Login.scss';
 
 interface LoginFieldErrors {
@@ -34,31 +35,24 @@ function validateLoginFields(email: string, password: string): LoginFieldErrors 
 }
 
 export default function LoginPage() {
-  const [notice, setNotice] = useState<ApiAlertMessage | null>(null);
   const [fieldErrors, setFieldErrors] = useState<LoginFieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { error: sessionError, login } = useAuth();
+  const { showToast } = useToast();
+  const { hasAttemptedSubmit, notifyInvalidFields } =
+    useRequiredFormValidation();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     if (sessionError) {
-      setNotice({
+      showToast({
         kind: 'error',
         title: 'Falha ao validar a sessão',
         message: sessionError,
       });
     }
-  }, [sessionError]);
-
-  useEffect(() => {
-    if (!notice) {
-      return;
-    }
-
-    const timeoutId = window.setTimeout(() => setNotice(null), 5000);
-    return () => window.clearTimeout(timeoutId);
-  }, [notice]);
+  }, [sessionError, showToast]);
 
   function handleFieldChange(event: ChangeEvent<HTMLFormElement>) {
     const field = event.target;
@@ -88,7 +82,6 @@ export default function LoginPage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setNotice(null);
 
     const formData = new FormData(event.currentTarget);
     const email = formData.get('email');
@@ -99,22 +92,16 @@ export default function LoginPage() {
         email: 'Informe seu e-mail.',
         password: 'Informe sua senha.',
       });
-      setNotice({
-        kind: 'error',
-        title: 'Confira os campos',
-        message: 'Preencha os campos destacados para continuar.',
-      });
+      notifyInvalidFields();
       return;
     }
 
     const validationErrors = validateLoginFields(email, password);
     setFieldErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) {
-      setNotice({
-        kind: 'error',
-        title: 'Confira os campos',
-        message: 'Preencha corretamente os campos destacados.',
-      });
+      notifyInvalidFields(
+        'Preencha corretamente os campos destacados para continuar.',
+      );
       const firstInvalidField = validationErrors.email
         ? 'login-email'
         : 'login-password';
@@ -128,7 +115,7 @@ export default function LoginPage() {
       const state = location.state as { from?: { pathname?: string } } | null;
       navigate(state?.from?.pathname ?? '/app/dashboard', { replace: true });
     } catch (error) {
-      setNotice(toApiAlert(error, 'Não foi possível entrar. Tente novamente.'));
+      showToast(toApiAlert(error, 'Não foi possível entrar. Tente novamente.'));
     } finally {
       setIsSubmitting(false);
     }
@@ -136,21 +123,13 @@ export default function LoginPage() {
 
   return (
     <main className="login-page">
-      {notice && (
-        <MessageAlert
-          kind={notice.kind}
-          message={notice.message}
-          onDismiss={() => setNotice(null)}
-          title={notice.title}
-        />
-      )}
       <section className="login-story">
         <Link className="login-story__back" to="/">
-          <ArrowLeft size={16} aria-hidden="true" /> Voltar para o início
+          <ArrowLeft size="var(--icon-size-16)" aria-hidden="true" /> Voltar para o início
         </Link>
         <div className="login-story__content">
           <span className="login-story__mark">
-            <Sprout size={22} aria-hidden="true" />
+            <Sprout size="var(--icon-size-22)" aria-hidden="true" />
           </span>
           <span className="eyebrow eyebrow--light">Que bom ter você aqui</span>
           <h1>
@@ -178,7 +157,7 @@ export default function LoginPage() {
             <p>Informe seus dados para continuar de onde parou.</p>
           </div>
           <form
-            className="login-form"
+            className={`login-form${hasAttemptedSubmit ? ' form-validation-attempted' : ''}`}
             noValidate
             onChange={handleFieldChange}
             onSubmit={handleSubmit}
@@ -215,7 +194,7 @@ export default function LoginPage() {
             <Button
               disabled={isSubmitting}
               fullWidth
-              icon={<ArrowUpRight size={17} />}
+              icon={<ArrowUpRight size="var(--icon-size-17)" />}
               type="submit"
             >
               {isSubmitting ? 'Entrando…' : 'Entrar na minha conta'}
@@ -225,7 +204,7 @@ export default function LoginPage() {
             Ainda não tem uma conta? <Link to="/contato">Fale com a gente</Link>
           </p>
           <p className="login-form__secure">
-            <LockKeyhole size={14} aria-hidden="true" />
+            <LockKeyhole size="var(--icon-size-14)" aria-hidden="true" />
             Seus dados ficam seguros com você.
           </p>
         </div>

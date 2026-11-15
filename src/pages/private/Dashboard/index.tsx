@@ -8,14 +8,15 @@ import {
   Wallet,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { SelectField } from '../../../components/forms/fields';
-import BankLogo from '../../../components/ui/BankLogo';
+import { SelectField } from '@components/forms/fields';
+import BankLogo from '@components/ui/BankLogo';
 import {
   getTransactionBankLabel,
   transactionBankOptions,
   type TransactionBank,
-} from '../../../config/transactionBanks';
-import type { SelectFieldOption } from '../../../components/forms/fields/SelectField';
+} from '@config/transactionBanks';
+import type { SelectFieldOption } from '@components/forms/fields/SelectField';
+import { formatCurrency } from '../../../utils/formatters';
 import './Dashboard.scss';
 
 type DashboardBank = TransactionBank | 'all';
@@ -106,15 +107,6 @@ const allBankTransactions: DashboardTransaction[] = [
   { ...baseTransactions[3], bank: 'banco_do_brasil' },
 ];
 
-const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-});
-
-function formatCurrency(value: number): string {
-  return currencyFormatter.format(value);
-}
-
 function getBankFactor(bank: TransactionBank): number {
   return bankFactors[bank] ?? 0.86;
 }
@@ -154,7 +146,7 @@ export default function DashboardPage() {
       <header className="dashboard-page__header">
         <div className="dashboard-page__heading">
           <span className="dashboard-page__heading-icon">
-            <ChartNoAxesCombined size={21} strokeWidth={1.8} aria-hidden="true" />
+            <ChartNoAxesCombined size="var(--icon-size-21)" strokeWidth={1.8} aria-hidden="true" />
           </span>
           <div>
             <span className="eyebrow">Visão geral</span>
@@ -184,16 +176,16 @@ export default function DashboardPage() {
           </span>
           <strong>{formatCurrency(currentBalance)}</strong>
           <span className="dashboard-balance__trend">
-            <ArrowUpRight size={15} aria-hidden="true" />
+            <ArrowUpRight size="var(--icon-size-15)" aria-hidden="true" />
             6,8% em relação ao mês passado
           </span>
         </div>
         <span className="dashboard-balance__icon" aria-hidden="true">
-          <Wallet size={23} />
+          <Wallet size="var(--icon-size-23)" />
         </span>
         <div className="dashboard-balance__footer">
           <span>
-            <CalendarDays size={14} aria-hidden="true" />
+            <CalendarDays size="var(--icon-size-14)" aria-hidden="true" />
             Dados demonstrativos · atualizado em 12 nov. 2026
           </span>
           {selectedBankOption && selectedBank !== 'all' && (
@@ -212,7 +204,7 @@ export default function DashboardPage() {
       <section aria-label="Resumo do mês" className="dashboard-metrics">
         <article className="dashboard-metric">
           <span className="dashboard-metric__icon dashboard-metric__icon--income">
-            <ArrowDownLeft size={18} aria-hidden="true" />
+            <ArrowDownLeft size="var(--icon-size-18)" aria-hidden="true" />
           </span>
           <span className="dashboard-metric__label">Receitas do mês</span>
           <strong>{formatCurrency(currentIncome)}</strong>
@@ -222,7 +214,7 @@ export default function DashboardPage() {
         </article>
         <article className="dashboard-metric">
           <span className="dashboard-metric__icon dashboard-metric__icon--expense">
-            <ArrowUpRight size={18} aria-hidden="true" />
+            <ArrowUpRight size="var(--icon-size-18)" aria-hidden="true" />
           </span>
           <span className="dashboard-metric__label">Despesas do mês</span>
           <strong>{formatCurrency(currentExpenses)}</strong>
@@ -232,7 +224,7 @@ export default function DashboardPage() {
         </article>
         <article className="dashboard-metric">
           <span className="dashboard-metric__icon dashboard-metric__icon--investments">
-            <ChartNoAxesCombined size={18} aria-hidden="true" />
+            <ChartNoAxesCombined size="var(--icon-size-18)" aria-hidden="true" />
           </span>
           <span className="dashboard-metric__label">Total investido</span>
           <strong>{formatCurrency(investedAmount)}</strong>
@@ -304,7 +296,7 @@ export default function DashboardPage() {
               className="dashboard-activity__more"
               to="/app/lancamentos"
             >
-              <ArrowRight size={17} aria-hidden="true" />
+              <ArrowRight size="var(--icon-size-17)" aria-hidden="true" />
             </Link>
           </header>
           <ul className="dashboard-activity__list">
@@ -327,9 +319,9 @@ export default function DashboardPage() {
                     }`}
                   >
                     {isIncome ? (
-                      <ArrowDownLeft size={16} aria-hidden="true" />
+                      <ArrowDownLeft size="var(--icon-size-16)" aria-hidden="true" />
                     ) : (
-                      <ArrowUpRight size={16} aria-hidden="true" />
+                      <ArrowUpRight size="var(--icon-size-16)" aria-hidden="true" />
                     )}
                   </span>
                   <span className="dashboard-activity__description">

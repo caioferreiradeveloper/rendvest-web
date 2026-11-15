@@ -3,21 +3,83 @@
   min-height: 100vh;
   align-content: center;
   justify-items: center;
-  gap: 12px;
+  gap: var(--space-7);
+  padding: var(--space-24);
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: var(--font-size-13);
+}
+
+.auth-loading__brand {
+  position: relative;
+  display: grid;
+  width: 76px;
+  height: 76px;
+  place-items: center;
+  margin-bottom: var(--space-12);
 }
 
 .auth-loading__spinner {
-  width: 25px;
-  height: 25px;
-  border: 2px solid var(--color-border);
+  position: absolute;
+  inset: 0;
+  border: 2px solid color-mix(in srgb, var(--color-primary) 14%, transparent);
   border-top-color: var(--color-primary);
+  border-right-color: color-mix(in srgb, var(--color-primary) 55%, transparent);
   border-radius: 50%;
-  animation: auth-spinner 700ms linear infinite;
+  animation: loading-spin 850ms linear infinite;
 }
 
-@keyframes auth-spinner {
+.auth-loading__mark {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+  color: var(--color-primary);
+}
+
+.auth-loading__title {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-15);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.auth-loading__message {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-12);
+}
+
+.loading-spinner {
+  display: block;
+  width: 25px;
+  height: 25px;
+  flex: 0 0 auto;
+  border: 2px solid color-mix(in srgb, var(--color-primary) 16%, transparent);
+  border-top-color: var(--color-primary);
+  border-right-color: color-mix(in srgb, var(--color-primary) 58%, transparent);
+  border-radius: 50%;
+  animation: loading-spin 750ms linear infinite;
+}
+
+.loading-spinner--table {
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 2px 5px color-mix(in srgb, var(--color-primary) 15%, transparent));
+}
+
+.table-loading {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-10);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-12);
+  font-weight: 550;
+}
+
+@keyframes loading-spin {
   to {
     transform: rotate(360deg);
   }

@@ -1,7 +1,7 @@
 .dashboard-page {
   width: min(1200px, calc(100% - 48px));
   margin-inline: auto;
-  padding-block: 28px 42px;
+  padding-block: var(--space-28) var(--space-42);
 }
 
 .dashboard-page__header,
@@ -12,12 +12,12 @@
 
 .dashboard-page__header {
   justify-content: space-between;
-  gap: 20px;
+  gap: var(--space-20);
 }
 
 .dashboard-page__heading {
   min-width: 0;
-  gap: 14px;
+  gap: var(--space-14);
 }
 
 .dashboard-page__heading-icon {
@@ -34,7 +34,7 @@
 }
 
 .dashboard-page__heading h1 {
-  margin: 2px 0 1px;
+  margin: var(--space-2) 0 var(--space-1);
   font-size: clamp(27px, 3.2vw, 35px);
   font-weight: 580;
   letter-spacing: -0.06em;
@@ -44,7 +44,7 @@
 .dashboard-page__heading p {
   margin: 0;
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   line-height: 1.55;
 }
 
@@ -55,13 +55,13 @@
 
 .dashboard-bank-filter .field__label {
   color: var(--color-text-secondary);
-  font-size: 10px;
+  font-size: var(--font-size-10);
   font-weight: 650;
 }
 
 .dashboard-bank-filter .select-field__trigger {
   min-height: 42px;
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 
 .dashboard-balance {
@@ -71,8 +71,8 @@
   align-items: flex-start;
   justify-content: space-between;
   overflow: hidden;
-  margin-top: 25px;
-  padding: 24px 27px 18px;
+  margin-top: var(--space-25);
+  padding: var(--space-24) var(--space-27) var(--space-18);
   border: 1px solid color-mix(in srgb, var(--color-primary) 72%, transparent);
   border-radius: 14px;
   background:
@@ -92,12 +92,12 @@
 
 .dashboard-balance__content {
   display: grid;
-  gap: 5px;
+  gap: var(--space-5);
 }
 
 .dashboard-balance__label {
   color: color-mix(in srgb, var(--color-text-inverse) 78%, transparent);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   font-weight: 550;
 }
 
@@ -112,9 +112,9 @@
 .dashboard-balance__trend {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   color: color-mix(in srgb, var(--color-text-inverse) 82%, transparent);
-  font-size: 11px;
+  font-size: var(--font-size-11);
 }
 
 .dashboard-balance__icon {
@@ -136,17 +136,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  padding-top: 11px;
+  gap: var(--space-14);
+  padding-top: var(--space-11);
   border-top: 1px solid color-mix(in srgb, #ffffff 18%, transparent);
   color: color-mix(in srgb, var(--color-text-inverse) 74%, transparent);
-  font-size: 10px;
+  font-size: var(--font-size-10);
 }
 
 .dashboard-balance__footer > span {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: var(--space-7);
 }
 
 .dashboard-balance__bank .bank-logo {
@@ -156,8 +156,8 @@
 .dashboard-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 16px;
+  gap: var(--space-14);
+  margin-top: var(--space-16);
 }
 
 .dashboard-metric {
@@ -165,8 +165,8 @@
   min-width: 0;
   grid-template-columns: 38px minmax(0, 1fr);
   align-items: center;
-  column-gap: 11px;
-  padding: 16px 18px;
+  column-gap: var(--space-11);
+  padding: var(--space-16) var(--space-18);
   border: 1px solid var(--color-border);
   border-radius: 12px;
   background: var(--color-surface);
@@ -199,7 +199,7 @@
 
 .dashboard-metric__label {
   color: var(--color-text-secondary);
-  font-size: 11px;
+  font-size: var(--font-size-11);
   font-weight: 570;
 }
 
@@ -214,7 +214,7 @@
 }
 
 .dashboard-metric__change {
-  font-size: 10px;
+  font-size: var(--font-size-10);
   font-weight: 650;
 }
 
@@ -234,8 +234,8 @@
 .dashboard-content {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(330px, 0.9fr);
-  gap: 16px;
-  margin-top: 16px;
+  gap: var(--space-16);
+  margin-top: var(--space-16);
 }
 
 .dashboard-card {
@@ -250,49 +250,49 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: var(--space-14);
 }
 
 .dashboard-card__header h2 {
   margin: 0;
   color: var(--color-text-primary);
-  font-size: 15px;
+  font-size: var(--font-size-15);
   font-weight: 680;
   letter-spacing: -0.025em;
 }
 
 .dashboard-card__header p {
-  margin: 3px 0 0;
+  margin: var(--space-3) 0 0;
   color: var(--color-text-secondary);
-  font-size: 11px;
+  font-size: var(--font-size-11);
 }
 
 .dashboard-flow {
-  padding: 19px 20px 16px;
+  padding: var(--space-19) var(--space-20) var(--space-16);
 }
 
 .dashboard-card__period {
   flex: 0 0 auto;
-  padding: 6px 9px;
+  padding: var(--space-6) var(--space-9);
   border: 1px solid var(--color-border);
   border-radius: 7px;
   color: var(--color-text-secondary);
-  font-size: 10px;
+  font-size: var(--font-size-10);
   font-weight: 600;
 }
 
 .dashboard-flow__legend {
   display: flex;
-  gap: 16px;
-  margin-top: 18px;
+  gap: var(--space-16);
+  margin-top: var(--space-18);
 }
 
 .dashboard-flow__legend > span {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   color: var(--color-text-secondary);
-  font-size: 10px;
+  font-size: var(--font-size-10);
 }
 
 .dashboard-flow__legend-dot {
@@ -314,9 +314,9 @@
   height: 190px;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   align-items: stretch;
-  gap: 8px;
-  margin-top: 10px;
-  padding-top: 12px;
+  gap: var(--space-8);
+  margin-top: var(--space-10);
+  padding-top: var(--space-12);
   border-bottom: 1px solid var(--color-divider);
   background: repeating-linear-gradient(
     to bottom,
@@ -333,7 +333,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .dashboard-flow__bars {
@@ -343,7 +343,7 @@
   flex: 1;
   align-items: flex-end;
   justify-content: center;
-  gap: 5px;
+  gap: var(--space-5);
 }
 
 .dashboard-flow__bar {
@@ -361,13 +361,13 @@
 }
 
 .dashboard-flow__month-label {
-  padding-bottom: 8px;
+  padding-bottom: var(--space-8);
   color: var(--color-text-muted);
-  font-size: 10px;
+  font-size: var(--font-size-10);
 }
 
 .dashboard-activity {
-  padding: 19px 20px 8px;
+  padding: var(--space-19) var(--space-20) var(--space-8);
 }
 
 .dashboard-activity__more {
@@ -391,7 +391,7 @@
 
 .dashboard-activity__list {
   display: grid;
-  margin: 12px 0 0;
+  margin: var(--space-12) 0 0;
   padding: 0;
   list-style: none;
 }
@@ -400,8 +400,8 @@
   display: flex;
   min-width: 0;
   align-items: center;
-  gap: 10px;
-  padding-block: 10px;
+  gap: var(--space-10);
+  padding-block: var(--space-10);
   border-top: 1px solid var(--color-divider);
 }
 
@@ -428,13 +428,13 @@
   display: grid;
   min-width: 0;
   flex: 1;
-  gap: 2px;
+  gap: var(--space-2);
 }
 
 .dashboard-activity__description strong {
   overflow: hidden;
   color: var(--color-text-primary);
-  font-size: 11px;
+  font-size: var(--font-size-11);
   font-weight: 630;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -443,7 +443,7 @@
 .dashboard-activity__description > span {
   overflow: hidden;
   color: var(--color-text-muted);
-  font-size: 9px;
+  font-size: var(--font-size-9);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -452,12 +452,12 @@
   display: grid;
   flex: 0 0 auto;
   justify-items: end;
-  gap: 3px;
+  gap: var(--space-3);
 }
 
 .dashboard-activity__amount > strong {
   color: var(--color-text-primary);
-  font-size: 11px;
+  font-size: var(--font-size-11);
   font-weight: 650;
   white-space: nowrap;
 }
@@ -469,9 +469,9 @@
 .dashboard-activity__amount > span {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   color: var(--color-text-muted);
-  font-size: 9px;
+  font-size: var(--font-size-9);
 }
 
 .dashboard-activity__amount .bank-logo {
@@ -488,7 +488,7 @@
 @media (max-width: 760px) {
   .dashboard-page {
     width: calc(100% - 32px);
-    padding-block: 20px 30px;
+    padding-block: var(--space-20) var(--space-30);
   }
 
   .dashboard-page__header {
@@ -500,13 +500,13 @@
   }
 
   .dashboard-metrics {
-    gap: 10px;
+    gap: var(--space-10);
   }
 
   .dashboard-metric {
     grid-template-columns: 32px minmax(0, 1fr);
-    column-gap: 8px;
-    padding: 13px;
+    column-gap: var(--space-8);
+    padding: var(--space-13);
   }
 
   .dashboard-metric__icon {
@@ -522,7 +522,7 @@
 
   .dashboard-page__heading {
     align-items: flex-start;
-    gap: 10px;
+    gap: var(--space-10);
   }
 
   .dashboard-page__heading-icon {
@@ -532,11 +532,11 @@
   }
 
   .dashboard-page__heading h1 {
-    font-size: 25px;
+    font-size: var(--font-size-25);
   }
 
   .dashboard-page__heading p {
-    font-size: 11px;
+    font-size: var(--font-size-11);
   }
 
   .dashboard-bank-filter {
@@ -545,8 +545,8 @@
 
   .dashboard-balance {
     min-height: 174px;
-    margin-top: 18px;
-    padding: 20px 18px 16px;
+    margin-top: var(--space-18);
+    padding: var(--space-20) var(--space-18) var(--space-16);
   }
 
   .dashboard-balance__content > strong {
@@ -557,11 +557,11 @@
     right: 18px;
     bottom: 14px;
     left: 18px;
-    font-size: 9px;
+    font-size: var(--font-size-9);
   }
 
   .dashboard-balance__footer > span {
-    gap: 5px;
+    gap: var(--space-5);
   }
 
   .dashboard-balance__bank {
@@ -577,13 +577,13 @@
 
   .dashboard-metrics {
     grid-template-columns: 1fr;
-    gap: 9px;
-    margin-top: 12px;
+    gap: var(--space-9);
+    margin-top: var(--space-12);
   }
 
   .dashboard-metric {
     grid-template-columns: 36px minmax(0, 1fr) auto;
-    padding: 12px 14px;
+    padding: var(--space-12) var(--space-14);
   }
 
   .dashboard-metric__icon {
@@ -608,18 +608,18 @@
   }
 
   .dashboard-content {
-    gap: 12px;
-    margin-top: 12px;
+    gap: var(--space-12);
+    margin-top: var(--space-12);
   }
 
   .dashboard-flow,
   .dashboard-activity {
-    padding-inline: 15px;
+    padding-inline: var(--space-15);
   }
 
   .dashboard-flow__chart {
     height: 160px;
-    gap: 4px;
+    gap: var(--space-4);
   }
 
   .dashboard-flow__bar {
@@ -627,7 +627,7 @@
   }
 
   .dashboard-card__period {
-    padding-inline: 7px;
-    font-size: 9px;
+    padding-inline: var(--space-7);
+    font-size: var(--font-size-9);
   }
 }

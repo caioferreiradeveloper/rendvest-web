@@ -1,4 +1,4 @@
-import { authEndpoints } from '../../config/auth';
+import { authEndpoints } from '@config/auth';
 import { apiJsonRequest, refreshSession } from '../api/apiClient';
 
 export interface LoginCredentials {

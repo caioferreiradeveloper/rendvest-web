@@ -3,12 +3,12 @@
   min-height: 50px;
   align-items: center;
   justify-content: center;
-  gap: 11px;
-  padding: 0 21px;
+  gap: var(--space-11);
+  padding: 0 var(--space-21);
   border: 1px solid transparent;
   border-radius: 9px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: var(--font-size-13);
   font-weight: 650;
   letter-spacing: -0.01em;
   line-height: 1.2;
@@ -41,8 +41,8 @@
 
 .button--small {
   min-height: 40px;
-  padding-inline: 16px;
-  font-size: 12px;
+  padding-inline: var(--space-16);
+  font-size: var(--font-size-12);
 }
 
 .button--primary {
@@ -91,7 +91,7 @@
 
 .button--text {
   min-height: 36px;
-  padding: 0 8px;
+  padding: 0 var(--space-8);
   border-color: transparent;
   background: transparent;
   box-shadow: none;
@@ -121,9 +121,9 @@
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   color: var(--color-primary);
-  font-size: 10px;
+  font-size: var(--font-size-10);
   font-weight: 750;
   letter-spacing: 0.14em;
   line-height: 1.5;

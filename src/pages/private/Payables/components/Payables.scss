@@ -1,14 +1,3 @@
-.payables-page {
-  display: flex;
-  width: min(1200px, calc(100% - 48px));
-  min-height: 0;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
-  margin-inline: auto;
-  padding-block: 28px 42px;
-}
-
 .transaction-drawer {
   position: fixed;
   z-index: 1000;
@@ -45,14 +34,14 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
-  padding: 25px 26px 20px;
+  gap: var(--space-16);
+  padding: var(--space-25) var(--space-26) var(--space-20);
   border-bottom: 1px solid var(--color-divider);
 }
 
 .transaction-drawer__header h2 {
-  margin: 3px 0 2px;
-  font-size: 23px;
+  margin: var(--space-3) 0 var(--space-2);
+  font-size: var(--font-size-23);
   font-weight: 650;
   letter-spacing: -0.05em;
   line-height: 1.25;
@@ -61,7 +50,7 @@
 .transaction-drawer__header p {
   margin: 0;
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 
 .transaction-form {
@@ -73,9 +62,9 @@
 
 .transaction-form__fields {
   display: grid;
-  gap: 17px;
+  gap: var(--space-17);
   overflow-y: auto;
-  padding: 21px 26px;
+  padding: var(--space-21) var(--space-26);
 }
 
 .transaction-form__fields .field-control {
@@ -89,21 +78,21 @@
 .transaction-form__actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: var(--space-10);
   margin-top: auto;
-  padding: 16px 26px;
+  padding: var(--space-16) var(--space-26);
   border-top: 1px solid var(--color-divider);
 }
 
 .transaction-detail-loading {
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: var(--space-12);
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: var(--font-size-13);
 }
 
-.transaction-detail-loading .transaction-loading {
+.transaction-detail-loading .loading-spinner {
   margin: 0;
 }
 
@@ -129,68 +118,20 @@
   }
 }
 
-.payables-page__toast {
-  z-index: 1200;
-}
-
-.payables-page__header,
-.payables-page__heading,
-.loan-summary__card {
-  display: flex;
-  align-items: center;
-}
-
-.payables-page__header {
-  justify-content: space-between;
-  gap: 20px;
-  flex-shrink: 0;
-}
-
-.payables-page__heading {
-  min-width: 0;
-  gap: 14px;
-}
-
-.payables-page__heading-icon {
-  display: grid;
-  width: 46px;
-  height: 46px;
-  flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid var(--color-border);
-  border-radius: 13px;
-  background: var(--color-surface);
-  box-shadow: var(--shadow-sm);
-  color: var(--color-primary);
-}
-
-.payables-page__heading h1 {
-  margin: 2px 0 1px;
-  font-size: clamp(27px, 3.2vw, 35px);
-  font-weight: 580;
-  letter-spacing: -0.06em;
-  line-height: 1.12;
-}
-
-.payables-page__heading p {
-  margin: 0;
-  color: var(--color-text-secondary);
-  font-size: 13px;
-  line-height: 1.55;
-}
-
 .loan-summary {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: var(--space-14);
   flex-shrink: 0;
-  margin-top: 25px;
+  margin-top: var(--space-25);
 }
 
 .loan-summary__card {
+  display: flex;
+  align-items: center;
   min-width: 0;
-  gap: 13px;
-  padding: 18px 20px;
+  gap: var(--space-13);
+  padding: var(--space-18) var(--space-20);
   border: 1px solid var(--color-border);
   border-radius: 12px;
   background: var(--color-surface);
@@ -211,12 +152,12 @@
 .loan-summary__card > div {
   display: grid;
   min-width: 0;
-  gap: 3px;
+  gap: var(--space-3);
 }
 
 .loan-summary__card > div > span {
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   font-weight: 560;
 }
 
@@ -238,7 +179,7 @@
   min-height: 0;
   flex: 1;
   flex-direction: column;
-  margin-top: 20px;
+  margin-top: var(--space-20);
   border: 1px solid var(--color-border);
   border-radius: 12px;
   background: var(--color-surface);
@@ -253,9 +194,9 @@
 
 .loan-list__header {
   justify-content: space-between;
-  gap: 18px;
+  gap: var(--space-18);
   flex-shrink: 0;
-  padding: 18px 20px;
+  padding: var(--space-18) var(--space-20);
   border-bottom: 1px solid var(--color-divider);
 }
 
@@ -266,31 +207,15 @@
 
 .loan-list__header h2 {
   margin: 0;
-  font-size: 16px;
+  font-size: var(--font-size-16);
   font-weight: 680;
   letter-spacing: -0.025em;
 }
 
 .loan-list__header p {
-  margin: 2px 0 0;
+  margin: var(--space-2) 0 0;
   color: var(--color-text-secondary);
-  font-size: 12px;
-}
-
-.loan-bank-filter {
-  width: 250px;
-  min-width: 250px;
-}
-
-.loan-bank-filter .field__label {
-  color: var(--color-text-secondary);
-  font-size: 10px;
-  font-weight: 650;
-}
-
-.loan-bank-filter .select-field__trigger {
-  min-height: 38px;
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 
 .loan-table-wrap {
@@ -312,10 +237,10 @@
 }
 
 .loan-table th {
-  padding: 10px 18px;
+  padding: var(--space-10) var(--space-18);
   background: color-mix(in srgb, var(--color-background) 72%, var(--color-surface));
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: var(--font-size-11);
   font-weight: 700;
   letter-spacing: 0.075em;
   text-transform: uppercase;
@@ -324,20 +249,20 @@
 
 .loan-table th:first-child,
 .loan-table td:first-child {
-  padding-left: 20px;
+  padding-left: var(--space-20);
 }
 
 .loan-table th:last-child,
 .loan-table td:last-child {
-  padding-right: 20px;
+  padding-right: var(--space-20);
   text-align: right;
 }
 
 .loan-table td {
-  padding: 12px 18px;
+  padding: var(--space-12) var(--space-18);
   border-top: 1px solid var(--color-divider);
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   white-space: nowrap;
 }
 
@@ -345,12 +270,12 @@
   display: flex;
   min-width: 170px;
   align-items: center;
-  gap: 9px;
+  gap: var(--space-9);
 }
 
 .loan-table__bank strong {
   color: var(--color-text-primary);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   font-weight: 620;
 }
 
@@ -372,7 +297,7 @@
 }
 
 .loan-table__actions .button--icon + .button--icon {
-  margin-left: 3px;
+  margin-left: var(--space-3);
 }
 
 .loan-table__actions .button--icon:hover {
@@ -411,16 +336,16 @@
 
 .loan-pagination {
   justify-content: space-between;
-  gap: 15px;
+  gap: var(--space-15);
   flex-shrink: 0;
-  padding: 12px 20px;
+  padding: var(--space-12) var(--space-20);
   border-top: 1px solid var(--color-divider);
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: var(--font-size-11);
 }
 
 .loan-pagination__controls {
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .loan-pagination__controls .button--icon {
@@ -442,13 +367,13 @@
   min-height: 0;
   flex: 1;
   overflow-y: auto;
-  padding: 20px 26px;
+  padding: var(--space-20) var(--space-26);
 }
 
 .loan-detail-content--payment {
   display: flex;
   overflow: hidden;
-  padding: 16px 22px 20px;
+  padding: var(--space-16) var(--space-22) var(--space-20);
 }
 
 .loan-payment-screen {
@@ -457,7 +382,7 @@
   min-height: 0;
   flex: 1;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-12);
   overflow: hidden;
 }
 
@@ -465,14 +390,14 @@
   display: inline-flex;
   width: fit-content;
   align-items: center;
-  gap: 7px;
-  padding: 4px 0;
+  gap: var(--space-7);
+  padding: var(--space-4) 0;
   border: 0;
   background: transparent;
   color: var(--color-text-secondary);
   cursor: pointer;
   font: inherit;
-  font-size: 12px;
+  font-size: var(--font-size-12);
   font-weight: 600;
   flex: 0 0 auto;
 }
@@ -486,7 +411,7 @@
   min-height: 0;
   flex: 1;
   grid-template-columns: minmax(0, 1.08fr) minmax(215px, 0.92fr);
-  gap: 16px;
+  gap: var(--space-16);
 }
 
 .loan-payment-screen__form {
@@ -495,7 +420,7 @@
   min-height: 0;
   flex: 1;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .loan-payment-screen__select .select-field__trigger {
@@ -503,13 +428,13 @@
 }
 
 .loan-payment-screen__select .select-field__value > span:last-child {
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 
 .loan-payment-hero {
   display: grid;
-  gap: 5px;
-  padding: 14px 16px 13px;
+  gap: var(--space-5);
+  padding: var(--space-14) var(--space-16) var(--space-13);
   border: 1px solid color-mix(in srgb, var(--color-primary) 24%, transparent);
   border-radius: 14px;
   background:
@@ -526,7 +451,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2px;
+  margin-bottom: var(--space-2);
 }
 
 .loan-payment-hero__icon {
@@ -541,7 +466,7 @@
 
 .loan-payment-hero__label {
   color: color-mix(in srgb, var(--color-text-inverse) 76%, transparent);
-  font-size: 11px;
+  font-size: var(--font-size-11);
   font-weight: 560;
 }
 
@@ -556,10 +481,10 @@
 .loan-payment-hero__meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 12px;
-  margin-top: 3px;
+  gap: var(--space-4) var(--space-12);
+  margin-top: var(--space-3);
   color: color-mix(in srgb, var(--color-text-inverse) 78%, transparent);
-  font-size: 10px;
+  font-size: var(--font-size-10);
 }
 
 .loan-payment-screen__amount {
@@ -569,7 +494,7 @@
 .loan-payment-screen__amount-field .field-control {
   height: 48px;
   padding-right: 126px;
-  font-size: 17px;
+  font-size: var(--font-size-17);
   font-weight: 650;
   font-variant-numeric: tabular-nums;
 }
@@ -579,14 +504,14 @@
   right: 10px;
   bottom: 7px;
   min-height: 34px;
-  padding: 0 8px;
+  padding: 0 var(--space-8);
   border: 0;
   border-radius: 6px;
   background: var(--color-highlight);
   color: var(--color-primary);
   cursor: pointer;
   font: inherit;
-  font-size: 9px;
+  font-size: var(--font-size-9);
   font-weight: 680;
 }
 
@@ -597,16 +522,16 @@
 .loan-payment-screen__hint {
   margin: -7px 0 0;
   color: var(--color-text-muted);
-  font-size: 9px;
+  font-size: var(--font-size-9);
   line-height: 1.5;
 }
 
 .loan-payment-screen__actions {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
+  gap: var(--space-8);
   margin-top: auto;
-  padding-top: 8px;
+  padding-top: var(--space-8);
   border-top: 1px solid var(--color-divider);
 }
 
@@ -620,13 +545,13 @@
   min-width: 0;
   min-height: 0;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .loan-payment-progress,
 .loan-payment-history {
   min-width: 0;
-  padding: 14px;
+  padding: var(--space-14);
   border: 1px solid var(--color-border);
   border-radius: 11px;
   background: var(--color-background);
@@ -635,7 +560,7 @@
 .loan-payment-progress {
   display: grid;
   align-content: start;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .loan-payment-progress__heading,
@@ -643,18 +568,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .loan-payment-progress__heading > span {
   color: var(--color-text-secondary);
-  font-size: 11px;
+  font-size: var(--font-size-11);
   font-weight: 620;
 }
 
 .loan-payment-progress__heading > strong {
   color: var(--color-primary);
-  font-size: 17px;
+  font-size: var(--font-size-17);
   font-weight: 720;
   font-variant-numeric: tabular-nums;
 }
@@ -665,21 +590,21 @@
 
 .loan-payment-progress__totals > span {
   display: grid;
-  gap: 2px;
+  gap: var(--space-2);
   color: var(--color-text-muted);
-  font-size: 9px;
+  font-size: var(--font-size-9);
 }
 
 .loan-payment-progress__totals strong {
   color: var(--color-text-primary);
-  font-size: 11px;
+  font-size: var(--font-size-11);
   font-weight: 650;
   font-variant-numeric: tabular-nums;
 }
 
 .loan-payment-progress__count {
   color: var(--color-text-secondary);
-  font-size: 10px;
+  font-size: var(--font-size-10);
 }
 
 .loan-payment-history {
@@ -693,37 +618,37 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .loan-payment-history > header > div {
   display: grid;
-  gap: 2px;
+  gap: var(--space-2);
 }
 
 .loan-payment-history h3 {
   margin: 0;
   color: var(--color-text-primary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   font-weight: 680;
 }
 
 .loan-payment-history > header > div > span {
   color: var(--color-text-muted);
-  font-size: 9px;
+  font-size: var(--font-size-9);
 }
 
 .loan-payment-history > header > strong {
   color: var(--color-success);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   font-weight: 680;
   white-space: nowrap;
 }
 
 .loan-payment-history__note {
-  margin: 7px 0 4px;
+  margin: var(--space-7) 0 var(--space-4);
   color: var(--color-text-muted);
-  font-size: 9px;
+  font-size: var(--font-size-9);
   line-height: 1.4;
 }
 
@@ -741,17 +666,17 @@
   min-width: 0;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  padding-block: 7px;
+  gap: var(--space-8);
+  padding-block: var(--space-7);
   border-top: 1px solid var(--color-divider);
 }
 
 .loan-payment-history__list > li > span {
   display: grid;
   min-width: 0;
-  gap: 2px;
+  gap: var(--space-2);
   color: var(--color-text-secondary);
-  font-size: 10px;
+  font-size: var(--font-size-10);
 }
 
 .loan-payment-history__list > li > span:last-child {
@@ -760,7 +685,7 @@
 
 .loan-payment-history__list strong {
   color: var(--color-text-primary);
-  font-size: 10px;
+  font-size: var(--font-size-10);
   font-weight: 650;
   font-variant-numeric: tabular-nums;
 }
@@ -768,21 +693,21 @@
 .loan-payment-history__list small {
   overflow: hidden;
   color: var(--color-text-muted);
-  font-size: 9px;
+  font-size: var(--font-size-9);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .loan-payment-history__empty,
 .loan-payment-history__more {
-  margin: 8px 0 0;
+  margin: var(--space-8) 0 0;
   color: var(--color-text-muted);
-  font-size: 9px;
+  font-size: var(--font-size-9);
   line-height: 1.45;
 }
 
 .loan-payment-history__more {
-  padding-top: 7px;
+  padding-top: var(--space-7);
   border-top: 1px solid var(--color-divider);
 }
 
@@ -791,7 +716,7 @@
   flex: 1;
   align-content: center;
   justify-items: center;
-  padding: 30px 12px;
+  padding: var(--space-30) var(--space-12);
   text-align: center;
 }
 
@@ -799,7 +724,7 @@
   display: grid;
   width: 52px;
   height: 52px;
-  margin-bottom: 13px;
+  margin-bottom: var(--space-13);
   place-items: center;
   border-radius: 15px;
   background: var(--color-highlight);
@@ -808,62 +733,62 @@
 
 .loan-payment-screen__empty strong {
   color: var(--color-text-primary);
-  font-size: 15px;
+  font-size: var(--font-size-15);
 }
 
 .loan-payment-screen__empty p {
-  margin: 5px 0 0;
+  margin: var(--space-5) 0 0;
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 
 .loan-detail-summary {
   display: grid;
-  gap: 16px;
+  gap: var(--space-16);
 }
 
 .loan-detail-summary__bank {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .loan-detail-summary__bank > div {
   display: grid;
-  gap: 1px;
+  gap: var(--space-1);
 }
 
 .loan-detail-summary__bank > div > span,
 .loan-detail-summary__amounts > div > span {
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: var(--font-size-11);
 }
 
 .loan-detail-summary__bank strong {
   color: var(--color-text-primary);
-  font-size: 13px;
+  font-size: var(--font-size-13);
 }
 
 .loan-detail-summary__amounts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .loan-detail-summary__amounts > div {
   display: grid;
   min-width: 0;
-  gap: 3px;
+  gap: var(--space-3);
 }
 
 .loan-detail-summary__amounts > div > span {
-  font-size: 10px;
+  font-size: var(--font-size-10);
 }
 
 .loan-detail-summary__amounts strong {
   overflow: hidden;
   color: var(--color-text-primary);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   font-weight: 650;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -895,67 +820,67 @@
 .loan-progress__summary {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  gap: var(--space-10);
   color: var(--color-text-muted);
-  font-size: 10px;
+  font-size: var(--font-size-10);
 }
 
 .loan-detail-list {
   display: grid;
-  margin: 18px 0 0;
+  margin: var(--space-18) 0 0;
 }
 
 .loan-detail-list > div {
   display: flex;
   justify-content: space-between;
-  gap: 14px;
-  padding-block: 10px;
+  gap: var(--space-14);
+  padding-block: var(--space-10);
   border-bottom: 1px solid var(--color-divider);
 }
 
 .loan-detail-list dt {
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: var(--font-size-11);
   font-weight: 600;
 }
 
 .loan-detail-list dd {
   margin: 0;
   color: var(--color-text-primary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   text-align: right;
 }
 
 .loan-payments {
-  margin-top: 22px;
+  margin-top: var(--space-22);
 }
 
 .loan-payments__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: var(--space-10);
+  margin-bottom: var(--space-10);
 }
 
 .loan-payments__header h3 {
   margin: 0;
   color: var(--color-text-primary);
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-weight: 680;
 }
 
 .loan-payments__header p {
-  margin: 1px 0 0;
+  margin: var(--space-1) 0 0;
   color: var(--color-text-muted);
-  font-size: 10px;
+  font-size: var(--font-size-10);
 }
 
 .loan-payment-form {
   display: grid;
-  gap: 13px;
-  margin-bottom: 13px;
-  padding: 14px;
+  gap: var(--space-13);
+  margin-bottom: var(--space-13);
+  padding: var(--space-14);
   border: 1px solid var(--color-border);
   border-radius: 9px;
   background: var(--color-background);
@@ -968,7 +893,7 @@
 .loan-payment-form__actions {
   display: flex;
   justify-content: flex-end;
-  gap: 7px;
+  gap: var(--space-7);
 }
 
 .loan-payment-list {
@@ -983,7 +908,7 @@
   display: flex;
   min-height: 48px;
   align-items: center;
-  gap: 9px;
+  gap: var(--space-9);
   border-bottom: 1px solid var(--color-divider);
 }
 
@@ -1001,12 +926,12 @@
 .loan-payment-list__date {
   flex: 1;
   color: var(--color-text-secondary);
-  font-size: 11px;
+  font-size: var(--font-size-11);
 }
 
 .loan-payment-list__item > strong {
   color: var(--color-text-primary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   font-weight: 650;
 }
 
@@ -1015,14 +940,14 @@
   min-height: 64px;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--space-8);
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: var(--font-size-11);
 }
 
 .loan-installment-list {
   display: grid;
-  gap: 10px;
+  gap: var(--space-10);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1030,8 +955,8 @@
 
 .loan-installment {
   display: grid;
-  gap: 10px;
-  padding: 13px;
+  gap: var(--space-10);
+  padding: var(--space-13);
   border: 1px solid var(--color-border);
   border-radius: 9px;
   background: var(--color-surface);
@@ -1045,32 +970,32 @@
 
 .loan-installment__heading {
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .loan-installment__heading > div {
   align-items: flex-start;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-2);
 }
 
 .loan-installment__heading strong {
   color: var(--color-text-primary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 
 .loan-installment__heading > div > span,
 .loan-installment__breakdown {
   color: var(--color-text-muted);
-  font-size: 10px;
+  font-size: var(--font-size-10);
 }
 
 .loan-installment__status {
-  padding: 4px 7px;
+  padding: var(--space-4) var(--space-7);
   border-radius: 99px;
   background: var(--color-surface-secondary);
   color: var(--color-text-secondary);
-  font-size: 9px;
+  font-size: var(--font-size-9);
   font-weight: 650;
   white-space: nowrap;
 }
@@ -1093,26 +1018,26 @@
 .loan-installment__amounts {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  gap: var(--space-8);
   margin: 0;
 }
 
 .loan-installment__amounts > div {
   display: grid;
   min-width: 0;
-  gap: 2px;
+  gap: var(--space-2);
 }
 
 .loan-installment__amounts dt {
   color: var(--color-text-muted);
-  font-size: 9px;
+  font-size: var(--font-size-9);
 }
 
 .loan-installment__amounts dd {
   overflow: hidden;
   margin: 0;
   color: var(--color-text-primary);
-  font-size: 11px;
+  font-size: var(--font-size-11);
   font-weight: 630;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1122,14 +1047,14 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-8);
   color: var(--color-text-muted);
-  font-size: 10px;
+  font-size: var(--font-size-10);
 }
 
 .loan-payment-form > strong {
   color: var(--color-text-primary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 
 .loan-confirmation {
@@ -1138,7 +1063,7 @@
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 20px;
+  padding: var(--space-20);
 }
 
 @media (max-width: 760px) {
@@ -1147,35 +1072,21 @@
   }
 
   .transaction-drawer__header {
-    padding: 21px 20px 17px;
+    padding: var(--space-21) var(--space-20) var(--space-17);
   }
 
   .transaction-form__fields {
-    gap: 15px;
-    padding: 18px 20px;
+    gap: var(--space-15);
+    padding: var(--space-18) var(--space-20);
   }
 
   .transaction-form__actions {
-    padding: 14px 20px;
-  }
-
-  .payables-page {
-    width: calc(100% - 32px);
-    padding-block: 20px 30px;
-  }
-
-  .payables-page__header {
-    align-items: flex-start;
+    padding: var(--space-14) var(--space-20);
   }
 
   .loan-list__header {
     align-items: flex-start;
     flex-direction: column;
-  }
-
-  .loan-bank-filter {
-    width: 100%;
-    min-width: 0;
   }
 
   .loan-pagination {
@@ -1191,99 +1102,72 @@
 
 @media (max-width: 520px) {
   .transaction-drawer__header {
-    padding: 20px 18px 16px;
+    padding: var(--space-20) var(--space-18) var(--space-16);
   }
 
   .transaction-form__fields {
-    gap: 14px;
-    padding: 18px;
+    gap: var(--space-14);
+    padding: var(--space-18);
   }
 
   .transaction-form__actions {
-    gap: 8px;
-    padding: 13px 18px;
+    gap: var(--space-8);
+    padding: var(--space-13) var(--space-18);
   }
 
   .transaction-form__actions .button {
     flex: 1;
-    padding-inline: 10px;
-    font-size: 11px;
-  }
-
-  .payables-page__heading {
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .payables-page__heading-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 11px;
-  }
-
-  .payables-page__heading h1 {
-    font-size: 25px;
-  }
-
-  .payables-page__heading p {
-    font-size: 11px;
-  }
-
-  .payables-page__header {
-    flex-wrap: wrap;
-  }
-
-  .payables-page__header > .button {
-    margin-left: 50px;
+    padding-inline: var(--space-10);
+    font-size: var(--font-size-11);
   }
 
   .loan-summary {
     grid-template-columns: 1fr;
-    gap: 10px;
-    margin-top: 19px;
+    gap: var(--space-10);
+    margin-top: var(--space-19);
   }
 
   .loan-summary__card {
-    padding: 14px 16px;
+    padding: var(--space-14) var(--space-16);
   }
 
   .loan-list__header {
-    padding: 15px;
+    padding: var(--space-15);
   }
 
   .loan-table th,
   .loan-table td {
-    padding-inline: 12px;
+    padding-inline: var(--space-12);
   }
 
   .loan-table th:first-child,
   .loan-table td:first-child {
-    padding-left: 15px;
+    padding-left: var(--space-15);
   }
 
   .loan-table th:last-child,
   .loan-table td:last-child {
-    padding-right: 15px;
+    padding-right: var(--space-15);
   }
 
   .loan-pagination {
-    padding-inline: 15px;
+    padding-inline: var(--space-15);
   }
 
   .loan-pagination__controls {
-    gap: 5px;
+    gap: var(--space-5);
   }
 
   .loan-detail-content {
-    padding: 18px;
+    padding: var(--space-18);
   }
 
   .loan-detail-content--payment {
-    padding: 14px 18px 16px;
+    padding: var(--space-14) var(--space-18) var(--space-16);
   }
 
   .loan-payment-screen__form {
-    gap: 10px;
+    gap: var(--space-10);
   }
 
   .loan-payment-screen__actions .button {
@@ -1291,15 +1175,15 @@
   }
 
   .loan-detail-summary__amounts {
-    gap: 5px;
+    gap: var(--space-5);
   }
 
   .loan-detail-summary__amounts strong {
-    font-size: 11px;
+    font-size: var(--font-size-11);
   }
 
   .loan-confirmation .transaction-confirmation__dialog {
-    padding: 20px;
+    padding: var(--space-20);
   }
 }
 
@@ -1313,7 +1197,7 @@
   }
 
   .loan-payment-progress {
-    padding: 10px 12px;
+    padding: var(--space-10) var(--space-12);
   }
 
   .loan-payment-history {
@@ -1323,21 +1207,21 @@
 
 @media (max-width: 560px) {
   .loan-detail-content--payment {
-    padding: 12px 16px 14px;
+    padding: var(--space-12) var(--space-16) var(--space-14);
   }
 
   .loan-payment-screen {
-    gap: 8px;
+    gap: var(--space-8);
   }
 
   .loan-payment-screen__layout {
     display: flex;
     flex-direction: column;
-    gap: 9px;
+    gap: var(--space-9);
   }
 
   .loan-payment-screen__form {
-    gap: 9px;
+    gap: var(--space-9);
   }
 
   .loan-payment-overview {
@@ -1347,8 +1231,8 @@
 
   .loan-payment-progress {
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 6px 12px;
-    padding: 9px 11px;
+    gap: var(--space-6) var(--space-12);
+    padding: var(--space-9) var(--space-11);
   }
 
   .loan-payment-progress__heading {
@@ -1356,7 +1240,7 @@
   }
 
   .loan-payment-progress__heading > strong {
-    font-size: 14px;
+    font-size: var(--font-size-14);
   }
 
   .loan-payment-progress .loan-progress {
@@ -1365,7 +1249,7 @@
 
   .loan-payment-progress__totals {
     justify-content: flex-start;
-    gap: 14px;
+    gap: var(--space-14);
   }
 
   .loan-payment-progress__count {
@@ -1382,8 +1266,8 @@
   }
 
   .loan-payment-hero {
-    gap: 4px;
-    padding: 10px 13px;
+    gap: var(--space-4);
+    padding: var(--space-10) var(--space-13);
   }
 
   .loan-payment-hero__top {
@@ -1396,43 +1280,43 @@
   }
 
   .loan-payment-hero > strong {
-    font-size: 27px;
+    font-size: var(--font-size-27);
   }
 
   .loan-payment-hero__meta {
-    font-size: 9px;
+    font-size: var(--font-size-9);
   }
 
   .loan-payment-screen__hint {
     margin-top: -5px;
-    font-size: 9px;
+    font-size: var(--font-size-9);
   }
 }
 
 @media (max-height: 700px) {
   .transaction-drawer__header {
-    padding-block: 14px 12px;
+    padding-block: var(--space-14) var(--space-12);
   }
 
   .loan-detail-content--payment {
-    padding-block: 10px 12px;
+    padding-block: var(--space-10) var(--space-12);
   }
 
   .loan-payment-screen {
-    gap: 7px;
+    gap: var(--space-7);
   }
 
   .loan-payment-screen__layout {
-    gap: 10px;
+    gap: var(--space-10);
   }
 
   .loan-payment-screen__form {
-    gap: 8px;
+    gap: var(--space-8);
   }
 
   .loan-payment-hero {
-    gap: 3px;
-    padding-block: 9px;
+    gap: var(--space-3);
+    padding-block: var(--space-9);
   }
 
   .loan-payment-hero__icon {
@@ -1441,7 +1325,7 @@
   }
 
   .loan-payment-hero > strong {
-    font-size: 27px;
+    font-size: var(--font-size-27);
   }
 
   .loan-payment-screen__hint,

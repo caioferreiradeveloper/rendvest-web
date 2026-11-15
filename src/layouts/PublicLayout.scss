@@ -1,5 +1,5 @@
 .site-footer {
-  padding-block: 25px 18px;
+  padding-block: var(--space-25) var(--space-18);
   border-top: 1px solid var(--color-border);
   background: var(--color-surface);
 }
@@ -9,11 +9,11 @@
   min-height: 42px;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: var(--space-20);
 }
 
 .brand--footer {
-  font-size: 16px;
+  font-size: var(--font-size-16);
 }
 
 .brand--footer .brand__mark {
@@ -25,32 +25,32 @@
 .site-footer__inner > p {
   margin: 0;
   color: var(--color-text-muted);
-  font-size: 12px;
+  font-size: var(--font-size-12);
 }
 
 .site-footer__link {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: var(--space-5);
   color: var(--color-primary);
-  font-size: 12px;
+  font-size: var(--font-size-12);
   font-weight: 650;
 }
 
 .site-footer__legal {
   display: flex;
   justify-content: space-between;
-  margin-top: 17px;
-  padding-top: 13px;
+  margin-top: var(--space-17);
+  padding-top: var(--space-13);
   border-top: 1px solid var(--color-divider);
   color: var(--color-text-muted);
-  font-size: 10px;
+  font-size: var(--font-size-10);
 }
 
 @media (max-width: 680px) {
   .site-footer__inner {
     flex-wrap: wrap;
-    gap: 11px 20px;
+    gap: var(--space-11) var(--space-20);
   }
 
   .site-footer__inner > p {
@@ -59,7 +59,7 @@
   }
 
   .site-footer__legal {
-    font-size: 9px;
+    font-size: var(--font-size-9);
   }
 }
 

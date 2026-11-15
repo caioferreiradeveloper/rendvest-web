@@ -22,16 +22,16 @@
 .bank-logo img {
   width: 100%;
   height: 100%;
-  padding: 3px;
+  padding: var(--space-3);
   object-fit: contain;
 }
 
 .bank-logo__fallback {
-  font-size: 8px;
+  font-size: var(--font-size-8);
   font-weight: 750;
   line-height: 1;
 }
 
 .bank-logo--medium .bank-logo__fallback {
-  font-size: 9px;
+  font-size: var(--font-size-9);
 }

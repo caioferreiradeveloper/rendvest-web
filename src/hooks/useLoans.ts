@@ -4,7 +4,7 @@ import type {
   LoanDetails,
   LoanPaymentPayload,
   LoanPayload,
-} from '../interfaces/loan';
+} from '@interface/loan';
 import {
   createLoan as createLoanRequest,
   createLoanPayment as createLoanPaymentRequest,
@@ -12,7 +12,7 @@ import {
   getLoanDetails,
   listLoans,
   updateLoan as updateLoanRequest,
-} from '../services/loans/loanService';
+} from '@services/loans/loanService';
 
 function getErrorMessage(error: unknown): string {
   return error instanceof Error

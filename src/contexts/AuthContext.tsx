@@ -7,12 +7,12 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { authEvents } from '../config/auth';
-import ApiError from '../services/api/ApiError';
+import { authEvents } from '@config/auth';
+import ApiError from '@services/api/ApiError';
 import {
   authService,
   type LoginCredentials,
-} from '../services/auth/authService';
+} from '@services/auth/authService';
 
 type AuthStatus =
   | 'checking'

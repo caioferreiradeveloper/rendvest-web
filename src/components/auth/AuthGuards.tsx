@@ -1,14 +1,21 @@
 import type { ReactNode } from 'react';
+import { Sprout } from 'lucide-react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@hooks/useAuth';
 import { Button } from '../ui/buttons';
 import MessageAlert from '../ui/MessageAlert';
 
 function AuthLoading() {
   return (
     <main className="auth-loading" role="status" aria-live="polite">
-      <span className="auth-loading__spinner" aria-hidden="true" />
-      <span>Verificando sua sessão…</span>
+      <span className="auth-loading__brand" aria-hidden="true">
+        <span className="auth-loading__spinner" />
+        <span className="auth-loading__mark">
+          <Sprout size={24} strokeWidth={2} />
+        </span>
+      </span>
+      <strong className="auth-loading__title">Preparando seu espaço</strong>
+      <span className="auth-loading__message">Verificando sua sessão…</span>
     </main>
   );
 }

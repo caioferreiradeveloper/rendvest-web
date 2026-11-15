@@ -1,3 +1,4 @@
+// React imports
 import { useEffect, useState } from 'react';
 import {
   ArrowDownLeft,
@@ -11,67 +12,66 @@ import {
   Pencil,
   Trash2,
 } from 'lucide-react';
-import MessageAlert from '../../../components/ui/MessageAlert';
-import { Button, IconButton } from '../../../components/ui/buttons';
-import { SelectField } from '../../../components/forms/fields';
-import BankLogo from '../../../components/ui/BankLogo';
+
+// Component imports
+import MessageAlert from '@components/ui/MessageAlert';
+import { Button, IconButton } from '@components/ui/buttons';
+import { SelectField } from '@components/forms/fields';
+import BankLogo from '@components/ui/BankLogo';
+
+// Config imports
 import {
   getTransactionBankLogoDomain,
   getTransactionBankLabel,
-  transactionBankOptions,
-  type TransactionBank,
-} from '../../../config/transactionBanks';
-import useTransactions from '../../../hooks/useTransactions';
+  transactionBankOptions
+} from '@config/transactionBanks';
+import { getPageSize } from '@config/pagination';
+
+// Hook imports
+import useTransactions from '@hooks/useTransactions';
+
+// Utility imports
+import { formatCurrency, formatDate } from '../../../utils/formatters';
+
+// Interface imports
 import type {
   Transaction,
   TransactionPayload,
   TransactionType,
-} from '../../../interfaces/transaction';
-import DeleteTransactionModal from './DeleteTransactionModal';
-import TransactionDetailSidebar from './TransactionDetailSidebar';
-import TransactionFormSidebar from './TransactionFormSidebar';
-import './Transactions.scss';
+} from '@interface/transaction';
+import type { BankFilter, TransactionFilter } from '@interface/filter';
 
-const pageSize = 5;
+// Context imports
+import { useToast } from '@contexts/ToastContext';
 
-type TransactionFilter = 'all' | TransactionType;
-type BankFilter = 'all' | TransactionBank;
-type ToastMessage = {
-  kind: 'error' | 'success';
-  title: string;
-  message: string;
-};
+// Page imports
+import DeleteTransactionModal from './components/DeleteTransactionModal';
+import TransactionDetailSidebar from './components/TransactionDetailSidebar';
+import TransactionFormSidebar from './components/TransactionFormSidebar';
 
+// Get the page size from the configuration
+const pageSize = getPageSize();
+
+// Bank filter options for the select field
 const bankFilterOptions = [
   { value: 'all', label: 'Todos os bancos' },
   ...transactionBankOptions,
 ] as const;
 
-const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-});
 
-const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
-  day: '2-digit',
-  month: 'short',
-  year: 'numeric',
-});
-
-function formatCurrency(value: string): string {
-  const amount = Number(value);
-  return Number.isFinite(amount) ? currencyFormatter.format(amount) : '—';
-}
-
-function formatDate(value: string): string {
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? '—' : dateFormatter.format(date);
-}
-
+// Exported page component - TransactionsPage
 export default function TransactionsPage() {
+
+  // State variables
   const [filter, setFilter] = useState<TransactionFilter>('all');
   const [bankFilter, setBankFilter] = useState<BankFilter>('all');
   const [page, setPage] = useState(1);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+  const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null);
+  const { showToast } = useToast();
+
+  // Use the custom hook to manage transactions
   const {
     transactions,
     selectedTransaction,
@@ -94,66 +94,49 @@ export default function TransactionsPage() {
     type: filter === 'all' ? undefined : filter,
     typeBank: bankFilter === 'all' ? undefined : bankFilter,
   });
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [editingTransaction, setEditingTransaction] =
-    useState<Transaction | null>(null);
-  const [transactionToDelete, setTransactionToDelete] =
-    useState<Transaction | null>(null);
-  const [toast, setToast] = useState<ToastMessage | null>(null);
-
-  const pageCount =
-    totalCount === null
-      ? Math.max(1, page + (hasNext ? 1 : 0))
-      : Math.max(1, Math.ceil(totalCount / pageSize));
-  const incomeTotal = transactions
-    .filter((transaction) => transaction.type === 'income')
-    .reduce((total, transaction) => total + Number(transaction.amount), 0);
-  const expenseTotal = transactions
-    .filter((transaction) => transaction.type === 'expense')
-    .reduce((total, transaction) => total + Number(transaction.amount), 0);
+  
+  
+  // Calculate pagination and filters details
+  const pageCount = totalCount === null
+    ? Math.max(1, page + (hasNext ? 1 : 0))
+    : Math.max(1, Math.ceil(totalCount / pageSize));
   const firstItem = transactions.length ? (page - 1) * pageSize + 1 : 0;
-  const lastItem =
-    totalCount === null
-      ? (page - 1) * pageSize + transactions.length
-      : Math.min(page * pageSize, totalCount);
-  const drawerInitialType: TransactionType =
-    filter === 'expense' ? 'expense' : 'income';
+  const lastItem = totalCount === null
+    ? (page - 1) * pageSize + transactions.length
+    : Math.min(page * pageSize, totalCount);
+  const drawerInitialType: TransactionType = filter === 'expense' ? 'expense' : 'income';
 
+  // Effect to ensure the current page does not exceed the total page count
   useEffect(() => {
     if (page > pageCount) {
       setPage(pageCount);
     }
   }, [page, pageCount]);
 
-  useEffect(() => {
-    if (!toast) {
-      return;
-    }
-
-    const timeout = window.setTimeout(() => setToast(null), 5000);
-    return () => window.clearTimeout(timeout);
-  }, [toast]);
-
+  // Effect to show a toast message when an error occurs
   useEffect(() => {
     if (error) {
-      setToast({
+      showToast({
         kind: 'error',
         title: 'Não foi possível concluir',
         message: error,
       });
     }
-  }, [error]);
+  }, [error, showToast]);
 
+  // Functions to handle filter changes and form actions
   function changeTypeFilter(value: TransactionFilter) {
     setFilter(value);
     setPage(1);
   }
 
+  // Function to handle bank filter changes
   function changeBankFilter(value: BankFilter) {
     setBankFilter(value);
     setPage(1);
   }
 
+  // Functions to handle opening forms
   function openCreateForm() {
     clearError();
     clearSelectedTransaction();
@@ -161,6 +144,7 @@ export default function TransactionsPage() {
     setIsDrawerOpen(true);
   }
 
+  // Functions to handle opening edit forms
   function openEditForm(transaction: Transaction) {
     clearError();
     clearSelectedTransaction();
@@ -168,11 +152,13 @@ export default function TransactionsPage() {
     setIsDrawerOpen(true);
   }
 
+  // Functions to handle opening delete confirmation
   function openDeleteConfirmation(transaction: Transaction) {
     clearSelectedTransaction();
     setTransactionToDelete(transaction);
   }
 
+  // Functions to handle closing forms
   function closeForm() {
     if (isSaving) {
       return;
@@ -182,11 +168,12 @@ export default function TransactionsPage() {
     clearError();
   }
 
+  // Functions to handle saving transactions (create or update)
   async function handleSave(values: TransactionPayload): Promise<boolean> {
     if (editingTransaction) {
       const saved = await update(editingTransaction.id, values);
       if (saved) {
-        setToast({
+        showToast({
           kind: 'success',
           title: 'Lançamento atualizado',
           message: 'As alterações foram salvas com sucesso.',
@@ -197,7 +184,7 @@ export default function TransactionsPage() {
 
     const saved = await create(values);
     if (saved) {
-      setToast({
+      showToast({
         kind: 'success',
         title: 'Lançamento cadastrado',
         message: 'A movimentação foi adicionada à sua lista.',
@@ -206,6 +193,7 @@ export default function TransactionsPage() {
     return saved;
   }
 
+  // Functions to handle deleting transactions
   async function handleDelete() {
     if (!transactionToDelete) {
       return;
@@ -217,7 +205,7 @@ export default function TransactionsPage() {
     );
     if (deleted) {
       setTransactionToDelete(null);
-      setToast({
+      showToast({
         kind: 'success',
         title: 'Lançamento excluído',
         message: 'A movimentação foi removida com sucesso.',
@@ -225,32 +213,26 @@ export default function TransactionsPage() {
     }
   }
 
+  // Functions to handle opening transaction details
   async function handleOpenDetail(transaction: Transaction) {
     clearError();
     await loadDetail(transaction.id, transaction.type);
   }
 
+  // Functions to handle editing transaction details
   function handleEditDetail() {
     if (selectedTransaction) {
       openEditForm(selectedTransaction);
     }
   }
 
+  // Render the TransactionsPage component
   return (
-    <main className="transactions-page">
-      {toast && (
-        <MessageAlert
-          className="transactions-page__toast"
-          kind={toast.kind}
-          message={toast.message}
-          onDismiss={() => setToast(null)}
-          title={toast.title}
-        />
-      )}
-      <header className="transactions-page__header">
-        <div className="transactions-page__heading">
-          <span className="transactions-page__heading-icon">
-            <ArrowDownUp size={21} strokeWidth={1.8} aria-hidden="true" />
+    <main className="private-page">
+      <header className="private-page__header">
+        <div className="private-page__heading">
+          <span className="private-page__heading-icon">
+            <ArrowDownUp size="var(--icon-size-21)" strokeWidth={1.8} aria-hidden="true" />
           </span>
           <div>
             <span className="eyebrow">Organização financeira</span>
@@ -259,7 +241,7 @@ export default function TransactionsPage() {
           </div>
         </div>
         <Button
-          icon={<CirclePlus size={17} />}
+          icon={<CirclePlus size="var(--icon-size-17)" />}
           iconPosition="leading"
           onClick={openCreateForm}
         >
@@ -335,9 +317,19 @@ export default function TransactionsPage() {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td className="transaction-table__state" colSpan={6}>
-                    <span className="transaction-loading" aria-hidden="true" />
-                    Carregando lançamentos...
+                  <td
+                    className="transaction-table__state"
+                    colSpan={6}
+                    role="status"
+                    aria-live="polite"
+                  >
+                    <div className="table-loading">
+                      <span
+                        className="loading-spinner loading-spinner--table"
+                        aria-hidden="true"
+                      />
+                      <span>Carregando lançamentos...</span>
+                    </div>
                   </td>
                 </tr>
               ) : transactions.length ? (
@@ -355,7 +347,7 @@ export default function TransactionsPage() {
                   <td className="transaction-table__state" colSpan={6}>
                     <div className="transaction-empty">
                       <span className="transaction-empty__icon">
-                        <CalendarDays size={22} aria-hidden="true" />
+                        <CalendarDays size="var(--icon-size-22)" aria-hidden="true" />
                       </span>
                       <strong>
                         {filter === 'all'
@@ -395,7 +387,7 @@ export default function TransactionsPage() {
           <div className="transaction-pagination__controls">
             <IconButton
               disabled={page <= 1 || isLoading}
-              icon={<ArrowLeft size={16} />}
+              icon={<ArrowLeft size="var(--icon-size-16)" />}
               label="Página anterior"
               onClick={() => setPage((currentPage) => currentPage - 1)}
             />
@@ -404,7 +396,7 @@ export default function TransactionsPage() {
             </span>
             <IconButton
               disabled={!hasNext || isLoading}
-              icon={<ArrowRight size={16} />}
+              icon={<ArrowRight size="var(--icon-size-16)" />}
               label="Próxima página"
               onClick={() => setPage((currentPage) => currentPage + 1)}
             />
@@ -442,7 +434,7 @@ export default function TransactionsPage() {
             className="transaction-drawer__panel transaction-detail-loading"
             role="dialog"
           >
-            <span className="transaction-loading" aria-hidden="true" />
+            <span className="loading-spinner" aria-hidden="true" />
             Carregando detalhes...
           </aside>
         </div>
@@ -498,9 +490,9 @@ function TransactionRow({
             }`}
           >
             {isIncome ? (
-              <ArrowDownLeft size={16} aria-hidden="true" />
+              <ArrowDownLeft size="var(--icon-size-16)" aria-hidden="true" />
             ) : (
-              <ArrowUpRight size={16} aria-hidden="true" />
+              <ArrowUpRight size="var(--icon-size-16)" aria-hidden="true" />
             )}
           </span>
           <div>
@@ -537,18 +529,18 @@ function TransactionRow({
       </td>
       <td className="transaction-table__actions">
         <IconButton
-          icon={<Eye size={16} />}
+          icon={<Eye size="var(--icon-size-16)" />}
           label={`Ver detalhes: ${transaction.category}`}
           onClick={onDetail}
         />
         <IconButton
-          icon={<Pencil size={16} />}
+          icon={<Pencil size="var(--icon-size-16)" />}
           label={`Editar ${isIncome ? 'ganho' : 'gasto'}: ${transaction.category}`}
           onClick={onEdit}
         />
         <IconButton
           className="transaction-table__delete"
-          icon={<Trash2 size={16} />}
+          icon={<Trash2 size="var(--icon-size-16)" />}
           label={`Excluir ${isIncome ? 'ganho' : 'gasto'}: ${transaction.category}`}
           onClick={onDelete}
         />
