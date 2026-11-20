@@ -1,5 +1,6 @@
-import PrivateModulePage from '@components/private/PrivateModulePage';
+import { Navigate } from 'react-router-dom';
+import { privateModules } from '@config/privateModules';
 
 export default function StocksPage() {
-  return <PrivateModulePage moduleKey="stocks" />;
+  return <Navigate to={`${privateModules.market.path}?tipo=stock`} replace />;
 }

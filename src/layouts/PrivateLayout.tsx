@@ -67,7 +67,7 @@ export default function PrivateLayout() {
                     className={({ isActive }) =>
                       `private-nav__link${isActive ? ' is-active' : ''}`
                     }
-                    end
+                    end={moduleKey !== 'market'}
                     key={moduleKey}
                     to={module.path}
                   >

@@ -48,20 +48,14 @@ export const privateModules = {
   },
   investments: {
     path: '/app/investimentos',
-    title: 'Investimentos',
+    title: 'Meus investimentos',
     description: 'Acompanhe sua carteira e seus objetivos de investimento.',
     icon: ChartNoAxesCombined,
   },
-  stocks: {
-    path: '/app/acoes',
-    title: 'Ações',
-    description: 'Organize seus investimentos em ações.',
-    icon: ChartNoAxesCombined,
-  },
-  fiis: {
-    path: '/app/fiis',
-    title: 'Fundos imobiliários',
-    description: 'Organize seus investimentos em fundos imobiliários.',
+  market: {
+    path: '/app/investimentos/mercado',
+    title: 'Cotações de mercado',
+    description: 'Pesquise ações e fundos imobiliários e consulte o último fechamento.',
     icon: Banknote,
   },
 } satisfies Record<
@@ -82,6 +76,6 @@ export const privateNavigationGroups: {
   },
   {
     title: 'Investimentos',
-    modules: ['investments', 'stocks', 'fiis'],
+    modules: ['investments', 'market'],
   },
 ];

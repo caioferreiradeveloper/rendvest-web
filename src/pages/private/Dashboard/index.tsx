@@ -1,359 +1,200 @@
-import { useState } from 'react';
-import {
-  ArrowDownLeft,
-  ArrowRight,
-  ArrowUpRight,
-  CalendarDays,
-  ChartNoAxesCombined,
-  Wallet,
-} from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowDownLeft, ArrowRight, ArrowUpRight, ChartNoAxesCombined, Wallet, type LucideIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { privateModules } from '@config/privateModules';
 import { SelectField } from '@components/forms/fields';
-import BankLogo from '@components/ui/BankLogo';
-import {
-  getTransactionBankLabel,
-  transactionBankOptions,
-  type TransactionBank,
-} from '@config/transactionBanks';
+import { getTransactionBankLabel, transactionBankOptions, type TransactionBank } from '@config/transactionBanks';
 import type { SelectFieldOption } from '@components/forms/fields/SelectField';
-import { formatCurrency } from '../../../utils/formatters';
+import { getDashboard, type DashboardData, type MonthlyFlow } from '../../../services/dashboard/dashboardService';
+import { formatCurrency, formatDate } from '../../../utils/formatters';
+import { portfolioTotal } from '../Investments/demoPortfolio';
+import FinancialOverview from './FinancialOverview';
+import MonthlyResult from './MonthlyResult';
+import PortfolioAllocation from './PortfolioAllocation';
 import './Dashboard.scss';
 
-type DashboardBank = TransactionBank | 'all';
-type TransactionKind = 'income' | 'expense';
-
-interface MonthlyFlow {
-  month: string;
-  income: number;
-  expenses: number;
-}
-
-interface DashboardTransaction {
-  title: string;
-  category: string;
-  date: string;
-  amount: number;
-  kind: TransactionKind;
-  bank: string;
-}
-
-const bankOptions: SelectFieldOption<DashboardBank>[] = [
-  { value: 'all', label: 'Todos os bancos' },
+const bankOptions: SelectFieldOption<TransactionBank>[] = [
+  { value: '', label: 'Todos os bancos' },
   ...transactionBankOptions.filter((bank) => bank.value !== ''),
 ];
+const monthFormat = new Intl.DateTimeFormat('pt-BR', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const countFormat = new Intl.NumberFormat('pt-BR');
+const dateFormat = new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' });
 
-const bankFactors: Record<string, number> = {
-  banco_do_brasil: 1.12,
-  bradesco: 1.04,
-  btg_pactual: 1.26,
-  c6_bank: 0.88,
-  caixa: 0.94,
-  inter: 0.78,
-  itau: 1.18,
-  mercado_pago: 0.68,
-  nubank: 0.92,
-  pagbank: 0.74,
-  picpay: 0.7,
-  santander: 1.08,
-  sicoob: 0.84,
-  sicredi: 0.82,
-  other: 0.66,
-};
+type MetricTone = 'income' | 'expense';
 
-const baseMonthlyFlow: MonthlyFlow[] = [
-  { month: 'Jun', income: 7200, expenses: 4680 },
-  { month: 'Jul', income: 8100, expenses: 5120 },
-  { month: 'Ago', income: 7600, expenses: 4920 },
-  { month: 'Set', income: 8900, expenses: 5380 },
-  { month: 'Out', income: 8350, expenses: 5060 },
-  { month: 'Nov', income: 9200, expenses: 4890 },
-];
-
-const baseTransactions: Omit<DashboardTransaction, 'bank'>[] = [
-  {
-    title: 'Salário',
-    category: 'Renda',
-    date: '12 nov',
-    amount: 8200,
-    kind: 'income',
-  },
-  {
-    title: 'Mercado da semana',
-    category: 'Alimentação',
-    date: '11 nov',
-    amount: 486.35,
-    kind: 'expense',
-  },
-  {
-    title: 'Freelance de design',
-    category: 'Renda extra',
-    date: '10 nov',
-    amount: 1450,
-    kind: 'income',
-  },
-  {
-    title: 'Conta de energia',
-    category: 'Moradia',
-    date: '08 nov',
-    amount: 213.9,
-    kind: 'expense',
-  },
-];
-
-const allBankTransactions: DashboardTransaction[] = [
-  { ...baseTransactions[0], bank: 'itau' },
-  { ...baseTransactions[1], bank: 'nubank' },
-  { ...baseTransactions[2], bank: 'inter' },
-  { ...baseTransactions[3], bank: 'banco_do_brasil' },
-];
-
-function getBankFactor(bank: TransactionBank): number {
-  return bankFactors[bank] ?? 0.86;
+function netTone(value: string): MetricTone | undefined {
+  const amount = Number(value);
+  if (amount === 0) return undefined;
+  return amount > 0 ? 'income' : 'expense';
 }
 
-function getBankTransactions(bank: TransactionBank): DashboardTransaction[] {
-  const factor = getBankFactor(bank);
-  return baseTransactions.map((transaction) => ({
-    ...transaction,
-    amount: transaction.amount * factor,
-    bank,
-  }));
+function amountClass(tone?: MetricTone) {
+  return tone ? `financial-amount financial-amount--${tone}` : undefined;
+}
+
+const changeFormat = new Intl.NumberFormat('pt-BR', {
+  style: 'percent', maximumFractionDigits: 1, signDisplay: 'exceptZero',
+});
+
+function SummaryCard({ label, amount, kind, Icon, previous }: {
+  label: string;
+  amount: string | number;
+  kind: 'income' | 'expense' | 'investments';
+  Icon: LucideIcon;
+  previous?: string;
+}) {
+  const baseline = Number(previous);
+  const change = baseline > 0 ? (Number(amount) - baseline) / baseline : null;
+  const favorable = change !== null && (kind === 'income' ? change > 0 : change < 0);
+  const caption = kind === 'investments' ? 'Carteira simulada' : 'Sem base de comparação';
+
+  return (
+    <div className="dashboard-metric">
+      <span className={`dashboard-metric__icon dashboard-metric__icon--${kind}`}>
+        <Icon size={20} aria-hidden="true" />
+      </span>
+      <span className="dashboard-metric__label">{label}</span>
+      <strong>{formatCurrency(amount)}</strong>
+      <span className={`dashboard-metric__change dashboard-metric__change--${favorable ? 'positive' : 'neutral'}`}>
+        {change === null ? caption : <>{changeFormat.format(change)} <span>vs. mês anterior</span></>}
+      </span>
+    </div>
+  );
+}
+
+function CashFlow({ history, transactions }: { history: MonthlyFlow[]; transactions: DashboardData['transactions'] }) {
+  const maxFlow = Math.max(1, ...history.flatMap(({ income, expenses }) => [Number(income), Number(expenses)]));
+  return (
+    <section className="dashboard-card dashboard-flow" aria-labelledby="dashboard-flow-title">
+      <header className="dashboard-card__header">
+        <div>
+          <h2 id="dashboard-flow-title">Fluxo de caixa em seis meses</h2>
+          <p>Entradas e saídas realizadas. Compras vinculadas a faturas entram no fluxo quando a fatura é paga.</p>
+        </div>
+      </header>
+      <dl className="dashboard-flow__summary" aria-label="Totais do mês">
+        <div><dt>Resultado do mês</dt><dd className={amountClass(netTone(transactions.net))}>{formatCurrency(transactions.net)}</dd></div>
+      </dl>
+      <p className="dashboard-overview__note">
+        {countFormat.format(transactions.transaction_count)} {transactions.transaction_count === 1 ? 'lançamento registrado' : 'lançamentos registrados'} no mês
+      </p>
+      <div className="dashboard-flow__legend" aria-hidden="true">
+        <span><i className="dashboard-flow__legend-dot dashboard-flow__legend-dot--income" />Entradas</span>
+        <span><i className="dashboard-flow__legend-dot dashboard-flow__legend-dot--expenses" />Saídas</span>
+      </div>
+      <div className="dashboard-flow__chart">
+        {history.map((period) => (
+          <div key={period.month} className="dashboard-flow__month">
+            <div className="dashboard-flow__bars" role="img" aria-label={`Entradas: ${formatCurrency(period.income)} · Saídas: ${formatCurrency(period.expenses)}`} title={`Entradas: ${formatCurrency(period.income)} · Saídas: ${formatCurrency(period.expenses)}`}>
+              <span className="dashboard-flow__bar dashboard-flow__bar--income" hidden={Number(period.income) === 0} style={{ height: `${Number(period.income) / maxFlow * 100}%` }} />
+              <span className="dashboard-flow__bar dashboard-flow__bar--expenses" hidden={Number(period.expenses) === 0} style={{ height: `${Number(period.expenses) / maxFlow * 100}%` }} />
+            </div>
+            <span className="dashboard-flow__month-label">{monthFormat.format(new Date(period.month))}</span>
+          </div>
+        ))}
+      </div>
+      <Link className="dashboard-chart-link" to={privateModules.transactions.path}>
+        Ver valores por mês <ArrowRight size={17} aria-hidden="true" />
+      </Link>
+    </section>
+  );
 }
 
 export default function DashboardPage() {
-  const [selectedBank, setSelectedBank] = useState<DashboardBank>('all');
-  const bankFactor = selectedBank === 'all' ? 1 : getBankFactor(selectedBank);
-  const monthlyFlow = baseMonthlyFlow.map((month) => ({
-    ...month,
-    income: month.income * bankFactor,
-    expenses: month.expenses * bankFactor,
-  }));
-  const transactions =
-    selectedBank === 'all'
-      ? allBankTransactions
-      : getBankTransactions(selectedBank);
-  const selectedBankOption = bankOptions.find(
-    (bank) => bank.value === selectedBank,
-  );
-  const maxFlow = Math.max(...monthlyFlow.map((month) => month.income));
-  const currentIncome = monthlyFlow[monthlyFlow.length - 1].income;
-  const currentExpenses = monthlyFlow[monthlyFlow.length - 1].expenses;
-  const currentBalance = 28450 * bankFactor;
-  const investedAmount = 18700 * bankFactor;
+  const [bank, setBank] = useState<TransactionBank>('');
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [error, setError] = useState('');
+  const [retry, setRetry] = useState(0);
+
+  useEffect(() => {
+    const request = new AbortController();
+    getDashboard(bank, request.signal)
+      .then((response) => { if (!request.signal.aborted) setData(response); })
+      .catch((failure: unknown) => {
+        if (!request.signal.aborted) {
+          setError(failure instanceof Error ? failure.message : 'Não foi possível carregar o dashboard.');
+        }
+      });
+    return () => request.abort();
+  }, [bank, retry]);
+
+  function changeBank(value: TransactionBank) {
+    if (value === bank) return;
+    setError('');
+    setData(null);
+    setBank(value);
+  }
 
   return (
     <main className="dashboard-page">
       <header className="dashboard-page__header">
         <div className="dashboard-page__heading">
-          <span className="dashboard-page__heading-icon">
-            <ChartNoAxesCombined size="var(--icon-size-21)" strokeWidth={1.8} aria-hidden="true" />
-          </span>
-          <div>
-            <span className="eyebrow">Visão geral</span>
-            <h1>Seu dinheiro em equilíbrio</h1>
-            <p>Acompanhe sua vida financeira em um só lugar.</p>
-          </div>
+          <span className="dashboard-page__heading-icon"><ChartNoAxesCombined aria-hidden="true" /></span>
+          <div><h1>Dashboard financeiro</h1><p>Resumo dos seus lançamentos e compromissos.</p></div>
         </div>
-        <SelectField
-          fieldClassName="dashboard-bank-filter"
-          id="dashboard-bank-filter"
-          label="Visualizar banco"
-          onChange={setSelectedBank}
-          options={bankOptions}
-          value={selectedBank}
-        />
+        <SelectField fieldClassName="dashboard-bank-filter" id="dashboard-bank-filter"
+          label="Banco dos lançamentos" onChange={changeBank} options={bankOptions} value={bank} />
       </header>
-
-      <section
-        aria-label="Saldo disponível"
-        className="dashboard-balance"
-      >
-        <div className="dashboard-balance__content">
-          <span className="dashboard-balance__label">
-            {selectedBank === 'all'
-              ? 'Saldo total em todos os bancos'
-              : `Saldo disponível no ${getTransactionBankLabel(selectedBank)}`}
-          </span>
-          <strong>{formatCurrency(currentBalance)}</strong>
-          <span className="dashboard-balance__trend">
-            <ArrowUpRight size="var(--icon-size-15)" aria-hidden="true" />
-            6,8% em relação ao mês passado
-          </span>
+      {error && (
+        <div className="dashboard-section" role="alert">
+          <p>{error}</p>
+          <button className="button button--secondary" type="button" onClick={() => {
+            setError('');
+            setRetry((current) => current + 1);
+          }}>Tentar novamente</button>
         </div>
-        <span className="dashboard-balance__icon" aria-hidden="true">
-          <Wallet size="var(--icon-size-23)" />
-        </span>
-        <div className="dashboard-balance__footer">
-          <span>
-            <CalendarDays size="var(--icon-size-14)" aria-hidden="true" />
-            Dados demonstrativos · atualizado em 12 nov. 2026
-          </span>
-          {selectedBankOption && selectedBank !== 'all' && (
-            <span className="dashboard-balance__bank">
-              <BankLogo
-                label={selectedBankOption.label}
-                logoDomain={selectedBankOption.logoDomain}
-                size="small"
-              />
-              {selectedBankOption.label}
-            </span>
-          )}
-        </div>
-      </section>
-
-      <section aria-label="Resumo do mês" className="dashboard-metrics">
-        <article className="dashboard-metric">
-          <span className="dashboard-metric__icon dashboard-metric__icon--income">
-            <ArrowDownLeft size="var(--icon-size-18)" aria-hidden="true" />
-          </span>
-          <span className="dashboard-metric__label">Receitas do mês</span>
-          <strong>{formatCurrency(currentIncome)}</strong>
-          <span className="dashboard-metric__change dashboard-metric__change--positive">
-            +12,4% <span>vs. mês anterior</span>
-          </span>
-        </article>
-        <article className="dashboard-metric">
-          <span className="dashboard-metric__icon dashboard-metric__icon--expense">
-            <ArrowUpRight size="var(--icon-size-18)" aria-hidden="true" />
-          </span>
-          <span className="dashboard-metric__label">Despesas do mês</span>
-          <strong>{formatCurrency(currentExpenses)}</strong>
-          <span className="dashboard-metric__change dashboard-metric__change--neutral">
-            -3,2% <span>vs. mês anterior</span>
-          </span>
-        </article>
-        <article className="dashboard-metric">
-          <span className="dashboard-metric__icon dashboard-metric__icon--investments">
-            <ChartNoAxesCombined size="var(--icon-size-18)" aria-hidden="true" />
-          </span>
-          <span className="dashboard-metric__label">Total investido</span>
-          <strong>{formatCurrency(investedAmount)}</strong>
-          <span className="dashboard-metric__change dashboard-metric__change--positive">
-            +5,6% <span>este mês</span>
-          </span>
-        </article>
-      </section>
-
-      <div className="dashboard-content">
-        <section
-          aria-labelledby="dashboard-flow-title"
-          className="dashboard-card dashboard-flow"
-        >
-          <header className="dashboard-card__header">
-            <div>
-              <h2 id="dashboard-flow-title">Fluxo financeiro</h2>
-              <p>Receitas e despesas nos últimos seis meses</p>
+      )}
+      {!data && !error && <p role="status">Carregando indicadores…</p>}
+      {data && (
+        <>
+          <section className="dashboard-balance" aria-label="Saldo acumulado">
+            <div className="dashboard-balance__content">
+              <span className="dashboard-balance__label">{bank ? `Saldo em ${getTransactionBankLabel(bank)}` : 'Saldo total registrado'}</span>
+              <strong>{formatCurrency(Number(data.transactions.balance))}</strong>
+              <span className="dashboard-balance__trend">Entradas menos saídas até {dateFormat.format(new Date(data.as_of))}</span>
             </div>
-            <span className="dashboard-card__period">Jun — Nov, 2026</span>
-          </header>
+            <span className="dashboard-balance__icon"><Wallet aria-hidden="true" /></span>
+          </section>
 
-          <div className="dashboard-flow__legend" aria-hidden="true">
-            <span>
-              <i className="dashboard-flow__legend-dot dashboard-flow__legend-dot--income" />
-              Receitas
-            </span>
-            <span>
-              <i className="dashboard-flow__legend-dot dashboard-flow__legend-dot--expenses" />
-              Despesas
-            </span>
-          </div>
-          <div
-            aria-label="Gráfico de receitas e despesas por mês"
-            className="dashboard-flow__chart"
-            role="img"
-          >
-            {monthlyFlow.map((month) => (
-              <div className="dashboard-flow__month" key={month.month}>
-                <div className="dashboard-flow__bars">
-                  <span
-                    className="dashboard-flow__bar dashboard-flow__bar--income"
-                    style={{ height: `${(month.income / maxFlow) * 100}%` }}
-                    title={`Receitas em ${month.month}: ${formatCurrency(month.income)}`}
-                  />
-                  <span
-                    className="dashboard-flow__bar dashboard-flow__bar--expenses"
-                    style={{ height: `${(month.expenses / maxFlow) * 100}%` }}
-                    title={`Despesas em ${month.month}: ${formatCurrency(month.expenses)}`}
-                  />
-                </div>
-                <span className="dashboard-flow__month-label">{month.month}</span>
-              </div>
-            ))}
-          </div>
-        </section>
+          <section className="dashboard-metrics" aria-label="Resumo do mês e investimentos">
+            <SummaryCard label="Receitas do mês" amount={data.transactions.income}
+              previous={data.history.at(-2)?.income} kind="income" Icon={ArrowDownLeft} />
+            <SummaryCard label="Despesas do mês" amount={data.transactions.expenses}
+              previous={data.history.at(-2)?.expenses} kind="expense" Icon={ArrowUpRight} />
+            <SummaryCard label="Total investido" amount={portfolioTotal}
+              kind="investments" Icon={ChartNoAxesCombined} />
+          </section>
 
-        <section
-          aria-labelledby="dashboard-activity-title"
-          className="dashboard-card dashboard-activity"
-        >
-          <header className="dashboard-card__header">
-            <div>
-              <h2 id="dashboard-activity-title">Movimentações recentes</h2>
-              <p>Suas últimas atividades</p>
-            </div>
-            <Link
-              aria-label="Ver todas as movimentações"
-              className="dashboard-activity__more"
-              to="/app/lancamentos"
-            >
-              <ArrowRight size="var(--icon-size-17)" aria-hidden="true" />
-            </Link>
-          </header>
-          <ul className="dashboard-activity__list">
-            {transactions.map((transaction, index) => {
-              const bank = transactionBankOptions.find(
-                (option) => option.value === transaction.bank,
-              );
-              const isIncome = transaction.kind === 'income';
-
-              return (
-                <li
-                  className="dashboard-activity__item"
-                  key={`${transaction.title}-${transaction.bank}-${index}`}
-                >
-                  <span
-                    className={`dashboard-activity__kind ${
-                      isIncome
-                        ? 'dashboard-activity__kind--income'
-                        : 'dashboard-activity__kind--expense'
-                    }`}
-                  >
-                    {isIncome ? (
-                      <ArrowDownLeft size="var(--icon-size-16)" aria-hidden="true" />
-                    ) : (
-                      <ArrowUpRight size="var(--icon-size-16)" aria-hidden="true" />
-                    )}
-                  </span>
-                  <span className="dashboard-activity__description">
-                    <strong>{transaction.title}</strong>
-                    <span>
-                      {transaction.category} · {transaction.date}
+          <section className="dashboard-card dashboard-section dashboard-recent" aria-label="Movimentações recentes">
+            <header className="dashboard-card__header"><h2>Movimentações recentes</h2></header>
+            {data.recent.length === 0 ? <p>Nenhuma movimentação registrada.</p> : (
+              <ul className="dashboard-activity__list">
+                {data.recent.map((item) => (
+                  <li className="dashboard-activity__item dashboard-recent-item" key={item.id}>
+                    <span className="dashboard-activity__description">
+                      <strong>{item.description || item.category}</strong>
+                      <span>{[getTransactionBankLabel(item.bank), formatDate(item.occurred_at)].filter(Boolean).join(' · ')}</span>
                     </span>
-                  </span>
-                  <span className="dashboard-activity__amount">
-                    <strong
-                      className={`financial-amount financial-amount--${isIncome ? 'income' : 'expense'}`}
-                    >
-                      {isIncome ? '+' : '−'}
-                      {formatCurrency(transaction.amount)}
+                    <strong className={`financial-amount financial-amount--${item.type}`}>
+                      {item.type === 'expense' ? '−' : '+'}{formatCurrency(Number(item.amount))}
                     </strong>
-                    {bank && (
-                      <span>
-                        <BankLogo
-                          label={bank.label}
-                          logoDomain={bank.logoDomain}
-                          size="small"
-                        />
-                        {bank.label}
-                      </span>
-                    )}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          <div className="dashboard-charts dashboard-section">
+            <CashFlow history={data.history} transactions={data.transactions} />
+            <PortfolioAllocation />
+            <MonthlyResult history={data.history} />
+            <FinancialOverview data={data} />
+          </div>
+
+          
+        </>
+      )}
     </main>
   );
 }

@@ -302,11 +302,11 @@
 }
 
 .dashboard-flow__legend-dot--income {
-  background: var(--color-primary);
+  background: var(--color-success);
 }
 
 .dashboard-flow__legend-dot--expenses {
-  background: color-mix(in srgb, var(--color-primary) 28%, var(--color-surface));
+  background: var(--color-danger);
 }
 
 .dashboard-flow__chart {
@@ -353,11 +353,11 @@
 }
 
 .dashboard-flow__bar--income {
-  background: var(--color-primary);
+  background: var(--color-success);
 }
 
 .dashboard-flow__bar--expenses {
-  background: color-mix(in srgb, var(--color-primary) 28%, var(--color-surface));
+  background: var(--color-danger);
 }
 
 .dashboard-flow__month-label {
@@ -565,29 +565,19 @@
   }
 
   .dashboard-metric {
-    grid-template-columns: 36px minmax(0, 1fr) auto;
+    grid-template-columns: 36px minmax(0, 1fr);
     padding: var(--space-12) var(--space-14);
   }
 
   .dashboard-metric__icon {
     width: 36px;
     height: 36px;
-    grid-row: span 2;
+    grid-row: span 3;
   }
 
   .dashboard-metric > strong {
     grid-column: 2;
     font-size: 18px;
-  }
-
-  .dashboard-metric__change {
-    grid-column: 3;
-    grid-row: 1 / span 2;
-    text-align: right;
-  }
-
-  .dashboard-metric__change > span {
-    display: none;
   }
 
   .dashboard-content {
@@ -612,5 +602,334 @@
   .dashboard-card__period {
     padding-inline: var(--space-7);
     font-size: var(--font-size-9);
+  }
+}
+
+.dashboard-section {
+  margin-block-start: var(--space-24);
+}
+
+.dashboard-recent {
+  padding: var(--space-19) var(--space-20);
+}
+
+.dashboard-activity__item.dashboard-recent-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dashboard-charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-16);
+}
+
+.dashboard-portfolio {
+  padding: var(--space-19) var(--space-20) var(--space-16);
+}
+
+.dashboard-portfolio a {
+  white-space: nowrap;
+}
+
+.dashboard-portfolio__chart {
+  display: grid;
+  width: min(100%, 190px);
+  aspect-ratio: 1;
+  place-items: center;
+  margin: var(--space-18) auto;
+  border-radius: 50%;
+}
+
+.dashboard-portfolio__total {
+  display: grid;
+  width: 74%;
+  aspect-ratio: 1;
+  align-content: center;
+  justify-items: center;
+  gap: var(--space-3);
+  border-radius: 50%;
+  background: var(--color-surface);
+  font-size: var(--font-size-11);
+}
+
+.dashboard-portfolio__total strong {
+  font-size: var(--font-size-16);
+  font-variant-numeric: tabular-nums;
+}
+
+.dashboard-portfolio__legend {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dashboard-portfolio__legend button {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 9px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-7);
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-size: var(--font-size-13);
+  text-align: left;
+}
+
+.dashboard-portfolio__legend button:hover,
+.dashboard-portfolio__legend button[aria-pressed='true'] {
+  border-color: var(--color-border);
+  background: var(--color-background);
+}
+
+.dashboard-portfolio__legend i {
+  height: 9px;
+  border-radius: 50%;
+}
+
+.dashboard-portfolio__legend strong {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (max-width: 1000px) {
+  .dashboard-charts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.dashboard-flow__summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12) var(--space-24);
+  margin: var(--space-16) 0 0;
+  padding: var(--space-12) var(--space-14);
+  border-radius: 9px;
+  background: var(--color-surface-secondary);
+}
+
+.dashboard-flow__summary dt,
+.dashboard-overview__note,
+.dashboard-overview__row small {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-12);
+}
+
+.dashboard-flow__summary dd {
+  margin: var(--space-3) 0 0;
+  font-size: var(--font-size-16);
+  font-weight: 680;
+  font-variant-numeric: tabular-nums;
+}
+
+.dashboard-overview {
+  padding: var(--space-19) var(--space-20);
+}
+
+.dashboard-overview .dashboard-card__header {
+  flex-wrap: wrap;
+}
+
+.dashboard-overview__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: 9px;
+  background: var(--color-surface-secondary);
+}
+
+.dashboard-overview__filters button {
+  border: 1px solid transparent;
+  border-radius: 7px;
+  padding: var(--space-6) var(--space-9);
+  background: transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-size: var(--font-size-12);
+  font-weight: 650;
+}
+
+.dashboard-overview__filters button:hover,
+.dashboard-overview__filters button[aria-pressed='true'] {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-primary);
+}
+
+.dashboard-overview__bars {
+  display: grid;
+  gap: var(--space-14);
+  margin: var(--space-16) 0 0;
+}
+
+.dashboard-overview__row {
+  --bar-color: var(--color-info);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-5) var(--space-9);
+  align-items: baseline;
+  font-size: var(--font-size-13);
+}
+
+.dashboard-overview__row[data-tone='income'] {
+  --bar-color: var(--color-success);
+}
+
+.dashboard-overview__row[data-tone='expense'] {
+  --bar-color: var(--color-danger);
+}
+
+.dashboard-overview__row dd {
+  margin: 0;
+  font-weight: 680;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-overview__track {
+  grid-column: 1 / -1;
+  height: 9px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--color-surface-secondary);
+}
+
+.dashboard-overview__track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--bar-color);
+}
+
+.dashboard-overview__row small {
+  grid-column: 1 / -1;
+}
+
+.dashboard-overview__note {
+  margin: var(--space-14) 0 0;
+}
+
+.dashboard-charts > .dashboard-card {
+  padding: var(--space-20);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-13);
+}
+
+.dashboard-charts .dashboard-card__header h2 {
+  font-size: var(--font-size-17);
+}
+
+.dashboard-charts .dashboard-card__header p,
+.dashboard-charts .dashboard-flow__legend > span,
+.dashboard-charts .dashboard-flow__month-label,
+.dashboard-charts .dashboard-overview__note,
+.dashboard-charts .dashboard-overview__row small,
+.dashboard-charts .dashboard-portfolio__total,
+.dashboard-charts .dashboard-flow__summary dt,
+.dashboard-charts .dashboard-overview__filters button {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-13);
+}
+
+.dashboard-flow__month-label {
+  text-align: center;
+}
+
+.dashboard-chart-link,
+.dashboard-portfolio a {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-12);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 8px;
+  background: var(--color-surface-secondary);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-13);
+  font-weight: 650;
+}
+
+.dashboard-chart-link {
+  margin-top: var(--space-14);
+}
+
+.dashboard-chart-link:hover,
+.dashboard-portfolio a:hover {
+  background: var(--color-surface-hover);
+}
+
+.dashboard-result__value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-8);
+  margin: var(--space-16) 0 var(--space-10);
+}
+
+.dashboard-result__value strong {
+  font-size: var(--font-size-16);
+  font-variant-numeric: tabular-nums;
+}
+
+.dashboard-result__plot {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+.dashboard-result__plot polyline {
+  fill: none;
+  stroke: var(--color-info);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.dashboard-result__plot circle {
+  fill: var(--color-info);
+  stroke: var(--color-surface);
+  stroke-width: 1.5;
+}
+
+.dashboard-result__zero {
+  stroke: var(--color-border-strong);
+  stroke-dasharray: 4 4;
+}
+
+.dashboard-result__months {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.dashboard-result__months button {
+  padding: var(--space-5);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: inherit;
+}
+
+.dashboard-result__months button:hover,
+.dashboard-result__months button[aria-pressed='true'] {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-secondary);
+}
+
+@media (max-width: 560px) {
+  .dashboard-charts > .dashboard-card {
+    padding: var(--space-14);
   }
 }
