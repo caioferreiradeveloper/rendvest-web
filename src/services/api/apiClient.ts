@@ -14,6 +14,12 @@ function getErrorMessage(body: unknown, fallback: string): string {
 
   if (typeof body === 'object' && body !== null) {
     const record = body as Record<string, unknown>;
+    const firstError: unknown = Array.isArray(record.errors) ? record.errors[0] : null;
+    if (firstError && typeof firstError === 'object' && 'message' in firstError &&
+      typeof firstError.message === 'string' && firstError.message.trim()) {
+      return firstError.message;
+    }
+
     for (const key of ['detail', 'message', 'error']) {
       const value = record[key];
       if (typeof value === 'string' && value.trim()) {

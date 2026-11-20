@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { createPortal } from 'react-dom';
 import { Check, ChevronDown } from 'lucide-react';
 import FieldShell from './FieldShell';
 import BankLogo from '../../ui/BankLogo';
@@ -20,7 +21,6 @@ interface SelectFieldProps<Value extends string> {
   error?: string;
   required?: boolean;
   disabled?: boolean;
-  showLogos?: boolean;
   validationAttempted?: boolean;
   fieldClassName?: string;
 }
@@ -35,13 +35,13 @@ export default function SelectField<Value extends string>({
   error,
   required,
   disabled,
-  showLogos = true,
   validationAttempted = false,
   fieldClassName,
 }: SelectFieldProps<Value>) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const selectedIndex = Math.max(
     0,
@@ -49,26 +49,75 @@ export default function SelectField<Value extends string>({
   );
   const selectedOption = options[selectedIndex];
 
-  useEffect(() => {
-    if (!isOpen) {
+  const expanded = isOpen && !disabled && options.length > 0;
+
+  // Position the portaled options against the trigger without affecting the form's scroll area.
+  useLayoutEffect(() => {
+    const trigger = triggerRef.current;
+    const list = listRef.current;
+    if (!expanded || !trigger || !list) {
       return;
     }
 
+    function positionList() {
+      if (!trigger || !list) {
+        return;
+      }
+
+      const gap = 6;
+      const viewportPadding = 8;
+      const { top, bottom, left, width } = trigger.getBoundingClientRect();
+      const availableBelow = window.innerHeight - bottom - gap - viewportPadding;
+      const availableAbove = top - gap - viewportPadding;
+      const menuWidth = Math.min(width, window.innerWidth - 2 * viewportPadding);
+      list.style.width = `${menuWidth}px`;
+      list.style.left = `${Math.max(viewportPadding, Math.min(left, window.innerWidth - menuWidth - viewportPadding))}px`;
+
+      const preferredHeight = Math.min(260, list.scrollHeight + list.offsetHeight - list.clientHeight);
+      const openAbove = availableBelow < preferredHeight && availableAbove > availableBelow;
+      list.style.maxHeight = `${Math.max(0, Math.min(preferredHeight, openAbove ? availableAbove : availableBelow))}px`;
+      list.style.top = `${openAbove ? top - gap - list.offsetHeight : bottom + gap}px`;
+    }
+
     function handleOutsideClick(event: PointerEvent) {
-      if (!containerRef.current?.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (!trigger?.contains(target) && !list?.contains(target)) {
         setIsOpen(false);
       }
     }
 
-    document.addEventListener('pointerdown', handleOutsideClick);
-    return () => document.removeEventListener('pointerdown', handleOutsideClick);
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (isOpen) {
-      optionRefs.current[activeIndex]?.focus();
+    function handleScroll(event: Event) {
+      if (event.target !== list) {
+        setIsOpen(false);
+      }
     }
-  }, [activeIndex, isOpen]);
+
+    positionList();
+    window.addEventListener('resize', positionList);
+    window.addEventListener('scroll', handleScroll, true);
+    document.addEventListener('pointerdown', handleOutsideClick);
+    return () => {
+      window.removeEventListener('resize', positionList);
+      window.removeEventListener('scroll', handleScroll, true);
+      document.removeEventListener('pointerdown', handleOutsideClick);
+    };
+  }, [expanded, options.length]);
+
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    const option = optionRefs.current[activeIndex];
+    if (!expanded || !list || !option) {
+      return;
+    }
+
+    const listTop = list.getBoundingClientRect().top + list.clientTop;
+    const optionRect = option.getBoundingClientRect();
+    if (optionRect.top < listTop) {
+      list.scrollTop -= listTop - optionRect.top;
+    } else if (optionRect.bottom > listTop + list.clientHeight) {
+      list.scrollTop += optionRect.bottom - (listTop + list.clientHeight);
+    }
+  }, [activeIndex, expanded]);
 
   function chooseOption(option: SelectFieldOption<Value>) {
     onChange(option.value);
@@ -76,36 +125,30 @@ export default function SelectField<Value extends string>({
   }
 
   function handleTriggerKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
-    if (disabled) {
-      return;
-    }
+    if (event.key === 'Escape' && expanded) {
+      event.preventDefault();
+      event.stopPropagation();
+      setIsOpen(false);
+    } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (!expanded) {
+        setActiveIndex(selectedIndex);
+        setIsOpen(true);
+        return;
+      }
 
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-      event.preventDefault();
-      setActiveIndex(selectedIndex);
-      setIsOpen(true);
-    } else if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      setActiveIndex(selectedIndex);
-      setIsOpen((open) => !open);
-    }
-  }
-
-  function handleOptionKeyDown(
-    event: KeyboardEvent<HTMLButtonElement>,
-    index: number,
-  ) {
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-      event.preventDefault();
       const direction = event.key === 'ArrowDown' ? 1 : -1;
       setActiveIndex((current) =>
         (current + direction + options.length) % options.length,
       );
     } else if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      chooseOption(options[index]);
-    } else if (event.key === 'Escape' || event.key === 'Tab') {
-      setIsOpen(false);
+      if (expanded && options[activeIndex]) {
+        chooseOption(options[activeIndex]);
+      } else {
+        setActiveIndex(selectedIndex);
+        setIsOpen(true);
+      }
     }
   }
 
@@ -119,13 +162,13 @@ export default function SelectField<Value extends string>({
       label={label}
       required={required}
     >
-      <div className="select-field" ref={containerRef}>
+      <div className="select-field">
         <button
           aria-activedescendant={
-            isOpen ? `${id}-option-${activeIndex}` : undefined
+            expanded ? `${id}-option-${activeIndex}` : undefined
           }
-          aria-controls={`${id}-options`}
-          aria-expanded={isOpen}
+          aria-controls={expanded ? `${id}-options` : undefined}
+          aria-expanded={expanded}
           aria-haspopup="listbox"
           aria-invalid={
             Boolean(error) ||
@@ -140,14 +183,16 @@ export default function SelectField<Value extends string>({
             setActiveIndex(selectedIndex);
             setIsOpen((open) => !open);
           }}
+          onBlur={() => setIsOpen(false)}
           onKeyDown={handleTriggerKeyDown}
+          ref={triggerRef}
           role="combobox"
           type="button"
         >
           <span className="select-field__value">
             {selectedOption && (
               <>
-                {showLogos && (
+                {selectedOption.logoDomain && (
                   <BankLogo
                     label={selectedOption.label}
                     logoDomain={selectedOption.logoDomain}
@@ -160,14 +205,15 @@ export default function SelectField<Value extends string>({
           </span>
           <ChevronDown
             aria-hidden="true"
-            className={isOpen ? 'select-field__chevron is-open' : 'select-field__chevron'}
+            className={expanded ? 'select-field__chevron is-open' : 'select-field__chevron'}
             size="var(--icon-size-16)"
           />
         </button>
-        {isOpen && (
+        {expanded && createPortal(
           <div
             className="select-field__options"
             id={`${id}-options`}
+            ref={listRef}
             role="listbox"
             aria-labelledby={`${id}-label`}
           >
@@ -180,15 +226,15 @@ export default function SelectField<Value extends string>({
                 id={`${id}-option-${index}`}
                 key={option.value || 'empty-option'}
                 onClick={() => chooseOption(option)}
-                onFocus={() => setActiveIndex(index)}
-                onKeyDown={(event) => handleOptionKeyDown(event, index)}
+                onMouseDown={(event) => event.preventDefault()}
                 ref={(element) => {
                   optionRefs.current[index] = element;
                 }}
                 role="option"
+                tabIndex={-1}
                 type="button"
               >
-                {showLogos && (
+                {option.logoDomain && (
                   <BankLogo
                     label={option.label}
                     logoDomain={option.logoDomain}
@@ -205,7 +251,8 @@ export default function SelectField<Value extends string>({
                 )}
               </button>
             ))}
-          </div>
+          </div>,
+          document.body,
         )}
       </div>
     </FieldShell>

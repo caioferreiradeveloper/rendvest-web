@@ -9,14 +9,15 @@ import PublicLayout from '../layouts/PublicLayout';
 import PrivateLayout from '../layouts/PrivateLayout';
 
 // Page imports
-import SubscriptionsPage from '@pages/private/Subscriptions';
 import DashboardPage from '@pages/private/Dashboard';
 import DebtorsPage from '@pages/private/Debtors';
 import FiisPage from '@pages/private/Fiis';
 import InvestmentsPage from '@pages/private/Investments';
+import MonthliesPage from '@pages/private/Monthlies';
 import PayablesPage from '@pages/private/Payables';
 import StocksPage from '@pages/private/Stocks';
 import TransactionsPage from '@pages/private/Transactions';
+import WishlistPage from '@pages/private/Wishlist';
 import AboutPage from '@pages/public/About';
 import ContactPage from '@pages/public/Contact';
 import HomePage from '@pages/public/Home';
@@ -37,9 +38,11 @@ export default function AppRoutes() {
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="lancamentos" element={<TransactionsPage />} />
-        <Route path="emprestimos-a-pagar" element={<PayablesPage />} />
+        <Route path="emprestimos" element={<PayablesPage />} />
         <Route path="devedores" element={<DebtorsPage />} />
-        <Route path="assinaturas" element={<SubscriptionsPage />} />
+        <Route path="lista-de-desejos" element={<WishlistPage />} />
+        <Route path="mensalidades" element={<MonthliesPage />} />
+        <Route path="assinaturas" element={<Navigate to="/app/mensalidades" replace />} />
         <Route path="investimentos" element={<InvestmentsPage />} />
         <Route path="acoes" element={<StocksPage />} />
         <Route path="fiis" element={<FiisPage />} />

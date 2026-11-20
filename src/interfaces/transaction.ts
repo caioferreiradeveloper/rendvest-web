@@ -10,6 +10,8 @@ export interface Transaction {
   category: string;
   description: string;
   occurred_at: string;
+  invoice?: string | null;
+  invoice_month?: string | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -21,6 +23,8 @@ export interface TransactionFormValues {
   category: string;
   description: string;
   occurred_at: string;
+  invoice?: string | null;
+  invoice_month?: string | null;
 }
 
 export interface TransactionPayload {
@@ -30,4 +34,6 @@ export interface TransactionPayload {
   category: string;
   description: string;
   occurred_at: string;
+  invoice?: string | null;
+  invoice_month?: string | null;
 }

@@ -10,6 +10,8 @@ import {
   SelectField,
   TextArea,
 } from '@components/forms/fields';
+import InvoiceSelect from '@components/private/InvoiceSelect';
+import FieldShell from '@components/forms/fields/FieldShell';
 import MessageAlert from '@components/ui/MessageAlert';
 import { Button, IconButton } from '@components/ui/buttons';
 
@@ -43,6 +45,8 @@ function getInitialValues(
       category: transaction.category,
       description: transaction.description,
       occurred_at: getLocalDateTimeValue(transaction.occurred_at),
+      invoice: transaction.invoice ?? null,
+      invoice_month: transaction.invoice_month ?? null,
     };
   }
 
@@ -71,6 +75,7 @@ export default function TransactionFormSidebar({
   const [values, setValues] = useState(() =>
     getInitialValues(transaction, initialType),
   );
+  const invoiceMonth = values.invoice_month || values.occurred_at.slice(0, 7) || getLocalDateTimeValue().slice(0, 7);
   const [formError, setFormError] = useState<string | null>(null);
   const {
     hasAttemptedSubmit,
@@ -127,6 +132,8 @@ export default function TransactionFormSidebar({
       ...values,
       amount: amount.toFixed(2),
       occurred_at: occurredAt.toISOString(),
+      invoice: values.type === 'expense' ? values.invoice ?? null : null,
+      invoice_month: values.type === 'expense' && values.invoice ? invoiceMonth : null,
     });
 
     if (saved) {
@@ -188,13 +195,17 @@ export default function TransactionFormSidebar({
               }
               id="transaction-type"
               label="Tipo"
-              onChange={(type) => updateField('type', type)}
+              onChange={(type) => {
+                if (type === values.type) {
+                  return;
+                }
+                setValues((current) => ({ ...current, type, invoice: null, invoice_month: null }));
+              }}
               options={[
                 { value: 'income', label: 'Ganho' },
                 { value: 'expense', label: 'Gasto' },
               ]}
               required
-              showLogos={false}
               validationAttempted={hasAttemptedSubmit}
               value={values.type}
             />
@@ -245,6 +256,37 @@ export default function TransactionFormSidebar({
                 updateField('occurred_at', event.target.value)
               }
             />
+            {values.type === 'expense' && (
+              <>
+                <InvoiceSelect
+                  id="transaction-invoice"
+                  month={invoiceMonth}
+                  value={values.invoice ?? null}
+                  disabled={isSaving}
+                  onChange={(invoice) => updateField('invoice', invoice)}
+                />
+                {values.invoice && (
+                  <FieldShell
+                    id="transaction-invoice-month"
+                    label="Mês da fatura"
+                    className="form-grid__item--span-2"
+                  >
+                    <input
+                      className="field-control"
+                      id="transaction-invoice-month"
+                      type="month"
+                      value={invoiceMonth}
+                      disabled={isSaving}
+                      onChange={(event) => {
+                        if (/^[0-9]{4}-(0[1-9]|1[0-2])$/.test(event.target.value)) {
+                          updateField('invoice_month', event.target.value);
+                        }
+                      }}
+                    />
+                  </FieldShell>
+                )}
+              </>
+            )}
             <TextArea
               disabled={isSaving}
               fieldClassName="form-grid__item--span-4"

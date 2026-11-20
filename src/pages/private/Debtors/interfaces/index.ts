@@ -1,5 +1,7 @@
-import type { Debtor, DebtorPayload } from '@interface/debtor';
+// Interface imports
+import type { Debtor, DebtorPayload, DebtorPaymentPayload } from '@interface/debtor';
 
+// Interface for the props of the DebtorFormSidebar component
 export interface DebtorFormSidebarProps {
   debtor: Debtor | null;
   isSaving: boolean;
@@ -8,13 +10,18 @@ export interface DebtorFormSidebarProps {
   onSave: (debtor: DebtorPayload) => Promise<boolean>;
 }
 
+// Interface for the props of the DebtorDetailSidebar component
 export interface DebtorDetailSidebarProps {
   debtor: Debtor;
+  error: string | null;
+  isSaving: boolean;
+  onPay: (payment: DebtorPaymentPayload) => Promise<void>;
   onClose: () => void;
   onEdit: () => void;
   onDelete: () => void;
 }
 
+// Interface for the props of the DeleteDebtorModal component
 export interface DeleteDebtorModalProps {
   debtor: Debtor;
   isDeleting: boolean;

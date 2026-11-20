@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { Debtor, DebtorPayload } from '@interface/debtor';
+import type { Debtor, DebtorPayload, DebtorPaymentPayload } from '@interface/debtor';
 import {
   createDebtor as createDebtorRequest,
   deleteDebtor as deleteDebtorRequest,
-  getDebtor,
+  getDebtorDetail,
   listDebtors,
+  payDebtor as payDebtorRequest,
   updateDebtor as updateDebtorRequest,
   type DebtorListParams,
 } from '@services/debtors/debtorService';
@@ -62,7 +63,7 @@ export default function useDebtors({ page, pageSize }: DebtorListParams) {
     setIsLoadingDetail(true);
     setError(null);
     try {
-      const debtor = await getDebtor(id);
+      const debtor = await getDebtorDetail(id);
       setSelectedDebtor(debtor);
       return debtor;
     } catch (detailError) {
@@ -128,6 +129,25 @@ export default function useDebtors({ page, pageSize }: DebtorListParams) {
     [reload],
   );
 
+  const pay = useCallback(
+    async (id: string, payment: DebtorPaymentPayload): Promise<boolean> => {
+      setIsSaving(true);
+      setError(null);
+      try {
+        await payDebtorRequest(id, payment);
+        setSelectedDebtor(null);
+        await reload();
+        return true;
+      } catch (paymentError) {
+        setError(getErrorMessage(paymentError));
+        return false;
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    [reload],
+  );
+
   const clearError = useCallback(() => setError(null), []);
   const clearSelectedDebtor = useCallback(() => setSelectedDebtor(null), []);
 
@@ -144,6 +164,7 @@ export default function useDebtors({ page, pageSize }: DebtorListParams) {
     create,
     update,
     remove,
+    pay,
     loadDetail,
     clearError,
     clearSelectedDebtor,

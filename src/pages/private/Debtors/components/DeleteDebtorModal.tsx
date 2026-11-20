@@ -1,15 +1,24 @@
+// React imports
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
+
+// Component imports
 import { Button } from '@components/ui/buttons';
+
+// Interface imports
 import type { DeleteDebtorModalProps } from '../interfaces';
+
+// Utility imports
 import { formatCurrency } from '../../../../utils/formatters';
 
+// Exported page component - DeleteDebtorModal
 export default function DeleteDebtorModal({
   debtor,
   isDeleting,
   onCancel,
   onConfirm,
 }: DeleteDebtorModalProps) {
+  // Effect to handle closing the modal on Escape key press and preventing body scroll
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -27,6 +36,7 @@ export default function DeleteDebtorModal({
     };
   }, [isDeleting, onCancel]);
 
+  // Render the delete debtor confirmation modal
   return (
     <div className="transaction-confirmation">
       <button
@@ -48,7 +58,7 @@ export default function DeleteDebtorModal({
         <h2 id="delete-debtor-title">Excluir registro?</h2>
         <p>
           O valor de <strong>{formatCurrency(debtor.amount)}</strong> devido por{' '}
-          <strong>{debtor.name}</strong> será excluído permanentemente.
+          <strong>{debtor.debtor_name}</strong> será excluído permanentemente.
         </p>
         <footer className="transaction-confirmation__actions">
           <Button

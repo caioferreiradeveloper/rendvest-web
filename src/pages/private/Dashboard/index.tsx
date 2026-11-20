@@ -332,11 +332,7 @@ export default function DashboardPage() {
                   </span>
                   <span className="dashboard-activity__amount">
                     <strong
-                      className={
-                        isIncome
-                          ? 'dashboard-activity__amount--income'
-                          : undefined
-                      }
+                      className={`financial-amount financial-amount--${isIncome ? 'income' : 'expense'}`}
                     >
                       {isIncome ? '+' : '−'}
                       {formatCurrency(transaction.amount)}

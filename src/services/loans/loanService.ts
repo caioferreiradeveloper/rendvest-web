@@ -101,6 +101,7 @@ function parseLoan(value: unknown): Loan {
     ),
     total_with_interest: parseAmount(record, 'total_with_interest'),
     amount_paid: parseAmount(record, 'amount_paid'),
+    discount_amount: parseAmount(record, 'discount_amount'),
     remaining_amount: parseAmount(record, 'remaining_amount'),
     ...(typeof record.created_at === 'string'
       ? { created_at: record.created_at }
@@ -135,6 +136,7 @@ function parseInstallment(value: unknown): LoanInstallment {
     interest_amount: parseAmount(record, 'interest_amount'),
     principal_amount: parseAmount(record, 'principal_amount'),
     amount_paid: parseAmount(record, 'amount_paid'),
+    discount_amount: parseAmount(record, 'discount_amount'),
     remaining_amount: parseAmount(record, 'remaining_amount'),
     status: record.status as LoanInstallmentStatus,
   };

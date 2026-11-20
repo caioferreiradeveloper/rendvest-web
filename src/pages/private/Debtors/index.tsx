@@ -1,3 +1,4 @@
+// React imports
 import { useEffect, useState } from 'react';
 import {
   ArrowLeft,
@@ -10,25 +11,44 @@ import {
   Trash2,
   UserRound,
 } from 'lucide-react';
+
+// Component imports
 import MessageAlert from '@components/ui/MessageAlert';
 import { Button, IconButton } from '@components/ui/buttons';
+
+// Config imports
 import { getPageSize } from '@config/pagination';
+
+// Context imports
 import { useToast } from '@contexts/ToastContext';
+
+// Hook imports
 import useDebtors from '@hooks/useDebtors';
-import type { Debtor, DebtorPayload } from '@interface/debtor';
-import { formatCurrency, formatDateOnly } from '../../../utils/formatters';
+
+// Interface imports
+import type { Debtor, DebtorPayload, DebtorPaymentPayload } from '@interface/debtor';
+
+// Utility imports
+import { formatCurrency, formatDate } from '../../../utils/formatters';
+
+// Page imports
 import DeleteDebtorModal from './components/DeleteDebtorModal';
 import DebtorDetailSidebar from './components/DebtorDetailSidebar';
 import DebtorFormSidebar from './components/DebtorFormSidebar';
+import { getDebtorStatus } from './utils';
 import './Debtors.scss';
 
+// Get the page size from the configuration
 const pageSize = getPageSize();
 
+// Exported page component - DebtorsPage
 export default function DebtorsPage() {
+  // State variables
   const [page, setPage] = useState(1);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingDebtor, setEditingDebtor] = useState<Debtor | null>(null);
   const [debtorToDelete, setDebtorToDelete] = useState<Debtor | null>(null);
+  // Use the custom hook to manage debtors
   const {
     debtors,
     selectedDebtor,
@@ -42,12 +62,14 @@ export default function DebtorsPage() {
     create,
     update,
     remove,
+    pay,
     loadDetail,
     clearError,
     clearSelectedDebtor,
   } = useDebtors({ page, pageSize });
   const { showToast } = useToast();
 
+  // Calculate pagination details
   const pageCount =
     totalCount === null
       ? Math.max(1, page + (hasNext ? 1 : 0))
@@ -58,12 +80,14 @@ export default function DebtorsPage() {
       ? (page - 1) * pageSize + debtors.length
       : Math.min(page * pageSize, totalCount);
 
+  // Effect to ensure the current page does not exceed the total page count
   useEffect(() => {
-    if (page > pageCount) {
+    if (!isLoading && totalCount !== null && page > pageCount) {
       setPage(pageCount);
     }
-  }, [page, pageCount]);
+  }, [isLoading, page, pageCount, totalCount]);
 
+  // Effect to show a toast message when an error occurs
   useEffect(() => {
     if (error) {
       showToast({
@@ -74,6 +98,7 @@ export default function DebtorsPage() {
     }
   }, [error, showToast]);
 
+  // Function to open the create form
   function openCreateForm() {
     clearError();
     clearSelectedDebtor();
@@ -81,6 +106,7 @@ export default function DebtorsPage() {
     setIsFormOpen(true);
   }
 
+  // Function to open the edit form
   function openEditForm(debtor: Debtor) {
     clearError();
     clearSelectedDebtor();
@@ -88,6 +114,7 @@ export default function DebtorsPage() {
     setIsFormOpen(true);
   }
 
+  // Function to close the form
   function closeForm() {
     if (isSaving) {
       return;
@@ -97,6 +124,7 @@ export default function DebtorsPage() {
     clearError();
   }
 
+  // Function to save a new or existing debtor
   async function handleSave(payload: DebtorPayload): Promise<boolean> {
     const saved = editingDebtor
       ? await update(editingDebtor.id, payload)
@@ -114,16 +142,19 @@ export default function DebtorsPage() {
     return saved;
   }
 
+  // Function to load debtor details
   async function handleOpenDetail(debtor: Debtor) {
     clearError();
     await loadDetail(debtor.id);
   }
 
+  // Function to open the delete confirmation
   function openDeleteConfirmation(debtor: Debtor) {
     clearSelectedDebtor();
     setDebtorToDelete(debtor);
   }
 
+  // Function to delete a debtor
   async function handleDelete() {
     if (!debtorToDelete) {
       return;
@@ -140,6 +171,18 @@ export default function DebtorsPage() {
     }
   }
 
+  // Function to register a payment and notify the user
+  async function handlePay(id: string, payment: DebtorPaymentPayload) {
+    if (await pay(id, payment)) {
+      showToast({
+        kind: 'success',
+        title: 'Recebimento registrado',
+        message: 'O saldo do devedor foi atualizado.',
+      });
+    }
+  }
+
+  // Render the DebtorsPage component
   return (
     <main className="private-page">
       <header className="private-page__header">
@@ -170,21 +213,23 @@ export default function DebtorsPage() {
         <MessageAlert kind="error" message={error} onDismiss={clearError} />
       )}
 
-      <section aria-labelledby="debtor-list-title" className="debtor-list">
-        <header className="debtor-list__header">
+      <section aria-labelledby="debtor-list-title" className="transaction-list">
+        <header className="transaction-list__header">
           <div>
             <h2 id="debtor-list-title">Valores a receber</h2>
             <p>Consulte e atualize os registros de quem deve.</p>
           </div>
         </header>
 
-        <div className="debtor-table-wrap">
-          <table className="debtor-table">
+        <div className="transaction-table-wrap">
+          <table className="transaction-table">
             <thead>
               <tr>
                 <th scope="col">Nome</th>
                 <th scope="col">Data</th>
-                <th scope="col">Valor devido</th>
+                <th scope="col">Valor original</th>
+                <th scope="col">Saldo a receber</th>
+                <th scope="col">Situação</th>
                 <th scope="col">
                   <span className="visually-hidden">Ações</span>
                 </th>
@@ -194,8 +239,8 @@ export default function DebtorsPage() {
               {isLoading ? (
                 <tr>
                   <td
-                    className="debtor-table__state"
-                    colSpan={4}
+                    className="transaction-table__state"
+                    colSpan={6}
                     role="status"
                     aria-live="polite"
                   >
@@ -220,13 +265,13 @@ export default function DebtorsPage() {
                 ))
               ) : error ? (
                 <tr>
-                  <td className="debtor-table__state" colSpan={4}>
+                  <td className="transaction-table__state" colSpan={6}>
                     Não foi possível carregar os devedores.
                   </td>
                 </tr>
               ) : (
                 <tr>
-                  <td className="debtor-table__state" colSpan={4}>
+                  <td className="transaction-table__state" colSpan={6}>
                     <div className="transaction-empty">
                       <span className="transaction-empty__icon">
                         <CalendarDays
@@ -254,7 +299,7 @@ export default function DebtorsPage() {
           </table>
         </div>
 
-        <footer className="debtor-pagination">
+        <footer className="transaction-pagination">
           <span>
             {totalCount === null
               ? debtors.length
@@ -264,7 +309,7 @@ export default function DebtorsPage() {
                 ? `Exibindo ${firstItem}–${lastItem} de ${totalCount} devedores`
                 : 'Nenhum devedor para exibir'}
           </span>
-          <div className="debtor-pagination__controls">
+          <div className="transaction-pagination__controls">
             <IconButton
               disabled={page <= 1 || isLoading}
               icon={<ArrowLeft size="var(--icon-size-16)" />}
@@ -323,7 +368,10 @@ export default function DebtorsPage() {
       {selectedDebtor && (
         <DebtorDetailSidebar
           debtor={selectedDebtor}
+          error={error}
+          isSaving={isSaving}
           onClose={clearSelectedDebtor}
+          onPay={(payment) => handlePay(selectedDebtor.id, payment)}
           onDelete={() => openDeleteConfirmation(selectedDebtor)}
           onEdit={() => openEditForm(selectedDebtor)}
         />
@@ -352,6 +400,7 @@ interface DebtorRowProps {
   onDelete: () => void;
 }
 
+// Render a debtor row with action buttons
 function DebtorRow({
   debtor,
   onDetail,
@@ -361,34 +410,38 @@ function DebtorRow({
   return (
     <tr>
       <td>
-        <div className="debtor-table__name">
-          <span className="debtor-table__icon">
+        <div className="transaction-table__name">
+          <span className="transaction-type-icon transaction-type-icon--income">
             <UserRound size="var(--icon-size-16)" aria-hidden="true" />
           </span>
-          <strong>{debtor.name}</strong>
+          <strong>{debtor.debtor_name}</strong>
         </div>
       </td>
-      <td className="debtor-table__date">
-        {formatDateOnly(debtor.occurred_at)}
+      <td className="transaction-table__date">
+        {formatDate(debtor.occurred_at)}
       </td>
-      <td className="debtor-table__amount">
+      <td className="financial-amount financial-amount--income">
         {formatCurrency(debtor.amount)}
       </td>
-      <td className="debtor-table__actions">
+      <td className="financial-amount financial-amount--income">
+        {formatCurrency(debtor.remaining_amount)}
+      </td>
+      <td>{getDebtorStatus(debtor)}</td>
+      <td className="transaction-table__actions">
         <IconButton
           icon={<Eye size="var(--icon-size-16)" />}
-          label={`Ver detalhes de ${debtor.name}`}
+          label={`Ver detalhes de ${debtor.debtor_name}`}
           onClick={onDetail}
         />
         <IconButton
           icon={<Pencil size="var(--icon-size-16)" />}
-          label={`Editar devedor: ${debtor.name}`}
+          label={`Editar devedor: ${debtor.debtor_name}`}
           onClick={onEdit}
         />
         <IconButton
-          className="debtor-table__delete"
+          className="transaction-table__delete"
           icon={<Trash2 size="var(--icon-size-16)" />}
-          label={`Excluir devedor: ${debtor.name}`}
+          label={`Excluir devedor: ${debtor.debtor_name}`}
           onClick={onDelete}
         />
       </td>
