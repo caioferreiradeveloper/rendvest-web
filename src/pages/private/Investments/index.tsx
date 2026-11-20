@@ -1,18 +1,7 @@
-import { Link } from 'react-router-dom';
 import PrivateModulePage from '@components/private/PrivateModulePage';
-import { privateModules } from '@config/privateModules';
 import { formatCurrency } from '../../../utils/formatters';
+import { portfolioTotal, positions } from './demoPortfolio';
 import './Investments.scss';
-
-const positions = [
-  { category: 'Fundos imobiliários', example: 'HGLG11 e KNCR11', amount: 8640, to: privateModules.fiis.path },
-  { category: 'Ações', example: 'ITUB4 e PETR4', amount: 7200 },
-  { category: 'Tesouro Direto', example: 'Tesouro IPCA+ e Tesouro Prefixado', amount: 6800 },
-  { category: 'Tesouro Selic', example: 'Título público atrelado à Selic', amount: 5400 },
-  { category: 'Renda fixa atrelada ao CDI', example: 'CDB a 100% do CDI', amount: 4000 },
-];
-
-const portfolioTotal = positions.reduce((total, position) => total + position.amount, 0);
 
 export default function InvestmentsPage() {
   return (
@@ -39,9 +28,9 @@ export default function InvestmentsPage() {
               </tr>
             </thead>
             <tbody>
-              {positions.map(({ category, example, amount, to }) => (
+              {positions.map(({ category, example, amount }) => (
                 <tr key={category}>
-                  <td>{to ? <Link to={to}>{category}</Link> : <strong>{category}</strong>}</td>
+                  <td><strong>{category}</strong></td>
                   <td>{example}</td>
                   <td>{formatCurrency(amount)}</td>
                   <td>{(amount / portfolioTotal).toLocaleString('pt-BR', {

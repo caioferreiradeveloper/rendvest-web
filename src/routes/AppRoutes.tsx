@@ -13,6 +13,8 @@ import DashboardPage from '@pages/private/Dashboard';
 import DebtorsPage from '@pages/private/Debtors';
 import FiisPage from '@pages/private/Fiis';
 import InvestmentsPage from '@pages/private/Investments';
+import FundDetailPage from '@pages/private/Investments/FundDetailPage';
+import InvestmentMarketPage from '@pages/private/Investments/MarketResearch';
 import MonthliesPage from '@pages/private/Monthlies';
 import PayablesPage from '@pages/private/Payables';
 import StocksPage from '@pages/private/Stocks';
@@ -44,6 +46,8 @@ export default function AppRoutes() {
         <Route path="mensalidades" element={<MonthliesPage />} />
         <Route path="assinaturas" element={<Navigate to="/app/mensalidades" replace />} />
         <Route path="investimentos" element={<InvestmentsPage />} />
+        <Route path="investimentos/mercado" element={<InvestmentMarketPage />} />
+        <Route path="investimentos/mercado/fundos/:ticker" element={<FundDetailPage />} />
         <Route path="acoes" element={<StocksPage />} />
         <Route path="fiis" element={<FiisPage />} />
       </Route>
