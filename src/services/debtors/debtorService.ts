@@ -1,7 +1,7 @@
-import type { Debtor, DebtorPayload } from '@interface/debtor';
+import type { Debtor, DebtorPayload, DebtorPaymentPayload } from '@interface/debtor';
 import { apiJsonRequest, apiRequest } from '../api/apiClient';
 
-const debtorsPath = '/api/v1/debtors/';
+const debtorsBasePath = '/api/v1/debtors/';
 
 export interface DebtorPage {
   results: Debtor[];
@@ -19,9 +19,9 @@ function parseAmount(value: unknown): string {
     (typeof value !== 'string' && typeof value !== 'number') ||
     !String(value).trim() ||
     !Number.isFinite(Number(value)) ||
-    Number(value) <= 0
+    Number(value) < 0
   ) {
-    throw new Error('A API retornou um valor devido inválido.');
+    throw new Error('A API retornou um valor monetário inválido.');
   }
   return String(value);
 }
@@ -34,18 +34,34 @@ function parseDebtor(value: unknown): Debtor {
   const record = value as Record<string, unknown>;
   if (
     typeof record.id !== 'string' ||
-    typeof record.name !== 'string' ||
-    !record.name.trim() ||
+    typeof record.debtor_name !== 'string' ||
+    !record.debtor_name.trim() ||
     typeof record.occurred_at !== 'string' ||
     Number.isNaN(new Date(record.occurred_at).getTime())
   ) {
     throw new Error('A API retornou um devedor sem os campos esperados.');
   }
 
+  const amount = parseAmount(record.amount);
+  const paidAmount = parseAmount(record.paid_amount ?? '0.00');
+  const paidAt = typeof record.paid_at === 'string' ? record.paid_at : null;
+  if (Number(amount) <= 0 || Number(paidAmount) > Number(amount)) {
+    throw new Error('A API retornou valores inválidos para o devedor.');
+  }
+
+  // Derive read-only properties when the serializer omits them.
+  const remainingAmount = record.remaining_amount ??
+    (Number(amount) - Number(paidAmount)).toFixed(2);
+
   return {
     id: record.id,
-    name: record.name,
-    amount: parseAmount(record.amount),
+    debtor_name: record.debtor_name,
+    amount,
+    description: typeof record.description === 'string' ? record.description : '',
+    paid_amount: paidAmount,
+    paid_at: paidAt,
+    is_paid: typeof record.is_paid === 'boolean' ? record.is_paid : paidAt !== null,
+    remaining_amount: parseAmount(remainingAmount),
     occurred_at: record.occurred_at,
     ...(typeof record.created_at === 'string'
       ? { created_at: record.created_at }
@@ -103,7 +119,7 @@ export async function listDebtors(
     page_size: String(params.pageSize),
   });
   const payload = await apiRequest<unknown>(
-    `${debtorsPath}?${query.toString()}`,
+    `${debtorsBasePath}?${query.toString()}`,
   );
   const result = parseDebtorPage(payload);
   if (!Array.isArray(payload)) {
@@ -118,15 +134,15 @@ export async function listDebtors(
   };
 }
 
-export async function getDebtor(id: string): Promise<Debtor> {
+export async function getDebtorDetail(id: string): Promise<Debtor> {
   const payload = await apiRequest<unknown>(
-    `${debtorsPath}${encodeURIComponent(id)}/`,
+    `${debtorsBasePath}${encodeURIComponent(id)}/`,
   );
   return parseDebtor(payload);
 }
 
 export function createDebtor(debtor: DebtorPayload): Promise<unknown> {
-  return apiJsonRequest(debtorsPath, 'POST', debtor);
+  return apiJsonRequest(`${debtorsBasePath}create/`, 'POST', debtor);
 }
 
 export function updateDebtor(
@@ -134,14 +150,25 @@ export function updateDebtor(
   debtor: DebtorPayload,
 ): Promise<unknown> {
   return apiJsonRequest(
-    `${debtorsPath}${encodeURIComponent(id)}/`,
+    `${debtorsBasePath}update/${encodeURIComponent(id)}/`,
     'PATCH',
     debtor,
   );
 }
 
 export function deleteDebtor(id: string): Promise<unknown> {
-  return apiRequest(`${debtorsPath}${encodeURIComponent(id)}/`, {
+  return apiRequest(`${debtorsBasePath}delete/${encodeURIComponent(id)}/`, {
     method: 'DELETE',
   });
+}
+
+export function payDebtor(
+  id: string,
+  payment: DebtorPaymentPayload,
+): Promise<unknown> {
+  return apiJsonRequest(
+    `${debtorsBasePath}${encodeURIComponent(id)}/pay/`,
+    'POST',
+    payment,
+  );
 }

@@ -16,6 +16,7 @@ export interface Loan {
   monthly_installment_amount: string;
   total_with_interest: string;
   amount_paid: string;
+  discount_amount: string;
   remaining_amount: string;
   created_at?: string;
   updated_at?: string;
@@ -28,6 +29,7 @@ export interface LoanInstallment {
   interest_amount: string;
   principal_amount: string;
   amount_paid: string;
+  discount_amount: string;
   remaining_amount: string;
   status: LoanInstallmentStatus;
 }
@@ -44,6 +46,7 @@ export interface LoanPayload {
 }
 
 export interface LoanPaymentPayload {
+  bank: TransactionBank;
   installment_number: number;
   amount: string;
   paid_at?: string;

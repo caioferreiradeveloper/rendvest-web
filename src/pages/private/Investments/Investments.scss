@@ -1,0 +1,32 @@
+.investment-total {
+  display: grid;
+  gap: var(--space-3);
+  font-size: var(--font-size-13);
+  white-space: nowrap;
+}
+
+.investment-total strong {
+  font-size: var(--font-size-20);
+}
+
+.investment-table a {
+  color: var(--color-primary);
+  font-weight: 620;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.investment-table__name {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.investment-filter input {
+  width: 100%;
+}
+
+@media (max-width: 760px) {
+  .investment-filter {
+    width: 100%;
+  }
+}

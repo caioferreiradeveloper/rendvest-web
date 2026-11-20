@@ -261,7 +261,7 @@ export default function PayablesPage() {
           </span>
           <div>
             <span className="eyebrow">Organização financeira</span>
-            <h1>Empréstimos a pagar</h1>
+            <h1>Empréstimos</h1>
             <p>Acompanhe valores contratados, juros e pagamentos.</p>
           </div>
         </div>
@@ -283,7 +283,7 @@ export default function PayablesPage() {
           </div>
           <div className="transaction-list__filters">
             <SelectField
-              fieldClassName="transaction-bank-filter"
+              fieldClassName="transaction-list__filter"
               id="loan-bank-filter"
               label="Banco"
               onChange={setBankFilter}
@@ -293,11 +293,11 @@ export default function PayablesPage() {
           </div>
         </header>
 
-        <div className="loan-table-wrap">
-          <table className="loan-table">
+        <div className="transaction-table-wrap">
+          <table className="transaction-table">
             <thead>
               <tr>
-                <th scope="col">Instituição</th>
+                <th scope="col">Banco</th>
                 <th scope="col">Valor financiado</th>
                 <th scope="col">Parcela mensal</th>
                 <th scope="col">Total</th>
@@ -494,20 +494,20 @@ function LoanRow({
           <strong>{getTransactionBankLabel(loan.bank)}</strong>
         </div>
       </td>
-      <td className="loan-table__amount">
+      <td className="financial-amount financial-amount--expense">
         {formatCurrency(loan.financed_amount)}
       </td>
-      <td className="loan-table__amount">
+      <td className="financial-amount financial-amount--expense">
         {formatCurrency(loan.monthly_installment_amount)}
       </td>
-      <td className="loan-table__amount">
+      <td className="financial-amount financial-amount--expense">
         {formatCurrency(loan.total_with_interest)}
       </td>
-      <td className="loan-table__amount loan-table__amount--remaining">
+      <td className="financial-amount financial-amount--expense">
         {formatCurrency(loan.remaining_amount)}
       </td>
       <td>{loan.term_months} meses</td>
-      <td className="loan-table__date">{formatDateOnly(loan.started_at)}</td>
+      <td className="transaction-table__date">{formatDateOnly(loan.started_at)}</td>
       <td className="loan-table__actions">
         <IconButton
           className="loan-table__pay"

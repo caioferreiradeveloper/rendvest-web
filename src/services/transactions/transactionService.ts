@@ -6,7 +6,7 @@ import type {
 import { apiJsonRequest, apiRequest } from '../api/apiClient';
 import type { TransactionBank } from '@config/transactionBanks';
 
-const transactionsBasePath = '/api/v1/transactions';
+const transactionsBasePath = '/api/v1/transactions/';
 
 export interface TransactionPage {
   results: Transaction[];
@@ -17,8 +17,10 @@ export interface TransactionPage {
 export interface TransactionListParams {
   page: number;
   pageSize: number;
-  type?: TransactionType;
+  type?: TransactionType | '';
   typeBank?: TransactionBank;
+  invoice?: string;
+  invoiceMonth?: string;
 }
 
 function parseTransactionType(value: unknown): TransactionType {
@@ -52,11 +54,6 @@ function parseTransactionBank(value: unknown): TransactionBank {
   throw new Error('A API retornou um banco inválido para o lançamento.');
 }
 
-function getCollectionPath(type: TransactionType): string {
-  const collection = type === 'income' ? 'incomes' : 'expenses';
-  return `${transactionsBasePath}/${collection}/`;
-}
-
 function parseTransaction(value: unknown): Transaction {
   if (typeof value !== 'object' || value === null) {
     throw new Error('A API retornou um lançamento em formato inválido.');
@@ -82,6 +79,8 @@ function parseTransaction(value: unknown): Transaction {
     description:
       typeof record.description === 'string' ? record.description : '',
     occurred_at: record.occurred_at,
+    invoice: typeof record.invoice === 'string' ? record.invoice : null,
+    invoice_month: typeof record.invoice_month === 'string' ? record.invoice_month : null,
     ...(typeof record.created_at === 'string'
       ? { created_at: record.created_at }
       : {}),
@@ -140,15 +139,22 @@ export async function listTransactions(
     page: String(params.page),
     page_size: String(params.pageSize),
   });
-  if (params.type) {
+  if (params.type !== undefined) {
     query.set('type', params.type);
   }
   if (params.typeBank !== undefined) {
     query.set('type_bank', params.typeBank);
   }
 
+  if (params.invoice) {
+    query.set('invoice', params.invoice);
+  }
+  if (params.invoiceMonth) {
+    query.set('invoice_month', params.invoiceMonth);
+  }
+
   const payload = await apiRequest<unknown>(
-    `${transactionsBasePath}/?${query.toString()}`,
+    `${transactionsBasePath}?${query.toString()}`,
   );
   const result = parseTransactionPage(payload);
   if (!Array.isArray(payload)) {
@@ -168,7 +174,7 @@ export async function getTransactionDetail(
   type: TransactionType,
 ): Promise<Transaction> {
   const payload = await apiRequest<unknown>(
-    `${getCollectionPath(type)}${encodeURIComponent(id)}/`,
+    `${transactionsBasePath}${encodeURIComponent(id)}/`,
   );
   const transaction = parseTransaction(payload);
 
@@ -182,11 +188,7 @@ export async function getTransactionDetail(
 export function createTransaction(
   transaction: TransactionPayload,
 ): Promise<unknown> {
-  return apiJsonRequest(
-    getCollectionPath(transaction.type),
-    'POST',
-    transaction,
-  );
+  return apiJsonRequest(`${transactionsBasePath}create/`, 'POST', transaction);
 }
 
 export function updateTransaction(
@@ -194,18 +196,15 @@ export function updateTransaction(
   transaction: TransactionPayload,
 ): Promise<unknown> {
   return apiJsonRequest(
-    `${getCollectionPath(transaction.type)}${encodeURIComponent(id)}/`,
+    `${transactionsBasePath}update/${encodeURIComponent(id)}/`,
     'PATCH',
     transaction,
   );
 }
 
-export function deleteTransaction(
-  id: string,
-  type: TransactionType,
-): Promise<unknown> {
+export function deleteTransaction(id: string): Promise<unknown> {
   return apiRequest(
-    `${getCollectionPath(type)}${encodeURIComponent(id)}/`,
+    `${transactionsBasePath}delete/${encodeURIComponent(id)}/`,
     { method: 'DELETE' },
   );
 }

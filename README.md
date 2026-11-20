@@ -45,13 +45,13 @@ As rotas internas ficam sob `/app`:
 
 - `/app/dashboard`
 - `/app/lancamentos` — ganhos e gastos
-- `/app/emprestimos-a-pagar`
+- `/app/emprestimos`
 - `/app/devedores`
 - `/app/investimentos`
 - `/app/acoes`
 - `/app/fiis`
 
-Ganhos e gastos e empréstimos a pagar já possuem integração com a API. O
+Ganhos e gastos e empréstimos já possuem integração com a API. O
 módulo Devedores está preparado para o contrato REST descrito abaixo, cuja API
 está em desenvolvimento. Os demais módulos ainda exibem “Em andamento”.
 As rotas privadas passam pelo guard de autenticação e dependem da validação de
@@ -59,7 +59,7 @@ sessão pelo backend antes de serem exibidas.
 
 ### Empréstimos
 
-O módulo `/app/emprestimos-a-pagar` usa `GET/POST /api/v1/loans/`,
+O módulo `/app/emprestimos` usa `GET/POST /api/v1/loans/`,
 `GET/PATCH/DELETE /api/v1/loans/{id}/` e
 `GET /api/v1/loans/{id}/installments/` para consultar o cronograma de parcelas.
 O cadastro envia valor contratado, IOF, taxa efetiva mensal, CET mensal, prazo,
@@ -87,7 +87,7 @@ No desenvolvimento, o Vite encaminha `/api/*` para
 `API_PROXY_TARGET` (padrão `http://localhost:8000`), evitando CORS entre
 frontend e backend. Copie `.env.example` para `.env.local` para personalizar o
 destino. `PAGE_SIZE` define o número de itens por página nas listas financeiras;
-se estiver vazio, Transações/Assinaturas mantêm 5 itens e Empréstimos mantém 10.
+se estiver vazio, Transações/Mensalidades mantêm 5 itens e Empréstimos mantém 10.
 Em produção, configure `VITE_API_BASE_URL` se a API estiver em outra origem. O
 cliente usa `credentials: include` para enviar e receber cookies HttpOnly:
 

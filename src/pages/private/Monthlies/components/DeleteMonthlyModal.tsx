@@ -1,14 +1,31 @@
+// React imports
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
-import { Button } from '@components/ui/buttons';
-import type { DeleteTransactionModalProps } from '../interfaces';
 
-export default function DeleteTransactionModal({
-  transaction,
+// Component imports
+import { Button } from '@components/ui/buttons';
+
+// Interface imports
+import type { Monthly } from '@interface/monthly';
+
+// Utility imports
+import { formatCurrency } from '../../../../utils/formatters';
+
+interface DeleteMonthlyModalProps {
+  monthly: Monthly;
+  isDeleting: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+}
+
+// Exported page component - DeleteMonthlyModal
+export default function DeleteMonthlyModal({
+  monthly,
   isDeleting,
   onCancel,
   onConfirm,
-}: DeleteTransactionModalProps) {
+}: DeleteMonthlyModalProps) {
+  // Effect to handle closing the modal on Escape key press and preventing body scroll
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -26,6 +43,7 @@ export default function DeleteTransactionModal({
     };
   }, [isDeleting, onCancel]);
 
+  // Render the monthly deletion confirmation modal
   return (
     <div className="transaction-confirmation">
       <button
@@ -36,7 +54,7 @@ export default function DeleteTransactionModal({
         type="button"
       />
       <section
-        aria-labelledby="delete-transaction-title"
+        aria-labelledby="delete-monthly-title"
         aria-modal="true"
         className="transaction-confirmation__dialog"
         role="alertdialog"
@@ -44,13 +62,11 @@ export default function DeleteTransactionModal({
         <span className="transaction-confirmation__icon">
           <AlertTriangle size="var(--icon-size-22)" aria-hidden="true" />
         </span>
-        <h2 id="delete-transaction-title">Excluir lançamento?</h2>
+        <h2 id="delete-monthly-title">Excluir mensalidade?</h2>
         <p>
-          Esta ação excluirá permanentemente{' '}
-          <strong>
-            {transaction.description || transaction.category}
-          </strong>
-          . Não será possível desfazê-la.
+          A mensalidade <strong>{monthly.name}</strong> de{' '}
+          <strong>{formatCurrency(monthly.amount)}</strong> e seu histórico de
+          baixas serão excluídos permanentemente.
         </p>
         <footer className="transaction-confirmation__actions">
           <Button

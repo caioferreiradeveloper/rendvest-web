@@ -1,5 +1,6 @@
 // React imports
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   ArrowDownLeft,
   ArrowDownUp,
@@ -15,7 +16,7 @@ import {
 
 // Component imports
 import MessageAlert from '@components/ui/MessageAlert';
-import { Button, IconButton } from '@components/ui/buttons';
+import { Button, ButtonLink, IconButton } from '@components/ui/buttons';
 import { SelectField } from '@components/forms/fields';
 import BankLogo from '@components/ui/BankLogo';
 
@@ -62,6 +63,26 @@ const bankFilterOptions = [
 // Exported page component - TransactionsPage
 export default function TransactionsPage() {
 
+  const [searchParams] = useSearchParams();
+  const invoice = searchParams.get('fatura') || undefined;
+  const invoiceMonth = invoice ? searchParams.get('mes') || undefined : undefined;
+
+  return (
+    <TransactionsList
+      key={`${invoice ?? ''}:${invoiceMonth ?? ''}`}
+      invoice={invoice}
+      invoiceMonth={invoiceMonth}
+    />
+  );
+}
+
+function TransactionsList({
+  invoice,
+  invoiceMonth,
+}: {
+  invoice?: string;
+  invoiceMonth?: string;
+}) {
   // State variables
   const [filter, setFilter] = useState<TransactionFilter>('all');
   const [bankFilter, setBankFilter] = useState<BankFilter>('all');
@@ -91,8 +112,10 @@ export default function TransactionsPage() {
   } = useTransactions({
     page,
     pageSize,
-    type: filter === 'all' ? undefined : filter,
+    type: filter === 'all' ? '' : filter,
     typeBank: bankFilter === 'all' ? undefined : bankFilter,
+    invoice,
+    invoiceMonth,
   });
   
   
@@ -187,7 +210,9 @@ export default function TransactionsPage() {
       showToast({
         kind: 'success',
         title: 'Lançamento cadastrado',
-        message: 'A movimentação foi adicionada à sua lista.',
+        message: values.invoice
+          ? 'O gasto foi adicionado à fatura.'
+          : 'A movimentação foi adicionada à sua lista.',
       });
     }
     return saved;
@@ -199,10 +224,7 @@ export default function TransactionsPage() {
       return;
     }
 
-    const deleted = await remove(
-      transactionToDelete.id,
-      transactionToDelete.type,
-    );
+    const deleted = await remove(transactionToDelete.id);
     if (deleted) {
       setTransactionToDelete(null);
       showToast({
@@ -236,17 +258,25 @@ export default function TransactionsPage() {
           </span>
           <div>
             <span className="eyebrow">Organização financeira</span>
-            <h1>Ganhos e gastos</h1>
-            <p>Acompanhe suas entradas e saídas em um só lugar.</p>
+            <h1>{invoice ? 'Gastos da fatura' : 'Ganhos e gastos'}</h1>
+            {invoiceMonth ? (
+              <p>Mês da fatura {invoiceMonth.split('-').reverse().join('/')}</p>
+            ) : !invoice && <p>Acompanhe suas entradas e saídas em um só lugar.</p>}
           </div>
         </div>
-        <Button
-          icon={<CirclePlus size="var(--icon-size-17)" />}
-          iconPosition="leading"
-          onClick={openCreateForm}
-        >
-          Novo lançamento
-        </Button>
+        {invoice ? (
+          <ButtonLink to={invoiceMonth ? `/app/mensalidades?mes=${encodeURIComponent(invoiceMonth)}` : '/app/mensalidades'} variant="secondary">
+            Voltar a Mensalidades
+          </ButtonLink>
+        ) : (
+          <Button
+            icon={<CirclePlus size="var(--icon-size-17)" />}
+            iconPosition="leading"
+            onClick={openCreateForm}
+          >
+            Novo lançamento
+          </Button>
+        )}
       </header>
 
 
@@ -262,10 +292,10 @@ export default function TransactionsPage() {
         <div className="transaction-list__header">
           <div>
             <h2 id="transaction-list-title">Lançamentos</h2>
-            <p>Consulte e atualize suas movimentações financeiras.</p>
+            {!invoice && <p>Consulte e atualize suas movimentações financeiras.</p>}
           </div>
-          <div className="transaction-list__filters">
-            <div className="transaction-type-filter">
+          {!invoice && <div className="transaction-list__filters">
+            <div className="transaction-list__filter transaction-type-filter">
               <span className="transaction-type-filter__label">Tipo</span>
               <div
                 aria-label="Filtrar por tipo"
@@ -290,14 +320,14 @@ export default function TransactionsPage() {
               </div>
             </div>
             <SelectField
-              fieldClassName="transaction-bank-filter"
+              fieldClassName="transaction-list__filter"
               id="transaction-bank-filter"
               label="Banco"
               onChange={changeBankFilter}
               options={bankFilterOptions}
               value={bankFilter}
             />
-          </div>
+          </div>}
         </div>
 
         <div className="transaction-table-wrap">
@@ -305,7 +335,6 @@ export default function TransactionsPage() {
             <thead>
               <tr>
                 <th scope="col">Movimentação</th>
-                <th scope="col">Categoria</th>
                 <th scope="col">Banco</th>
                 <th scope="col">Data</th>
                 <th scope="col">Valor</th>
@@ -354,10 +383,8 @@ export default function TransactionsPage() {
                           ? 'Nenhum lançamento encontrado'
                           : `Nenhum ${filter === 'income' ? 'ganho' : 'gasto'} encontrado`}
                       </strong>
-                      <p>
-                        Cadastre uma movimentação para começar a acompanhar suas finanças.
-                      </p>
-                      {filter === 'all' && (
+                      {!invoice && <p>Cadastre uma movimentação para começar a acompanhar suas finanças.</p>}
+                      {!invoice && filter === 'all' && (
                         <Button
                           onClick={openCreateForm}
                           size="small"
@@ -502,9 +529,6 @@ function TransactionRow({
         </div>
       </td>
       <td>
-        <span className="transaction-category">{transaction.category}</span>
-      </td>
-      <td>
         <span className="transaction-bank">
           <BankLogo
             label={getTransactionBankLabel(transaction.bank)}
@@ -518,10 +542,10 @@ function TransactionRow({
         {formatDate(transaction.occurred_at)}
       </td>
       <td
-        className={`transaction-table__amount ${
+        className={`financial-amount ${
           isIncome
-            ? 'transaction-table__amount--income'
-            : 'transaction-table__amount--expense'
+            ? 'financial-amount--income'
+            : 'financial-amount--expense'
         }`}
       >
         {isIncome ? '+' : '−'}

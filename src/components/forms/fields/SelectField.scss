@@ -1,5 +1,4 @@
 .select-field {
-  position: relative;
   min-width: 0;
 }
 
@@ -36,13 +35,11 @@
 }
 
 .select-field__options {
-  position: absolute;
-  z-index: 20;
-  top: calc(100% + 6px);
-  right: 0;
-  left: 0;
+  position: fixed;
+  z-index: 1050;
   max-height: 260px;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: var(--space-5);
   border: 1px solid var(--color-border);
   border-radius: 9px;
@@ -53,7 +50,7 @@
 .select-field__option {
   display: flex;
   width: 100%;
-  min-height: 38px;
+  height: 38px;
   align-items: center;
   gap: var(--space-9);
   padding: var(--space-5) var(--space-8);
@@ -65,6 +62,13 @@
   font: inherit;
   font-size: var(--font-size-13);
   text-align: left;
+}
+
+.select-field__option > span:not(.bank-logo) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .select-field__option:hover,
@@ -84,19 +88,4 @@
 
 .select-field__trigger:disabled {
   cursor: not-allowed;
-}
-
-.transaction-bank-filter .field {
-  gap: var(--space-4);
-}
-
-.transaction-bank-filter .field__label {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-10);
-  font-weight: 650;
-}
-
-.transaction-bank-filter .select-field__trigger {
-  height: 38px;
-  font-size: var(--font-size-11);
 }

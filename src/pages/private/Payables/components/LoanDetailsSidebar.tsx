@@ -24,6 +24,8 @@ import BankLogo from '@components/ui/BankLogo';
 import {
   getTransactionBankLabel,
   getTransactionBankLogoDomain,
+  transactionBankOptions,
+  type TransactionBank,
 } from '@config/transactionBanks';
 import useRequiredFormValidation from '@hooks/useRequiredFormValidation';
 import type {
@@ -45,8 +47,7 @@ function getInstallmentDiscount(installment: LoanInstallment): number {
     return 0;
   }
 
-  const discount =
-    Number(installment.amount_due) - Number(installment.amount_paid);
+  const discount = Number(installment.discount_amount);
   return Number.isFinite(discount)
     ? Math.max(0, Math.round(discount * 100) / 100)
     : 0;
@@ -72,6 +73,7 @@ export default function LoanDetailsSidebar({
   const [paymentInstallmentNumber, setPaymentInstallmentNumber] = useState<
     number | null
   >(null);
+  const [bank, setBank] = useState<TransactionBank>(details.loan.bank);
   const [amount, setAmount] = useState('');
   const [paidAt, setPaidAt] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
@@ -100,11 +102,7 @@ export default function LoanDetailsSidebar({
     Number(loan.amount_paid) > 0 ||
     installments.some((installment) => Number(installment.amount_paid) > 0);
   const recentPaidInstallments = paidInstallments.slice(-4).reverse();
-  const totalDiscount = paidInstallments.reduce(
-    (total, installment) =>
-      total + Math.round(getInstallmentDiscount(installment) * 100),
-    0,
-  ) / 100;
+  const totalDiscount = Number(loan.discount_amount);
   const selectedInstallment = useMemo(
     () =>
       installments.find(
@@ -183,6 +181,7 @@ export default function LoanDetailsSidebar({
       return;
     }
     const paymentPayload: LoanPaymentPayload = {
+      bank,
       installment_number: selectedInstallment.number,
       amount: paymentAmount.toFixed(2),
     };
@@ -206,6 +205,7 @@ export default function LoanDetailsSidebar({
   }
 
   function openPaymentForm(installment: LoanInstallment) {
+    setBank(loan.bank);
     setPaymentInstallmentNumber(installment.number);
     setAmount(installment.remaining_amount);
     setPaidAt(getLocalDateTimeValue());
@@ -243,7 +243,7 @@ export default function LoanDetailsSidebar({
             </h2>
             <p>
               {isPaymentScreen
-                ? 'Escolha a parcela e informe o valor que deseja pagar.'
+                ? 'Escolha a parcela e informe o valor para quitá-la.'
                 : 'Consulte as condições e acompanhe cada parcela.'}
             </p>
           </div>
@@ -314,7 +314,7 @@ export default function LoanDetailsSidebar({
                             </span>
                           </div>
                           <span className="loan-payment-hero__label">
-                            Saldo desta parcela
+                            Valor previsto da parcela
                           </span>
                           <strong>
                             {formatCurrency(selectedInstallment.remaining_amount)}
@@ -336,7 +336,7 @@ export default function LoanDetailsSidebar({
                             disabled={isSaving}
                             fieldClassName="loan-payment-screen__amount-field"
                             id="loan-payment-amount"
-                            label="Valor do pagamento"
+                            label="Valor para quitar a parcela"
                             max={Number(
                               selectedInstallment.remaining_amount,
                             ).toFixed(2)}
@@ -358,10 +358,18 @@ export default function LoanDetailsSidebar({
                             }
                             type="button"
                           >
-                            Usar saldo total
+                            Usar valor previsto
                           </button>
                         </div>
 
+                        <SelectField
+                          disabled={isSaving}
+                          id="loan-payment-bank"
+                          label="Banco do pagamento"
+                          options={transactionBankOptions}
+                          value={bank}
+                          onChange={setBank}
+                        />
                         <InputDateTime
                           disabled={isSaving}
                           id="loan-payment-paid-at"
@@ -373,8 +381,8 @@ export default function LoanDetailsSidebar({
                           }}
                         />
                         <p className="loan-payment-screen__hint">
-                          O pagamento pode ser parcial e não pode exceder o
-                          saldo da parcela.
+                          Informe o valor total da quitação. Se houver desconto
+                          por antecipação, informe o valor já com o desconto.
                         </p>
                       </>
                     )}
@@ -513,7 +521,7 @@ export default function LoanDetailsSidebar({
                 logoDomain={getTransactionBankLogoDomain(loan.bank)}
               />
               <div>
-                <span>Instituição financeira</span>
+                <span>Banco</span>
                 <strong>{getTransactionBankLabel(loan.bank)}</strong>
               </div>
             </div>

@@ -218,54 +218,6 @@
   font-size: var(--font-size-12);
 }
 
-.loan-table-wrap {
-  min-height: 0;
-  flex: 1;
-  overflow: auto;
-}
-
-.loan-table thead {
-  position: sticky;
-  z-index: 1;
-  top: 0;
-}
-
-.loan-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.loan-table th {
-  padding: var(--space-10) var(--space-18);
-  background: color-mix(in srgb, var(--color-background) 72%, var(--color-surface));
-  color: var(--color-text-muted);
-  font-size: var(--font-size-11);
-  font-weight: 700;
-  letter-spacing: 0.075em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.loan-table th:first-child,
-.loan-table td:first-child {
-  padding-left: var(--space-20);
-}
-
-.loan-table th:last-child,
-.loan-table td:last-child {
-  padding-right: var(--space-20);
-  text-align: right;
-}
-
-.loan-table td {
-  padding: var(--space-12) var(--space-18);
-  border-top: 1px solid var(--color-divider);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-13);
-  white-space: nowrap;
-}
-
 .loan-table__bank {
   display: flex;
   min-width: 170px;
@@ -274,19 +226,7 @@
 }
 
 .loan-table__bank strong {
-  color: var(--color-text-primary);
-  font-size: var(--font-size-13);
   font-weight: 620;
-}
-
-.loan-table__amount {
-  color: var(--color-text-primary) !important;
-  font-weight: 650;
-  font-variant-numeric: tabular-nums;
-}
-
-.loan-table__date {
-  text-transform: capitalize;
 }
 
 .loan-table__actions .button--icon {
@@ -1133,21 +1073,6 @@
 
   .loan-list__header {
     padding: var(--space-15);
-  }
-
-  .loan-table th,
-  .loan-table td {
-    padding-inline: var(--space-12);
-  }
-
-  .loan-table th:first-child,
-  .loan-table td:first-child {
-    padding-left: var(--space-15);
-  }
-
-  .loan-table th:last-child,
-  .loan-table td:last-child {
-    padding-right: var(--space-15);
   }
 
   .loan-pagination {

@@ -23,6 +23,8 @@ export default function useTransactions({
   pageSize,
   type,
   typeBank,
+  invoice,
+  invoiceMonth,
 }: TransactionListParams) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [totalCount, setTotalCount] = useState<number | null>(0);
@@ -48,6 +50,8 @@ export default function useTransactions({
         pageSize,
         type,
         typeBank,
+        invoice,
+        invoiceMonth,
       });
       if (currentRequestId !== requestId.current) {
         return;
@@ -65,7 +69,7 @@ export default function useTransactions({
         setIsLoading(false);
       }
     }
-  }, [page, pageSize, type, typeBank]);
+  }, [page, pageSize, type, typeBank, invoice, invoiceMonth]);
 
   useEffect(() => {
     void reload();
@@ -132,14 +136,11 @@ export default function useTransactions({
   );
 
   const remove = useCallback(
-    async (
-      id: string,
-      type: Transaction['type'],
-    ): Promise<boolean> => {
+    async (id: string): Promise<boolean> => {
       setIsSaving(true);
       setError(null);
       try {
-        await deleteTransactionRequest(id, type);
+        await deleteTransactionRequest(id);
         setSelectedTransaction(null);
         await reload();
         return true;

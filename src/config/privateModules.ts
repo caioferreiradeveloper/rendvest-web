@@ -5,6 +5,7 @@ import {
   CircleDollarSign,
   HandCoins,
   LayoutDashboard,
+  ShoppingBag,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -22,8 +23,8 @@ export const privateModules = {
     icon: ArrowDownUp,
   },
   payables: {
-    path: '/app/emprestimos-a-pagar',
-    title: 'Empréstimos a pagar',
+    path: '/app/emprestimos',
+    title: 'Empréstimos',
     description: 'Organize empréstimos, parcelas e compromissos futuros.',
     icon: HandCoins,
   },
@@ -33,11 +34,17 @@ export const privateModules = {
     description: 'Registre quem deve, em qual data e o valor a receber.',
     icon: CircleDollarSign,
   },
-  subscriptions: {
-    path: '/app/assinaturas',
-    title: 'Assinaturas e Mensalidades',
-    description: 'Organize suas assinaturas e mensalidades recorrentes.',
+  monthlies: {
+    path: '/app/mensalidades',
+    title: 'Mensalidades',
+    description: 'Acompanhe vencimentos e registre baixas de mensalidades.',
     icon: Banknote,
+  },
+  wishlist: {
+    path: '/app/lista-de-desejos',
+    title: 'Lista de desejos',
+    description: 'Planeje suas próximas compras.',
+    icon: ShoppingBag,
   },
   investments: {
     path: '/app/investimentos',
@@ -53,7 +60,7 @@ export const privateModules = {
   },
   fiis: {
     path: '/app/fiis',
-    title: 'FIIs',
+    title: 'Fundos imobiliários',
     description: 'Organize seus investimentos em fundos imobiliários.',
     icon: Banknote,
   },
@@ -71,7 +78,7 @@ export const privateNavigationGroups: {
   { title: 'Visão geral', modules: ['dashboard'] },
   {
     title: 'Organização',
-    modules: ['transactions', 'payables', 'debtors', 'subscriptions'],
+    modules: ['transactions', 'payables', 'debtors', 'monthlies', 'wishlist'],
   },
   {
     title: 'Investimentos',

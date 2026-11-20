@@ -16,9 +16,13 @@ export default function PrivateLayout() {
   const { logout } = useAuth();
   const { showToast } = useToast();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const isTablePage =
-    pathname === '/app/lancamentos' ||
-    pathname === '/app/emprestimos-a-pagar';
+  const isTablePage = [
+    privateModules.transactions.path,
+    privateModules.payables.path,
+    privateModules.debtors.path,
+    privateModules.monthlies.path,
+    privateModules.wishlist.path,
+  ].some((path) => pathname.replace(/\/$/, '') === path);
 
   async function handleLogout() {
     setIsLoggingOut(true);
