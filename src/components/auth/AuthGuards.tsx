@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Sprout } from 'lucide-react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { administrationLinks } from '@config/administration';
 import { useAuth } from '@hooks/useAuth';
 import { Button } from '../ui/buttons';
 import MessageAlert from '../ui/MessageAlert';
@@ -46,6 +47,16 @@ export function RequireAuth({ children }: AuthGuardProps) {
   }
 
   return children;
+}
+
+export function RequireStaff() {
+  const { user } = useAuth();
+  return user?.is_staff ? <Outlet /> : <Navigate to="/app/dashboard" replace />;
+}
+
+export function RequireFinancialArea() {
+  const { user } = useAuth();
+  return user?.is_staff ? <Navigate to={administrationLinks.dashboard.path} replace /> : <Outlet />;
 }
 
 export function RequireGuest({ children }: AuthGuardProps) {

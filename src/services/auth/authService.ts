@@ -1,12 +1,21 @@
 import { authEndpoints } from '@config/auth';
-import { apiJsonRequest, refreshSession } from '../api/apiClient';
+import { apiJsonRequest, apiRequest, refreshSession } from '../api/apiClient';
 
 export interface LoginCredentials {
   email: string;
   password: string;
 }
 
+export interface AuthenticatedUser {
+  id: string;
+  is_staff: boolean;
+}
+
 export const authService = {
+  currentUser(): Promise<AuthenticatedUser> {
+    return apiRequest<AuthenticatedUser>('/api/v1/users/current/');
+  },
+
   login(credentials: LoginCredentials): Promise<void> {
     return apiJsonRequest<void>(authEndpoints.login, 'POST', credentials, {
       retryAfterRefresh: false,

@@ -114,6 +114,77 @@
   align-items: start;
 }
 
+.fund-sidebar {
+  display: grid;
+  gap: var(--space-14);
+  min-width: 0;
+}
+
+.fund-payment {
+  border-top: 3px solid var(--color-primary);
+}
+
+.fund-payment .fund-metrics {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr));
+}
+
+.fund-payment .fund-metrics > div {
+  background: color-mix(in srgb, var(--color-primary) 7%, var(--color-surface));
+}
+
+.fund-payment .fund-metrics dd {
+  font-size: var(--font-size-15);
+}
+
+.fund-payment a {
+  display: inline-block;
+  margin-top: var(--space-12);
+  color: var(--color-primary);
+  font-size: var(--font-size-13);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.fund-history {
+  container-type: inline-size;
+}
+
+.fund-metrics--inline,
+.fund-metrics--period {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+}
+
+.fund-metrics--inline > div,
+.fund-metrics--period > div {
+  --fund-metric-accent: var(--color-info);
+  display: grid;
+  align-content: space-between;
+  border-inline-start: 3px solid var(--fund-metric-accent);
+  background: color-mix(in srgb, var(--fund-metric-accent) 7%, var(--color-surface));
+}
+
+.fund-metrics--period > div {
+  --fund-metric-accent: var(--color-primary);
+}
+
+@container (max-width: 440px) {
+  .fund-metrics--inline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fund-metrics--period {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@container (max-width: 240px) {
+  .fund-metrics--inline {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .fund-summary {
   margin: 0;
 }
@@ -171,8 +242,14 @@
 }
 
 .fund-price-chart {
+  display: block;
   width: 100%;
   margin-top: var(--space-14);
+  border-radius: 9px;
+  background: linear-gradient(
+    color-mix(in srgb, var(--color-primary) 6%, var(--color-surface)),
+    var(--color-surface)
+  );
 }
 
 .fund-price-chart line {
@@ -189,6 +266,11 @@
 .fund-chart-labels {
   display: flex;
   justify-content: space-between;
+  gap: var(--space-8);
+}
+
+.fund-chart-labels span:last-child {
+  text-align: end;
 }
 
 .fund-note {
@@ -268,4 +350,49 @@
 
 .fund-metrics--period {
   margin-top: var(--space-10);
+}
+
+.fund-section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.fund-section-nav a {
+  padding: var(--space-7) var(--space-12);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font-size: var(--font-size-13);
+  font-weight: 650;
+}
+
+.fund-section-nav a:hover {
+  background: var(--color-surface-hover);
+}
+
+.fund-section [id] {
+  scroll-margin-top: var(--space-18);
+}
+
+.fund-metric-detail {
+  display: block;
+  margin-top: var(--space-4);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-12);
+  font-weight: 500;
+}
+
+.fund-simulator-basis {
+  margin-bottom: var(--space-14);
+}
+
+.fund-simulator-basis strong {
+  color: var(--color-success);
+}
+
+.fund-switch button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }

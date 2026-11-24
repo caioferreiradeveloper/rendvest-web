@@ -5,6 +5,8 @@ import {
   privateModules,
   privateNavigationGroups,
 } from '@config/privateModules';
+import { administrationLinks } from '@config/administration';
+import Notifications from '@components/private/notifications/Notifications';
 import { Button, ButtonLink } from '@components/ui/buttons';
 import { useToast } from '@contexts/ToastContext';
 import { useAuth } from '@hooks/useAuth';
@@ -13,7 +15,10 @@ import './PrivateLayout.scss';
 
 export default function PrivateLayout() {
   const { pathname } = useLocation();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
+  const isStaff = user?.is_staff === true;
+  const areaLabel = isStaff ? 'Administrador' : 'Área financeira';
+  const dashboardPath = isStaff ? administrationLinks.dashboard.path : privateModules.dashboard.path;
   const { showToast } = useToast();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const isTablePage = [
@@ -22,6 +27,9 @@ export default function PrivateLayout() {
     privateModules.debtors.path,
     privateModules.monthlies.path,
     privateModules.wishlist.path,
+    administrationLinks.users.path,
+    administrationLinks.pending.path,
+    administrationLinks.messages.path,
   ].some((path) => pathname.replace(/\/$/, '') === path);
 
   async function handleLogout() {
@@ -42,7 +50,7 @@ export default function PrivateLayout() {
       className={`private-shell${isTablePage ? ' private-shell--table-page' : ''}`}
     >
       <aside className="private-sidebar">
-        <Link className="brand private-sidebar__brand" to="/app/dashboard">
+        <Link className="brand private-sidebar__brand" to={dashboardPath}>
           <span className="brand__mark" aria-hidden="true">
             <Sprout size="var(--icon-size-19)" strokeWidth={2.2} />
           </span>
@@ -51,33 +59,49 @@ export default function PrivateLayout() {
 
         <div className="private-sidebar__workspace">
           <span className="private-sidebar__workspace-dot" />
-          Área financeira
+          {areaLabel}
         </div>
 
-        <nav className="private-nav" aria-label="Menu da área financeira">
-          {privateNavigationGroups.map((group) => (
-            <div className="private-nav__group" key={group.title}>
-              <span className="private-nav__title">{group.title}</span>
-              {group.modules.map((moduleKey) => {
-                const module = privateModules[moduleKey];
-                const ModuleIcon = module.icon;
-
-                return (
-                  <NavLink
-                    className={({ isActive }) =>
-                      `private-nav__link${isActive ? ' is-active' : ''}`
-                    }
-                    end={moduleKey !== 'market'}
-                    key={moduleKey}
-                    to={module.path}
-                  >
-                    <ModuleIcon size="var(--icon-size-17)" strokeWidth={1.8} aria-hidden="true" />
-                    <span>{module.title}</span>
-                  </NavLink>
-                );
-              })}
+        <nav className="private-nav" aria-label={isStaff ? 'Menu do administrador' : 'Menu da área financeira'}>
+          {isStaff ? (
+            <div className="private-nav__group">
+              <span className="private-nav__title">Administrador</span>
+              {Object.values(administrationLinks).map(({ path, title, icon: Icon }) => (
+                <NavLink
+                  className={({ isActive }) => `private-nav__link${isActive ? ' is-active' : ''}`}
+                  key={path}
+                  to={path}
+                >
+                  <Icon size="var(--icon-size-17)" strokeWidth={1.8} aria-hidden="true" />
+                  <span>{title}</span>
+                </NavLink>
+              ))}
             </div>
-          ))}
+          ) : (
+            privateNavigationGroups.map((group) => (
+              <div className="private-nav__group" key={group.title}>
+                <span className="private-nav__title">{group.title}</span>
+                {group.modules.map((moduleKey) => {
+                  const module = privateModules[moduleKey];
+                  const ModuleIcon = module.icon;
+
+                  return (
+                    <NavLink
+                      className={({ isActive }) =>
+                        `private-nav__link${isActive ? ' is-active' : ''}`
+                      }
+                      end={moduleKey !== 'fiis'}
+                      key={moduleKey}
+                      to={module.path}
+                    >
+                      <ModuleIcon size="var(--icon-size-17)" strokeWidth={1.8} aria-hidden="true" />
+                      <span>{module.title}</span>
+                    </NavLink>
+                  );
+                })}
+              </div>
+            ))
+          )}
         </nav>
 
         <div className="private-sidebar__bottom">
@@ -97,12 +121,13 @@ export default function PrivateLayout() {
       <div className="private-main">
         <header className="private-topbar">
           <span className="private-topbar__breadcrumb">
-            Rendvest <span>/</span> Área financeira
+            Rendvest <span>/</span> {areaLabel}
           </span>
           <div className="private-topbar__actions">
             <span className="private-topbar__status">
               <span /> Em desenvolvimento
             </span>
+            <Notifications />
             <Button
               className="private-topbar__logout"
               disabled={isLoggingOut}

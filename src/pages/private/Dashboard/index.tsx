@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { ArrowDownLeft, ArrowRight, ArrowUpRight, ChartNoAxesCombined, Wallet, type LucideIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { privateModules } from '@config/privateModules';
+import Skeleton from '@components/ui/Skeleton';
+import MessageAlert from '@components/ui/MessageAlert';
+import { Button } from '@components/ui/buttons';
 import { SelectField } from '@components/forms/fields';
 import { getTransactionBankLabel, transactionBankOptions, type TransactionBank } from '@config/transactionBanks';
 import type { SelectFieldOption } from '@components/forms/fields/SelectField';
@@ -101,6 +104,65 @@ function CashFlow({ history, transactions }: { history: MonthlyFlow[]; transacti
   );
 }
 
+function DashboardLoading() {
+  return (
+    <div role="status" aria-label="Carregando indicadores financeiros">
+      <div className="dashboard-balance dashboard-balance--loading" aria-hidden="true">
+        <div className="dashboard-balance__content">
+          <Skeleton width={118} />
+          <Skeleton width={204} height={40} />
+          <Skeleton width={164} height={10} />
+        </div>
+        <Skeleton width={42} height={42} />
+      </div>
+      <div className="dashboard-metrics" aria-hidden="true">
+        {[0, 1, 2].map((index) => (
+          <div className="dashboard-metric dashboard-metric--loading" key={index}>
+            <Skeleton className="dashboard-metric__icon" height={38} />
+            <Skeleton width="55%" />
+            <Skeleton width="75%" height={22} />
+            <Skeleton width="45%" height={9} />
+          </div>
+        ))}
+      </div>
+      <div className="dashboard-card dashboard-section dashboard-recent" aria-hidden="true">
+        <div className="dashboard-card__header"><Skeleton width={170} height={17} /></div>
+        <ul className="dashboard-activity__list">
+          {[64, 48, 57].map((width) => (
+            <li className="dashboard-activity__item" key={width}>
+              <Skeleton width={32} height={32} />
+              <span className="dashboard-activity__description">
+                <Skeleton width={width + '%'} />
+                <Skeleton width="30%" height={9} />
+              </span>
+              <Skeleton width={75} height={15} />
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="dashboard-charts dashboard-section" aria-hidden="true">
+        <div className="dashboard-card">
+          <Skeleton width={170} height={17} />
+          <div className="dashboard-flow__chart">
+            {[42, 68, 53, 76, 64, 88].map((height) => (
+              <div className="dashboard-flow__month" key={height}>
+                <Skeleton width="55%" height={height + '%'} />
+                <Skeleton width="70%" height={10} />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="dashboard-card">
+          <Skeleton width={145} height={17} />
+          <div className="dashboard-portfolio__chart dashboard-portfolio__chart--loading">
+            <div className="dashboard-portfolio__total"><Skeleton width="56%" height={18} /></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const [bank, setBank] = useState<TransactionBank>('');
   const [data, setData] = useState<DashboardData | null>(null);
@@ -137,15 +199,15 @@ export default function DashboardPage() {
           label="Banco dos lançamentos" onChange={changeBank} options={bankOptions} value={bank} />
       </header>
       {error && (
-        <div className="dashboard-section" role="alert">
-          <p>{error}</p>
-          <button className="button button--secondary" type="button" onClick={() => {
+        <div className="dashboard-card dashboard-section dashboard-recent dashboard-feedback">
+          <MessageAlert kind="error" message={error} />
+          <Button variant="secondary" onClick={() => {
             setError('');
             setRetry((current) => current + 1);
-          }}>Tentar novamente</button>
+          }}>Tentar novamente</Button>
         </div>
       )}
-      {!data && !error && <p role="status">Carregando indicadores…</p>}
+      {!data && !error && <DashboardLoading />}
       {data && (
         <>
           <section className="dashboard-balance" aria-label="Saldo acumulado">
@@ -167,11 +229,20 @@ export default function DashboardPage() {
           </section>
 
           <section className="dashboard-card dashboard-section dashboard-recent" aria-label="Movimentações recentes">
-            <header className="dashboard-card__header"><h2>Movimentações recentes</h2></header>
-            {data.recent.length === 0 ? <p>Nenhuma movimentação registrada.</p> : (
+            <header className="dashboard-card__header">
+              <h2>Movimentações recentes</h2>
+              <Link className="dashboard-activity__more" to={privateModules.transactions.path}
+                aria-label="Ver todos os lançamentos" title="Ver todos os lançamentos">
+                <ArrowRight size={17} aria-hidden="true" />
+              </Link>
+            </header>
+            {data.recent.length === 0 ? <p className="dashboard-overview__note">Nenhuma movimentação registrada.</p> : (
               <ul className="dashboard-activity__list">
                 {data.recent.map((item) => (
                   <li className="dashboard-activity__item dashboard-recent-item" key={item.id}>
+                    <span className={`dashboard-activity__kind dashboard-activity__kind--${item.type}`}>
+                      {item.type === 'expense' ? <ArrowUpRight size={16} aria-hidden="true" /> : <ArrowDownLeft size={16} aria-hidden="true" />}
+                    </span>
                     <span className="dashboard-activity__description">
                       <strong>{item.description || item.category}</strong>
                       <span>{[getTransactionBankLabel(item.bank), formatDate(item.occurred_at)].filter(Boolean).join(' · ')}</span>
@@ -191,8 +262,6 @@ export default function DashboardPage() {
             <MonthlyResult history={data.history} />
             <FinancialOverview data={data} />
           </div>
-
-          
         </>
       )}
     </main>

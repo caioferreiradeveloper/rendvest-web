@@ -4,13 +4,15 @@ import PublicHeader from '@components/navigation/PublicHeader';
 import './PublicLayout.scss';
 
 export default function PublicLayout() {
-  const isLoginPage = useLocation().pathname === '/login';
+  const pathname = useLocation().pathname.replace(/\/$/, '');
+  const isRegisterPage = pathname === '/cadastre-se';
+  const isAuthPage = pathname === '/login' || isRegisterPage;
 
   return (
-    <div className={`site-shell${isLoginPage ? ' site-shell--auth' : ''}`}>
-      {!isLoginPage && <PublicHeader />}
+    <div className={`site-shell${isAuthPage ? ' site-shell--auth' : ''}${isRegisterPage ? ' site-shell--register' : ''}`}>
+      {!isAuthPage && <PublicHeader />}
       <Outlet />
-      {!isLoginPage && (
+      {!isAuthPage && (
         <footer className="site-footer">
           <div className="container site-footer__inner">
             <Link className="brand brand--footer" to="/">

@@ -933,3 +933,48 @@
     padding: var(--space-14);
   }
 }
+
+.dashboard-balance {
+  align-items: center;
+}
+
+.dashboard-balance--loading .skeleton {
+  --skeleton-base: color-mix(in srgb, var(--color-text-inverse) 19%, transparent);
+  --skeleton-glow: color-mix(in srgb, var(--color-text-inverse) 35%, transparent);
+}
+
+.dashboard-balance--loading .dashboard-balance__content,
+.dashboard-metric--loading {
+  row-gap: var(--space-7);
+}
+
+.dashboard-portfolio__chart--loading {
+  background: var(--color-surface-secondary);
+}
+
+.dashboard-feedback {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-12);
+}
+
+.dashboard-feedback .message-alert--toast {
+  position: static;
+  width: auto;
+  box-shadow: none;
+  animation: none;
+}
+
+.dashboard-recent .dashboard-card__header {
+  min-height: 32px;
+}
+
+.dashboard-recent .dashboard-activity__description > span {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-12);
+}
+
+.dashboard-recent-item > .financial-amount {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+}

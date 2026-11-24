@@ -201,7 +201,7 @@ export default function LoginPage() {
             </Button>
           </form>
           <p className="login-form__signup">
-            Ainda não tem uma conta? <Link to="/contato">Fale com a gente</Link>
+            Ainda não tem uma conta? <Link to="/cadastre-se">Cadastre-se</Link>
           </p>
           <p className="login-form__secure">
             <LockKeyhole size="var(--icon-size-14)" aria-hidden="true" />

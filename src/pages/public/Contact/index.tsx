@@ -1,5 +1,5 @@
 import { ArrowUpRight, Mail, MessageCircle, Send } from 'lucide-react';
-import { type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import {
   InputDate,
   InputNumber,
@@ -9,21 +9,36 @@ import {
 import { Button } from '@components/ui/buttons';
 import { useToast } from '@contexts/ToastContext';
 import useRequiredFormValidation from '@hooks/useRequiredFormValidation';
+import { administrationService } from '@services/administration/administrationService';
+import { toApiAlert } from '@services/api/apiFeedback';
 import './Contact.scss';
 
 export default function ContactPage() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { showToast } = useToast();
   const { hasAttemptedSubmit, handleInvalidCapture } =
     useRequiredFormValidation();
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    showToast({
-      kind: 'info',
-      title: 'Formulário demonstrativo',
-      message:
-        'O formulário está pronto para integração. Nenhuma mensagem foi enviada.',
-    });
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    setIsSubmitting(true);
+    try {
+      await administrationService.sendContact({
+        name: String(data.get('name') ?? ''),
+        email: String(data.get('email') ?? ''),
+        message: String(data.get('message') ?? ''),
+        monthly_goal: String(data.get('monthlyGoal') ?? '') || null,
+        preferred_date: String(data.get('preferredDate') ?? '') || null,
+      });
+      form.reset();
+      showToast({ kind: 'success', title: 'Mensagem enviada', message: 'Recebemos seu contato.' });
+    } catch (error) {
+      showToast(toApiAlert(error, 'Não foi possível enviar a mensagem.'));
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -70,6 +85,7 @@ export default function ContactPage() {
               autoComplete="name"
               id="contact-name"
               label="Seu nome"
+              maxLength={150}
               name="name"
               placeholder="Como podemos te chamar?"
               required
@@ -78,6 +94,7 @@ export default function ContactPage() {
               autoComplete="email"
               id="contact-email"
               label="E-mail"
+              maxLength={254}
               name="email"
               placeholder="voce@exemplo.com"
               required
@@ -89,7 +106,8 @@ export default function ContactPage() {
               name="monthlyGoal"
               min={0}
               placeholder="Ex.: 500"
-              step="any"
+              max={9999999999.99}
+              step="0.01"
               hint="Somente se fizer sentido para sua pergunta."
             />
             <InputDate
@@ -102,6 +120,7 @@ export default function ContactPage() {
               <TextArea
                 id="contact-message"
                 label="Sua mensagem"
+                maxLength={5000}
                 name="message"
                 placeholder="Conte um pouco sobre o que você precisa..."
                 required
@@ -109,8 +128,8 @@ export default function ContactPage() {
               />
             </div>
           </div>
-          <Button icon={<Send size="var(--icon-size-16)" />} type="submit">
-            Enviar mensagem
+          <Button disabled={isSubmitting} icon={<Send size="var(--icon-size-16)" />} type="submit">
+            {isSubmitting ? 'Enviando…' : 'Enviar mensagem'}
           </Button>
           <p className="contact-form__privacy">
             Não compartilhe senhas ou informações bancárias neste formulário.

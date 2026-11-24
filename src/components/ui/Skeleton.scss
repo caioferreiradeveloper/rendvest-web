@@ -1,0 +1,23 @@
+.skeleton {
+  --skeleton-base: var(--color-surface-secondary);
+  --skeleton-glow: var(--color-highlight);
+  display: block;
+  max-width: 100%;
+  border-radius: 6px;
+  background: var(--skeleton-base);
+  background-image: linear-gradient(105deg, transparent 30%, var(--skeleton-glow) 50%, transparent 70%);
+  background-size: 240% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  from { background-position: 100% 0; }
+  to { background-position: -80% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background-image: none;
+  }
+}
