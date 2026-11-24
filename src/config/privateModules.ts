@@ -1,6 +1,7 @@
 import {
   ArrowDownUp,
   Banknote,
+  Building2,
   ChartNoAxesCombined,
   CircleDollarSign,
   HandCoins,
@@ -49,14 +50,14 @@ export const privateModules = {
   investments: {
     path: '/app/investimentos',
     title: 'Meus investimentos',
-    description: 'Acompanhe sua carteira e seus objetivos de investimento.',
+    description: 'Acompanhe suas aplicações em fundos imobiliários.',
     icon: ChartNoAxesCombined,
   },
-  market: {
-    path: '/app/investimentos/mercado',
-    title: 'Cotações de mercado',
-    description: 'Pesquise ações e fundos imobiliários e consulte o último fechamento.',
-    icon: Banknote,
+  fiis: {
+    path: '/app/fiis',
+    title: 'Fundos Imobiliários',
+    description: 'Acompanhe os fundos imobiliários da sua carteira.',
+    icon: Building2,
   },
 } satisfies Record<
   string,
@@ -76,6 +77,6 @@ export const privateNavigationGroups: {
   },
   {
     title: 'Investimentos',
-    modules: ['investments', 'market'],
+    modules: ['investments', 'fiis'],
   },
 ];

@@ -1,0 +1,46 @@
+.site-shell--auth.site-shell--register {
+  overflow-y: auto;
+}
+
+.login-page.register-page {
+  min-height: 100%;
+  height: auto;
+  grid-template-areas: 'form banner';
+  grid-template-columns: 1.08fr 0.92fr;
+
+  .login-story {
+    grid-area: banner;
+    justify-content: flex-start;
+  }
+
+  .login-story__content {
+    margin-block: auto;
+    padding-block: var(--space-32);
+  }
+
+  .login-panel {
+    grid-area: form;
+  }
+
+  .login-form-wrap {
+    width: min(100%, 560px);
+  }
+
+  .login-form__signup {
+    display: block;
+  }
+}
+
+.register-page__names {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  gap: var(--space-15);
+}
+
+@media (max-width: 680px) {
+  .login-page.register-page {
+    grid-template-areas: 'banner' 'form';
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+  }
+}

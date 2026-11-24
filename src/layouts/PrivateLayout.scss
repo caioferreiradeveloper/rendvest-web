@@ -265,3 +265,9 @@
     font-size: var(--font-size-10);
   }
 }
+
+@media (max-width: 420px) {
+  .private-topbar__status {
+    display: none;
+  }
+}

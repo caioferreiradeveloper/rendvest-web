@@ -1,80 +1,38 @@
+.investment-list__header {
+  flex-wrap: wrap;
+}
+
 .investment-total {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  padding: var(--space-9) var(--space-13);
+  border-radius: 10px;
+  background: var(--color-highlight);
+  color: var(--color-primary);
+}
+
+.investment-total > div {
   display: grid;
   gap: var(--space-3);
-  font-size: var(--font-size-13);
-  white-space: nowrap;
+  font-size: var(--font-size-12);
 }
 
 .investment-total strong {
-  font-size: var(--font-size-20);
-}
-
-.investment-table a {
-  color: var(--color-primary);
-  font-weight: 620;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.investment-table__name {
-  display: grid;
-  gap: var(--space-3);
-}
-
-.investment-filter input {
-  width: 100%;
-}
-
-@media (max-width: 760px) {
-  .investment-filter {
-    width: 100%;
-  }
-}
-
-form.investment-filter {
-  display: flex;
-  align-items: end;
-  gap: var(--space-3);
-  flex-wrap: wrap;
-}
-
-.market-filters {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: var(--space-5);
-  margin-top: var(--space-20);
-  padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: 11px;
-  background: var(--color-surface);
-}
-
-.market-filters button,
-.market-fund-link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-8);
-  padding: var(--space-9) var(--space-13);
-  border: 1px solid transparent;
-  border-radius: 8px;
-  background: transparent;
   color: var(--color-text-primary);
-  cursor: pointer;
-  font-size: var(--font-size-13);
-  font-weight: 650;
+  font-size: var(--font-size-20);
+  font-variant-numeric: tabular-nums;
 }
 
-.market-filters button:hover,
-.market-fund-link:hover {
-  border-color: var(--color-border);
-  background: var(--color-background);
-}
-
-.market-filters button[aria-pressed='true'] {
-  background: var(--color-primary);
-  color: var(--color-on-primary, white);
-}
-
-.market-fund-link {
+.investment-asset-icon {
+  background: var(--color-highlight);
   color: var(--color-primary);
+}
+
+.investment-table__amount-placeholder {
+  margin-inline-start: auto;
+}
+
+.investment-list__feedback {
+  padding: var(--space-20);
 }

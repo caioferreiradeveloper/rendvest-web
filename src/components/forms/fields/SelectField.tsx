@@ -18,6 +18,7 @@ interface SelectFieldProps<Value extends string> {
   value: Value;
   onChange: (value: Value) => void;
   hint?: string;
+  placeholder?: string;
   error?: string;
   required?: boolean;
   disabled?: boolean;
@@ -32,6 +33,7 @@ export default function SelectField<Value extends string>({
   value,
   onChange,
   hint,
+  placeholder,
   error,
   required,
   disabled,
@@ -43,11 +45,9 @@ export default function SelectField<Value extends string>({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const selectedIndex = Math.max(
-    0,
-    options.findIndex((option) => option.value === value),
-  );
-  const selectedOption = options[selectedIndex];
+  const matchingIndex = options.findIndex((option) => option.value === value);
+  const selectedIndex = Math.max(0, matchingIndex);
+  const selectedOption = matchingIndex < 0 && placeholder ? undefined : options[selectedIndex];
 
   const expanded = isOpen && !disabled && options.length > 0;
 
@@ -190,7 +190,7 @@ export default function SelectField<Value extends string>({
           type="button"
         >
           <span className="select-field__value">
-            {selectedOption && (
+            {selectedOption ? (
               <>
                 {selectedOption.logoDomain && (
                   <BankLogo
@@ -201,7 +201,7 @@ export default function SelectField<Value extends string>({
                 )}
                 <span>{selectedOption.label}</span>
               </>
-            )}
+            ) : <span>{placeholder}</span>}
           </span>
           <ChevronDown
             aria-hidden="true"
